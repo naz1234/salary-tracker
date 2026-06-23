@@ -10,6 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import {
   CalendarDays,
   ChartColumnBig,
+  ChevronDown,
   ChevronRight,
   Pencil,
   PieChart,
@@ -183,8 +184,33 @@ function DonutChart({ data, total }) {
   );
 }
 
+function CategoryExpenseDetailRow({ expense }) {
+  const Icon = getExpenseIcon(expense.category);
+  const tone = getExpenseDateTone(expense.date);
+
+  return (
+    <div className={`flex items-center gap-2.5 rounded-xl border ${tone.border} ${tone.rowBg} px-2.5 py-2`}>
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+        <Icon className="h-3.5 w-3.5" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[11px] font-bold text-slate-800">{expense.description || expense.category || "Expense"}</p>
+        <p className="truncate text-[9px] font-medium text-slate-500">
+          {fmtDate(expense.date, true)}{expense.payment_method ? ` · ${expense.payment_method}` : ""}
+        </p>
+      </div>
+      <p className={`shrink-0 text-[11px] font-extrabold ${tone.text}`}>-{fmtCurrency(expense.amount)}</p>
+    </div>
+  );
+}
+
 function CategoryBreakdown({ data, total, compact = false }) {
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const visibleData = compact ? data.slice(0, 5) : data;
+
+  const toggleCategory = (categoryName) => {
+    setExpandedCategory((current) => (current === categoryName ? null : categoryName));
+  };
 
   return (
     <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
@@ -195,7 +221,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
           </div>
           <div>
             <h3 className="text-sm font-extrabold text-slate-950">Expenses by Category</h3>
-            <p className="text-[10px] font-medium text-slate-400">Where the money went</p>
+            <p className="text-[10px] font-medium text-slate-400">Tap a category to see its expenses</p>
           </div>
         </div>
       </div>
@@ -211,17 +237,36 @@ function CategoryBreakdown({ data, total, compact = false }) {
             {visibleData.map((item) => {
               const percent = total > 0 ? (item.amount / total) * 100 : 0;
               const tone = getExpenseCategoryTone(item.name);
+              const isExpanded = expandedCategory === item.name;
               return (
-                <div key={item.name} className={`flex items-center gap-3 rounded-2xl border ${tone.border} ${tone.rowBg} px-3 py-2.5`}>
-                  <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                  <div className="min-w-0 flex-1">
-                    <p className={`truncate text-xs font-bold ${tone.text}`}>{item.name}</p>
-                    <p className="text-[10px] font-medium text-slate-400">{item.count} item{item.count > 1 ? "s" : ""}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-xs font-extrabold ${tone.text}`}>{fmtCurrency(item.amount)}</p>
-                    <p className="text-[10px] font-semibold text-slate-400">{percent.toFixed(1)}%</p>
-                  </div>
+                <div key={item.name} className={`overflow-hidden rounded-2xl border ${tone.border} ${tone.rowBg}`}>
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left"
+                    onClick={() => toggleCategory(item.name)}
+                    aria-expanded={isExpanded}
+                  >
+                    <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
+                    <div className="min-w-0 flex-1">
+                      <p className={`truncate text-xs font-bold ${tone.text}`}>{item.name}</p>
+                      <p className="text-[10px] font-medium text-slate-400">{item.count} item{item.count > 1 ? "s" : ""}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-xs font-extrabold ${tone.text}`}>{fmtCurrency(item.amount)}</p>
+                      <p className="text-[10px] font-semibold text-slate-400">{percent.toFixed(1)}%</p>
+                    </div>
+                    <ChevronDown className={`h-4 w-4 shrink-0 ${tone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {isExpanded && (
+                    <div className="border-t border-white/80 px-2.5 pb-2.5 pt-2">
+                      <div className="space-y-1.5">
+                        {item.expenses.map((expense, index) => (
+                          <CategoryExpenseDetailRow key={expense.id || `${item.name}-${index}`} expense={expense} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -376,12 +421,17 @@ export default function Expenses() {
     const byCategoryMap = new Map();
     expenses.forEach((item) => {
       const key = item.category || "Uncategorized";
-      const current = byCategoryMap.get(key) || { name: key, amount: 0, count: 0 };
+      const current = byCategoryMap.get(key) || { name: key, amount: 0, count: 0, expenses: [] };
       current.amount += Number(item.amount || 0);
       current.count += 1;
+      current.expenses.push(item);
       byCategoryMap.set(key, current);
     });
     const byCategory = Array.from(byCategoryMap.values())
+      .map((item) => ({
+        ...item,
+        expenses: [...item.expenses].sort((a, b) => (parseLocalDate(b.date) || 0) - (parseLocalDate(a.date) || 0)),
+      }))
       .sort((a, b) => b.amount - a.amount)
       .map((item) => ({ ...item, color: getExpenseCategoryHex(item.name) }));
 
