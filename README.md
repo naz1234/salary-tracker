@@ -45,7 +45,7 @@ It points to:
 
 ```txt
 Database name: salary-cycle-tracker-db
-Database ID: b926b62a-5cf2-4061-a577-415c1c859b3a
+Database ID: bce8ea8e-589d-4575-9709-5f5a8b1acdb5
 ```
 
 The same binding is already inside `wrangler.toml`:
@@ -54,7 +54,7 @@ The same binding is already inside `wrangler.toml`:
 [[d1_databases]]
 binding = "DB"
 database_name = "salary-cycle-tracker-db"
-database_id = "b926b62a-5cf2-4061-a577-415c1c859b3a"
+database_id = "bce8ea8e-589d-4575-9709-5f5a8b1acdb5"
 ```
 
 If Cloudflare dashboard still does not bind D1 automatically, add it manually:
