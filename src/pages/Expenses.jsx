@@ -10,7 +10,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import {
   CalendarDays,
   ChevronDown,
-  ChevronRight,
   Pencil,
   PieChart,
   Plus,
@@ -254,9 +253,7 @@ function ExpenseRow({ expense, onEdit, onDelete, showActions = true, softText = 
             <Trash2 className="h-3.5 w-3.5 text-rose-500" />
           </button>
         </div>
-      ) : (
-        <ChevronRight className={`h-4 w-4 shrink-0 ${tone.text} opacity-50`} />
-      )}
+      ) : null}
     </div>
   );
 }
