@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { cloudflare } from "@/api/cloudflareClient";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowRightLeft, Info, CalendarDays, ReceiptText } from "lucide-react";
+import { Plus, ArrowRightLeft, Info, CalendarDays } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
 import SummaryCards from "../components/SummaryCards";
 import { filterExpensesForCycle, formatDisplayDate, parseDateOnly } from "@/utils/cycleFilters";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
+import { getExpenseIcon } from "@/utils/expenseIcons";
 
 const DASHBOARD_CACHE_KEY = "salary-cycle-dashboard-cache-v1";
 
@@ -233,13 +234,14 @@ export default function Dashboard() {
                   <div className="space-y-2">
                     {recentExpenses.map((e) => {
                       const tone = getExpenseDateTone(e.date);
+                      const ExpenseIcon = getExpenseIcon(e.category, e.description);
                       return (
                         <div
                           key={e.id}
                           className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} p-3 shadow-sm backdrop-blur`}
                         >
                           <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
-                            <ReceiptText className="h-4 w-4" />
+                            <ExpenseIcon className="h-4 w-4" strokeWidth={2.1} />
                           </div>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-[12px] font-medium text-slate-900">{e.description || e.category}</p>
