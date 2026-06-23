@@ -9,7 +9,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import {
   CalendarDays,
-  ChartColumnBig,
   ChevronDown,
   ChevronRight,
   Pencil,
@@ -22,8 +21,6 @@ import {
 } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
 import ExpenseForm from "../components/ExpenseForm";
-
-const CHART_COLORS = ["#fb7185", "#60a5fa", "#fbbf24", "#4ade80", "#a78bfa", "#22c55e", "#f97316", "#38bdf8"];
 
 function parseLocalDate(value) {
   if (!value) return null;
@@ -82,66 +79,6 @@ function StatCard({ icon: Icon, label, value, helper, tone = "rose" }) {
           {helper && <p className="mt-0.5 text-[10px] font-medium text-slate-400">{helper}</p>}
         </div>
       </div>
-    </div>
-  );
-}
-
-function MiniBarChart({ data }) {
-  const maxAmount = Math.max(...data.map((item) => item.amount), 1);
-  const visibleData = data.slice(-7);
-
-  return (
-    <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-            <ChartColumnBig className="h-4 w-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-extrabold text-slate-950">Expenses by Date</h3>
-            <p className="text-[10px] font-medium text-slate-400">Latest spending days</p>
-          </div>
-        </div>
-        <span className="text-[11px] font-bold text-slate-500">⃁</span>
-      </div>
-
-      {visibleData.length === 0 ? (
-        <div className="flex h-36 items-center justify-center rounded-2xl bg-slate-50 text-xs font-medium text-slate-400">
-          No expense data yet.
-        </div>
-      ) : (
-        <>
-          <div className="flex h-48 items-end gap-2 border-b border-slate-200 px-1 pb-2">
-            {visibleData.map((item, index) => {
-              const barHeight = Math.max(18, (item.amount / maxAmount) * 145);
-              return (
-                <div key={item.date} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-2">
-                  <span className="text-[10px] font-extrabold text-slate-800">{item.amount.toFixed(2)}</span>
-                  <div
-                    className="w-full max-w-11 rounded-t-xl shadow-sm"
-                    style={{
-                      height: `${barHeight}px`,
-                      background: `linear-gradient(180deg, ${CHART_COLORS[index % CHART_COLORS.length]}, ${CHART_COLORS[index % CHART_COLORS.length]}cc)`,
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-2 flex gap-2 px-1">
-            {visibleData.map((item) => (
-              <p key={item.date} className="min-w-0 flex-1 text-center text-[10px] font-semibold text-slate-500">
-                {fmtDate(item.date)}
-              </p>
-            ))}
-          </div>
-          {data.length > visibleData.length && (
-            <p className="mt-3 text-center text-[10px] font-medium text-slate-400">
-              Showing latest {visibleData.length} of {data.length} spending days.
-            </p>
-          )}
-        </>
-      )}
     </div>
   );
 }
@@ -409,15 +346,6 @@ export default function Expenses() {
     const rangeDays = getDaysBetween(parseLocalDate(firstDate), parseLocalDate(lastDate));
     const averagePerDay = rangeDays > 0 ? total / rangeDays : 0;
 
-    const byDateMap = new Map();
-    expenses.forEach((item) => {
-      const key = item.date || "No date";
-      byDateMap.set(key, (byDateMap.get(key) || 0) + Number(item.amount || 0));
-    });
-    const byDate = Array.from(byDateMap.entries())
-      .map(([date, amount]) => ({ date, amount }))
-      .sort((a, b) => (parseLocalDate(a.date) || 0) - (parseLocalDate(b.date) || 0));
-
     const byCategoryMap = new Map();
     expenses.forEach((item) => {
       const key = item.category || "Uncategorized";
@@ -441,7 +369,6 @@ export default function Expenses() {
       lastDate,
       rangeDays,
       averagePerDay,
-      byDate,
       byCategory,
       recent: [...expenses].sort((a, b) => (parseLocalDate(b.date) || 0) - (parseLocalDate(a.date) || 0)).slice(0, 5),
     };
@@ -497,7 +424,7 @@ export default function Expenses() {
                 <ReceiptText className="h-7 w-7" />
               </div>
               <h2 className="mt-4 text-base font-extrabold text-slate-950">No expenses yet</h2>
-              <p className="mx-auto mt-1 max-w-xs text-xs font-medium text-slate-500">Tap Add to record your spending and the overview chart will appear here.</p>
+              <p className="mx-auto mt-1 max-w-xs text-xs font-medium text-slate-500">Tap Add to record your spending and view the expense overview here.</p>
               <Button className="mt-5 h-11 rounded-2xl bg-emerald-500 px-6 font-bold text-white hover:bg-emerald-600" onClick={openAddSheet}>
                 <Plus className="mr-1 h-4 w-4" /> Add Expense
               </Button>
@@ -549,7 +476,6 @@ export default function Expenses() {
                     <StatCard icon={PieChart} label="Categories" value={overview.byCategory.length} helper="Spending groups" tone="rose" />
                   </div>
 
-                  <MiniBarChart data={overview.byDate} />
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
                   <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
