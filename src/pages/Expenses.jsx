@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { cloudflare } from "@/api/cloudflareClient";
 import { filterExpensesForCycle, formatDisplayDate, isDateInSalaryCycle } from "@/utils/cycleFilters";
 import { getExpenseCategoryHex, getExpenseCategoryTone } from "@/utils/expenseCategoryColors";
+import { getExpenseDateTone } from "@/utils/expenseDateColors";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -238,7 +239,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
 
 function ExpenseRow({ expense, onEdit, onDelete, showActions = true, softText = false }) {
   const Icon = getExpenseIcon(expense.category);
-  const tone = getExpenseCategoryTone(expense.category);
+  const tone = getExpenseDateTone(expense.date);
   const titleClass = softText
     ? "truncate text-[13px] font-medium text-slate-900"
     : "truncate text-sm font-extrabold text-slate-950";
