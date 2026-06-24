@@ -216,24 +216,40 @@ function CategoryBreakdown({ data, total, compact = false }) {
   );
 }
 
-function ExpenseRow({ expense, onEdit, onDelete, showActions = true, softText = false }) {
+function ExpenseRow({ expense, onEdit, onDelete, showActions = true, softText = false, compact = false }) {
   const Icon = getExpenseIcon(expense.category, expense.description);
   const tone = getExpenseDateTone(expense.date);
-  const titleClass = softText
-    ? "truncate text-[13px] font-medium text-slate-900"
-    : "truncate text-sm font-extrabold text-slate-950";
-  const metaClass = softText
-    ? "truncate text-[10px] font-normal text-slate-500"
-    : "truncate text-[11px] font-medium text-slate-500";
-  const categoryClass = softText ? `font-medium ${tone.text}` : `font-extrabold ${tone.text}`;
-  const amountClass = softText
-    ? `shrink-0 text-[13px] font-medium ${tone.text}`
-    : `shrink-0 text-sm font-extrabold ${tone.text}`;
+  const titleClass = compact
+    ? "truncate text-xs font-bold text-slate-900"
+    : softText
+      ? "truncate text-[13px] font-medium text-slate-900"
+      : "truncate text-sm font-extrabold text-slate-950";
+  const metaClass = compact
+    ? "truncate text-[10px] font-medium text-slate-500"
+    : softText
+      ? "truncate text-[10px] font-normal text-slate-500"
+      : "truncate text-[11px] font-medium text-slate-500";
+  const categoryClass = compact
+    ? `font-bold ${tone.text}`
+    : softText
+      ? `font-medium ${tone.text}`
+      : `font-extrabold ${tone.text}`;
+  const amountClass = compact
+    ? `shrink-0 text-xs font-extrabold ${tone.text}`
+    : softText
+      ? `shrink-0 text-[13px] font-medium ${tone.text}`
+      : `shrink-0 text-sm font-extrabold ${tone.text}`;
+  const rowClass = compact
+    ? `flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`
+    : `flex items-center gap-3 rounded-[1.25rem] border border-l-4 ${tone.border} ${tone.rowBg} p-3 shadow-sm`;
+  const iconWrapClass = compact
+    ? `flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`
+    : `flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`;
 
   return (
-    <div className={`flex items-center gap-3 rounded-[1.25rem] border border-l-4 ${tone.border} ${tone.rowBg} p-3 shadow-sm`}>
-      <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
-        <Icon className="h-5 w-5" />
+    <div className={rowClass}>
+      <div className={iconWrapClass}>
+        <Icon className={compact ? "h-4 w-4" : "h-5 w-5"} />
       </div>
       <div className="min-w-0 flex-1">
         <p className={titleClass}>{expense.description || expense.category}</p>
@@ -488,7 +504,7 @@ export default function Expenses() {
                     </div>
                     <div className="space-y-2">
                       {overview.recent.map((expense) => (
-                        <ExpenseRow key={expense.id} expense={expense} onEdit={handleEdit} onDelete={setDeleteId} showActions={false} softText />
+                        <ExpenseRow key={expense.id} expense={expense} onEdit={handleEdit} onDelete={setDeleteId} showActions={false} softText compact />
                       ))}
                     </div>
                   </div>
