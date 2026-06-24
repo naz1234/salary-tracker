@@ -3,6 +3,7 @@ import { cloudflare } from "@/api/cloudflareClient";
 import { filterExpensesForCycle, formatDisplayDate, isDateInSalaryCycle } from "@/utils/cycleFilters";
 import { getExpenseCategoryHex, getExpenseCategoryTone } from "@/utils/expenseCategoryColors";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
+import { getExpenseIcon } from "@/utils/expenseIcons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -10,6 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import {
   CalendarDays,
   ChevronDown,
+  Clock3,
   Pencil,
   PieChart,
   Plus,
@@ -49,13 +51,6 @@ function getDaysBetween(start, end) {
   if (!start || !end) return 0;
   const oneDay = 24 * 60 * 60 * 1000;
   return Math.max(1, Math.round((end - start) / oneDay) + 1);
-}
-
-function getExpenseIcon(category = "") {
-  const text = category.toLowerCase();
-  if (text.includes("hunger") || text.includes("makan") || text.includes("food") || text.includes("naim")) return ReceiptText;
-  if (text.includes("shopping") || text.includes("wife") || text.includes("kids") || text.includes("anak")) return WalletCards;
-  return ReceiptText;
 }
 
 function StatCard({ icon: Icon, label, value, helper, tone = "rose" }) {
@@ -121,7 +116,7 @@ function DonutChart({ data, total }) {
 }
 
 function CategoryExpenseDetailRow({ expense }) {
-  const Icon = getExpenseIcon(expense.category);
+  const Icon = getExpenseIcon(expense.category, expense.description);
   const tone = getExpenseDateTone(expense.date);
 
   return (
@@ -173,6 +168,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
             {visibleData.map((item) => {
               const percent = total > 0 ? (item.amount / total) * 100 : 0;
               const tone = getExpenseCategoryTone(item.name);
+              const CategoryIcon = getExpenseIcon(item.name);
               const isExpanded = expandedCategory === item.name;
               return (
                 <div key={item.name} className={`overflow-hidden rounded-2xl border ${tone.border} ${tone.rowBg}`}>
@@ -182,7 +178,9 @@ function CategoryBreakdown({ data, total, compact = false }) {
                     onClick={() => toggleCategory(item.name)}
                     aria-expanded={isExpanded}
                   >
-                    <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+                      <CategoryIcon className="h-4 w-4" strokeWidth={2.1} />
+                    </span>
                     <div className="min-w-0 flex-1">
                       <p className={`truncate text-xs font-bold ${tone.text}`}>{item.name}</p>
                       <p className="text-[10px] font-medium text-slate-400">{item.count} item{item.count > 1 ? "s" : ""}</p>
@@ -219,7 +217,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
 }
 
 function ExpenseRow({ expense, onEdit, onDelete, showActions = true, softText = false }) {
-  const Icon = getExpenseIcon(expense.category);
+  const Icon = getExpenseIcon(expense.category, expense.description);
   const tone = getExpenseDateTone(expense.date);
   const titleClass = softText
     ? "truncate text-[13px] font-medium text-slate-900"
@@ -476,8 +474,16 @@ export default function Expenses() {
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
                   <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
-                    <div className="mb-3 flex items-center justify-between">
-                      <h3 className="text-[13px] font-medium text-slate-900">Recent Transactions</h3>
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                          <Clock3 className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-[13px] font-semibold text-slate-900">Recent Transactions</h3>
+                          <p className="text-[10px] font-medium text-slate-400">Latest spending activity</p>
+                        </div>
+                      </div>
                       <button type="button" className="text-[11px] font-medium text-emerald-600" onClick={() => setActiveView("transactions")}>View all</button>
                     </div>
                     <div className="space-y-2">
