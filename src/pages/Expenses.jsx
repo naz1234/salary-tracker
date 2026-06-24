@@ -68,9 +68,9 @@ function StatCard({ icon: Icon, label, value, helper, tone = "rose" }) {
           <Icon className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold text-slate-500">{label}</p>
-          <p className="mt-1 break-words text-[1.05rem] font-extrabold leading-tight text-slate-950">{value}</p>
-          {helper && <p className="mt-0.5 text-[10px] font-medium text-slate-400">{helper}</p>}
+          <p className="text-[10px] font-semibold text-slate-500">{label}</p>
+          <p className="mt-1 break-words text-[0.95rem] font-extrabold leading-tight text-slate-950">{value}</p>
+          {helper && <p className="mt-0.5 text-[9px] font-medium text-slate-400">{helper}</p>}
         </div>
       </div>
     </div>
@@ -396,8 +396,8 @@ export default function Expenses() {
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-extrabold tracking-tight text-slate-950">Daily Expenses</h1>
-              <p className="text-xs font-medium text-slate-500">
+              <h1 className="text-xl font-extrabold tracking-tight text-slate-950">Daily Expenses</h1>
+              <p className="text-[11px] font-medium text-slate-500">
                 {cycle ? `${formatDisplayDate(cycle.start_date)} — ${formatDisplayDate(cycle.end_date)}` : "Overview for salary cycle"}
               </p>
               {cycle && cycle.status !== "active" && (
@@ -407,8 +407,8 @@ export default function Expenses() {
               )}
             </div>
             {cycle && (
-              <Button className="h-11 rounded-2xl bg-emerald-500 px-4 font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600" onClick={openAddSheet}>
-                <Plus className="mr-1 h-4 w-4" /> Add
+              <Button className="h-10 rounded-2xl bg-emerald-500 px-3.5 text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600" onClick={openAddSheet}>
+                <Plus className="mr-1 h-3.5 w-3.5" /> Add
               </Button>
             )}
           </div>
@@ -447,7 +447,7 @@ export default function Expenses() {
                   <button
                     key={view}
                     type="button"
-                    className={`rounded-2xl px-2 py-2 text-xs font-extrabold capitalize transition-all ${
+                    className={`rounded-2xl px-2 py-2 text-[11px] font-extrabold capitalize transition-all ${
                       activeView === view ? "bg-emerald-500 text-white shadow-sm" : "text-slate-500 hover:bg-slate-50"
                     }`}
                     onClick={() => setActiveView(view)}
@@ -465,10 +465,10 @@ export default function Expenses() {
                         <TrendingDown className="h-7 w-7" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-500">Total Expenses</p>
-                        <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">{fmtCurrency(overview.total)}</h2>
+                        <p className="text-[11px] font-bold text-slate-500">Total Expenses</p>
+                        <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950">{fmtCurrency(overview.total)}</h2>
                       </div>
-                      <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-extrabold text-rose-700">
+                      <span className="rounded-full bg-rose-100 px-3 py-1 text-[11px] font-extrabold text-rose-700">
                         {expenses.length} item{expenses.length > 1 ? "s" : ""}
                       </span>
                     </div>
@@ -510,8 +510,8 @@ export default function Expenses() {
                   </div>
 
                   <div className="flex items-center justify-between rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
-                    <p className="text-sm font-extrabold text-slate-800">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
-                    <p className="text-2xl font-black text-rose-600">{fmtCurrency(overview.total)}</p>
+                    <p className="text-xs font-extrabold text-slate-800">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
+                    <p className="text-xl font-black text-rose-600">{fmtCurrency(overview.total)}</p>
                   </div>
                 </div>
               )}
