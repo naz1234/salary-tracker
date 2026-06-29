@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CalendarDays, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { formatDisplayDate, parseDateOnly, toDateOnly } from "@/utils/cycleFilters";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
@@ -36,31 +36,31 @@ function groupExpensesByDate(expenses = []) {
   return Array.from(map.values());
 }
 
-function ExpenseListItem({ expense, onEdit, onDelete, showActions = false, compact = false }) {
+function ExpenseListItem({ expense, onEdit, onDelete, showActions = false }) {
   const Icon = getExpenseIcon(expense.category, expense.description);
   const tone = getExpenseDateTone(expense.date);
 
   return (
-    <div className={`flex items-center gap-3 rounded-[1.25rem] border border-l-4 ${tone.border} ${tone.rowBg} p-3 shadow-sm`}>
-      <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
-        <Icon className="h-5 w-5" />
+    <div className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`}>
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+        <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className={`truncate ${compact ? "text-[13px]" : "text-sm"} font-semibold text-slate-900`}>
+        <p className="truncate text-[13px] font-semibold text-slate-900">
           {expense.description || expense.category || "Expense"}
         </p>
-        <p className={`truncate ${compact ? "text-[10px]" : "text-[11px]"} font-medium text-slate-500`}>
+        <p className="truncate text-[10px] font-medium text-slate-500">
           {formatExpenseMetaDate(expense.date)} · <span className={`font-semibold ${tone.text}`}>{expense.category || "Uncategorized"}</span>
           {expense.payment_method ? ` · ${expense.payment_method}` : ""}
         </p>
       </div>
-      <p className={`shrink-0 ${compact ? "text-[13px]" : "text-sm"} font-extrabold ${tone.text}`}>-{fmtCurrency(expense.amount)}</p>
+      <p className={`shrink-0 text-[13px] font-extrabold ${tone.text}`}>-{fmtCurrency(expense.amount)}</p>
       {showActions ? (
-        <div className="flex shrink-0 gap-1">
-          <button type="button" className="rounded-xl p-2 hover:bg-slate-100" onClick={() => onEdit?.(expense)} aria-label="Edit expense">
+        <div className="flex shrink-0 gap-0.5">
+          <button type="button" className="rounded-lg p-1.5 hover:bg-slate-100" onClick={() => onEdit?.(expense)} aria-label="Edit expense">
             <Pencil className="h-3.5 w-3.5 text-slate-500" />
           </button>
-          <button type="button" className="rounded-xl p-2 hover:bg-rose-50" onClick={() => onDelete?.(expense.id)} aria-label="Delete expense">
+          <button type="button" className="rounded-lg p-1.5 hover:bg-rose-50" onClick={() => onDelete?.(expense.id)} aria-label="Delete expense">
             <Trash2 className="h-3.5 w-3.5 text-rose-500" />
           </button>
         </div>
@@ -74,14 +74,9 @@ export default function GroupedExpenseSections({
   onEdit,
   onDelete,
   showActions = false,
-  compact = false,
 }) {
   const groupedExpenses = useMemo(() => groupExpensesByDate(expenses), [expenses]);
   const [expandedGroupKey, setExpandedGroupKey] = useState(null);
-
-  useEffect(() => {
-    setExpandedGroupKey(groupedExpenses[0]?.key || null);
-  }, [groupedExpenses]);
 
   const toggleGroup = (key) => {
     setExpandedGroupKey((current) => (current === key ? null : key));
@@ -123,8 +118,7 @@ export default function GroupedExpenseSections({
                       onEdit={onEdit}
                       onDelete={onDelete}
                       showActions={showActions}
-                      compact={compact}
-                    />
+                                          />
                   ))}
                 </div>
               </div>
