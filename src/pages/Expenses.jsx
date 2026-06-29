@@ -7,6 +7,7 @@ import { getExpenseIcon } from "@/utils/expenseIcons";
 import GroupedExpenseSections from "@/components/GroupedExpenseSections";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import {
@@ -217,6 +218,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
 
 export default function Expenses() {
   const [cycle, setCycle] = useState(null);
+  const [cycles, setCycles] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -225,40 +227,54 @@ export default function Expenses() {
   const [deleteId, setDeleteId] = useState(null);
   const [activeView, setActiveView] = useState("overview");
 
-  const params = new URLSearchParams(window.location.search);
-  const selectedCycleId = params.get("cycleId");
+  const getUrlParams = () => new URLSearchParams(window.location.search);
 
   useEffect(() => {
-    load();
+    const params = getUrlParams();
+    load(params.get("cycleId"));
   }, []);
 
   useEffect(() => {
+    const params = getUrlParams();
     if (params.get("add") === "1" && cycle) {
       setSheetOpen(true);
-      window.history.replaceState({}, "", selectedCycleId ? `/expenses?cycleId=${selectedCycleId}` : "/expenses");
+      params.delete("add");
+      const nextQuery = params.toString();
+      window.history.replaceState({}, "", nextQuery ? `/expenses?${nextQuery}` : "/expenses");
     }
-  }, [cycle, selectedCycleId]);
+  }, [cycle]);
 
-  const load = async () => {
+  const load = async (requestedCycleId = null) => {
     setLoading(true);
-    let selectedCycle = null;
+    try {
+      const allCycles = await cloudflare.entities.SalaryCycle.list("-start_date", 50);
+      setCycles(allCycles);
 
-    if (selectedCycleId) {
-      selectedCycle = await cloudflare.entities.SalaryCycle.get(selectedCycleId);
-    } else {
-      const cycles = await cloudflare.entities.SalaryCycle.filter({ status: "active" }, "-start_date", 1);
-      selectedCycle = cycles[0] || null;
-    }
+      const selectedCycle = requestedCycleId
+        ? allCycles.find((item) => String(item.id) === String(requestedCycleId))
+        : allCycles.find((item) => item.status === "active") || allCycles[0] || null;
 
-    if (selectedCycle) {
-      setCycle(selectedCycle);
-      const e = await cloudflare.entities.Expense.filter({ salary_cycle_id: selectedCycle.id }, "-date");
-      setExpenses(filterExpensesForCycle(e, selectedCycle));
-    } else {
-      setCycle(null);
-      setExpenses([]);
+      if (selectedCycle) {
+        setCycle(selectedCycle);
+        const e = await cloudflare.entities.Expense.filter({ salary_cycle_id: selectedCycle.id }, "-date");
+        setExpenses(filterExpensesForCycle(e, selectedCycle));
+      } else {
+        setCycle(null);
+        setExpenses([]);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const handleCycleChange = async (cycleId) => {
+    const params = getUrlParams();
+    params.set("cycleId", cycleId);
+    params.delete("add");
+    window.history.replaceState({}, "", `/expenses?${params.toString()}`);
+    setEditing(null);
+    setDeleteId(null);
+    await load(cycleId);
   };
 
   const handleSubmit = async (data) => {
@@ -278,13 +294,13 @@ export default function Expenses() {
     setSheetOpen(false);
     setEditing(null);
     setSaving(false);
-    await load();
+    await load(cycle?.id);
   };
 
   const handleDelete = async () => {
     await cloudflare.entities.Expense.delete(deleteId);
     setDeleteId(null);
-    await load();
+    await load(cycle?.id);
   };
 
   const handleEdit = (expense) => {
@@ -355,6 +371,47 @@ export default function Expenses() {
               </Button>
             )}
           </div>
+
+          {cycles.length > 0 && (
+            <div className="rounded-[1.25rem] bg-white p-3 shadow-sm ring-1 ring-slate-200/70">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                    <CalendarDays className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-semibold text-slate-900">Salary Cycle</p>
+                    <p className="text-[10px] font-medium text-slate-400">Choose which cycle to view</p>
+                  </div>
+                </div>
+                {cycle && (
+                  <Badge
+                    variant="secondary"
+                    className={`rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
+                      cycle.status === "active"
+                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                        : "bg-slate-100 text-slate-500 hover:bg-slate-100"
+                    }`}
+                  >
+                    {cycle.status === "active" ? "Active" : "Closed"}
+                  </Badge>
+                )}
+              </div>
+              <Select value={cycle?.id ? String(cycle.id) : ""} onValueChange={handleCycleChange}>
+                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 bg-emerald-50/60 px-3 text-[12px] font-semibold text-slate-800 shadow-sm focus:ring-emerald-300">
+                  <SelectValue placeholder="Select salary cycle" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cycles.map((item) => (
+                    <SelectItem key={item.id} value={String(item.id)} className="text-[12px]">
+                      {formatDisplayDate(item.start_date)} — {item.end_date ? formatDisplayDate(item.end_date) : "Current"}
+                      {item.status === "active" ? " · Active" : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {!cycle && !loading && (
             <p className="rounded-[1.5rem] bg-white p-5 text-center text-sm font-medium text-slate-500 shadow-sm ring-1 ring-slate-200/70">
@@ -458,7 +515,7 @@ export default function Expenses() {
                 <div className="space-y-3">
                   <div className="rounded-[1.25rem] bg-white p-3 shadow-sm ring-1 ring-slate-200/70">
                     <p className="text-[13px] font-medium text-slate-900">All Daily Expenses</p>
-                    <p className="text-[11px] font-normal text-slate-500">Edit or delete any transaction here.</p>
+                    <p className="text-[11px] font-normal text-slate-500">Viewing {cycle ? `${formatDisplayDate(cycle.start_date)} — ${cycle.end_date ? formatDisplayDate(cycle.end_date) : "Current"}` : "selected salary cycle"}.</p>
                   </div>
                   <GroupedExpenseSections expenses={expenses} onEdit={handleEdit} onDelete={setDeleteId} showActions />
                 </div>
