@@ -25,7 +25,7 @@ export default function CycleDetail() {
         cloudflare.entities.FixedSpending.filter({ salary_cycle_id: cycleId }),
         cloudflare.entities.Expense.filter({ salary_cycle_id: cycleId }, "-date"),
       ]);
-      setFixed(f);
+      setFixed(f.filter((item) => !item.is_skipped));
       setExpenses(filterExpensesForCycle(e, c));
       setLoading(false);
     })();

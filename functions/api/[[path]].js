@@ -37,6 +37,7 @@ const SCHEMA_STATEMENTS = [
     category TEXT NOT NULL,
     repeat_every_cycle INTEGER NOT NULL DEFAULT 0,
     is_paid INTEGER NOT NULL DEFAULT 0,
+    is_skipped INTEGER NOT NULL DEFAULT 0,
     sort_order INTEGER NOT NULL DEFAULT 0,
     note TEXT DEFAULT '',
     created_date TEXT NOT NULL,
@@ -72,10 +73,12 @@ async function ensureSchema(env) {
       } else {
         // Tables already exist. Avoid repeating every CREATE TABLE / CREATE INDEX on each cold start.
         await ensureTableColumn(env, "fixed_spending", "is_paid", "INTEGER NOT NULL DEFAULT 0");
+        await ensureTableColumn(env, "fixed_spending", "is_skipped", "INTEGER NOT NULL DEFAULT 0");
         await ensureTableColumn(env, "fixed_spending", "sort_order", "INTEGER NOT NULL DEFAULT 0");
       }
 
       await env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_fixed_spending_sort_order ON fixed_spending(sort_order)").run();
+      await env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_fixed_spending_skipped ON fixed_spending(is_skipped)").run();
     })().catch((err) => {
       schemaReadyPromise = null;
       throw err;
@@ -109,15 +112,16 @@ const ENTITY_CONFIG = {
   },
   "fixed-spending": {
     table: "fixed_spending",
-    fields: ["salary_cycle_id", "name", "amount", "category", "repeat_every_cycle", "is_paid", "sort_order", "note"],
+    fields: ["salary_cycle_id", "name", "amount", "category", "repeat_every_cycle", "is_paid", "is_skipped", "sort_order", "note"],
     defaults: {
       amount: 0,
       repeat_every_cycle: false,
       is_paid: false,
+      is_skipped: false,
       sort_order: 0,
       note: "",
     },
-    booleans: ["repeat_every_cycle", "is_paid"],
+    booleans: ["repeat_every_cycle", "is_paid", "is_skipped"],
   },
 };
 
@@ -367,7 +371,7 @@ async function getDashboard(env) {
 
   const [fixedResult, expenseResult] = await Promise.all([
     env.DB
-      .prepare("SELECT * FROM fixed_spending WHERE salary_cycle_id = ? ORDER BY sort_order ASC, created_date DESC")
+      .prepare("SELECT * FROM fixed_spending WHERE salary_cycle_id = ? AND is_skipped = 0 ORDER BY sort_order ASC, created_date DESC")
       .bind(cycle.id)
       .all(),
     env.DB

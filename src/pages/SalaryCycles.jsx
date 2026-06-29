@@ -86,7 +86,7 @@ export default function SalaryCycles() {
       ]);
       const cycleExpenses = filterExpensesForCycle(expenses, cy);
       t[cy.id] = {
-        fixedTotal: fixed.reduce((s, i) => s + (i.amount || 0), 0),
+        fixedTotal: fixed.filter((i) => !i.is_skipped).reduce((s, i) => s + (i.amount || 0), 0),
         expenseTotal: cycleExpenses.reduce((s, i) => s + (i.amount || 0), 0),
       };
     }));
@@ -158,6 +158,7 @@ export default function SalaryCycles() {
               category: normalizeFixedSpendingCategory(f.category),
               repeat_every_cycle: true,
               is_paid: false,
+              is_skipped: false,
               sort_order: index,
               note: applyPaidStatusToNote(stripPaidStatusFromNote(f.note), false),
             }))

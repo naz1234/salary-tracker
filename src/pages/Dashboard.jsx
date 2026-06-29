@@ -14,7 +14,7 @@ const DASHBOARD_CACHE_KEY = "salary-cycle-dashboard-cache-v1";
 function normalizeDashboardPayload(payload) {
   return {
     cycle: payload?.cycle || null,
-    fixed: Array.isArray(payload?.fixed) ? payload.fixed : [],
+    fixed: Array.isArray(payload?.fixed) ? payload.fixed.filter((item) => !item.is_skipped) : [],
     expenses: Array.isArray(payload?.expenses) ? payload.expenses : [],
   };
 }

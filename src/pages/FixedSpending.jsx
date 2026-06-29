@@ -317,13 +317,13 @@ const getCategoryVisual = (item = {}) => {
 };
 
 const prepareFixedSpendingItems = (fixedItems = []) => {
-  const normalizedItems = normalizeFixedSpendingItems(fixedItems).map(
-    (item, index) => ({
+  const normalizedItems = normalizeFixedSpendingItems(fixedItems)
+    .filter((item) => !item.is_skipped)
+    .map((item, index) => ({
       ...item,
       sort_order: normalizeSortOrder(item.sort_order, index),
       category: normalizeFixedSpendingCategory(item.category),
-    }),
-  );
+    }));
 
   // Legacy rows all have sort_order 0. Keep newest-first until the user manually sorts.
   // Once the user drags, sort_order becomes 0,1,2... and this page will always reload by that saved order.
@@ -418,6 +418,7 @@ export default function FixedSpending() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [arrangeMode, setArrangeMode] = useState(false);
   const [savingOrder, setSavingOrder] = useState(false);
 
@@ -533,6 +534,7 @@ export default function FixedSpending() {
         category: normalizeFixedSpendingCategory(data.category),
         sort_order: normalizeSortOrder(editing.sort_order),
         is_paid: !!editing.is_paid,
+        is_skipped: false,
         note: applyPaidStatusToNote(data.note, !!editing.is_paid),
       });
     } else {
@@ -542,6 +544,7 @@ export default function FixedSpending() {
         salary_cycle_id: cycle.id,
         sort_order: items.length,
         is_paid: false,
+        is_skipped: false,
         note: applyPaidStatusToNote(data.note, false),
       });
     }
@@ -552,9 +555,46 @@ export default function FixedSpending() {
   };
 
   const handleDelete = async () => {
-    await cloudflare.entities.FixedSpending.delete(deleteId);
-    setDeleteId(null);
-    await load();
+    const item = items.find((fixedItem) => fixedItem.id === deleteId);
+    if (!item || deleting) {
+      setDeleteId(null);
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      let nextCachedItems;
+
+      if (item.repeat_every_cycle) {
+        // A repeated commitment is only skipped in this salary cycle.
+        // The hidden row remains as the recurrence source so it returns next cycle.
+        await cloudflare.entities.FixedSpending.update(item.id, {
+          is_skipped: true,
+          is_paid: false,
+          note: applyPaidStatusToNote(item.note, false),
+        });
+        nextCachedItems = items.map((fixedItem) =>
+          fixedItem.id === item.id
+            ? { ...fixedItem, is_skipped: true, is_paid: false }
+            : fixedItem,
+        );
+      } else {
+        await cloudflare.entities.FixedSpending.delete(item.id);
+        nextCachedItems = items.filter((fixedItem) => fixedItem.id !== item.id);
+      }
+
+      setItems(prepareFixedSpendingItems(nextCachedItems));
+      writeFixedSpendingCache(cycle, nextCachedItems);
+      setDeleteId(null);
+      await load();
+    } catch (error) {
+      console.error("Failed to remove fixed spending", error);
+      alert(
+        "Fixed spending could not be removed. Please check your connection and try again.",
+      );
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const togglePaid = async (item) => {
@@ -661,6 +701,7 @@ export default function FixedSpending() {
         ? dueItems
         : items;
   const visibleItems = arrangeMode ? items : filteredItems;
+  const deleteItem = items.find((item) => item.id === deleteId);
 
   const filters = [
     { key: "all", label: "All", count: items.length, dot: "bg-emerald-500" },
@@ -1050,7 +1091,8 @@ export default function FixedSpending() {
                                   onClick={() => setDeleteId(i.id)}
                                   className="gap-2 text-red-600 focus:text-red-600"
                                 >
-                                  <Trash2 className="h-4 w-4" /> Delete
+                                  <Trash2 className="h-4 w-4" />
+                                  {i.repeat_every_cycle ? "Remove This Cycle" : "Delete"}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -1092,17 +1134,40 @@ export default function FixedSpending() {
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(open) => {
+          if (!open && !deleting) setDeleteId(null);
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this item?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {deleteItem?.repeat_every_cycle
+                ? "Remove for this cycle?"
+                : "Delete this item?"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone.
+              {deleteItem?.repeat_every_cycle
+                ? `This item will be removed only from the ${formatDisplayDate(cycle?.start_date)} salary cycle. It will return automatically in the next cycle.`
+                : "This action cannot be undone."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deleting}
+              onClick={(event) => {
+                event.preventDefault();
+                handleDelete();
+              }}
+            >
+              {deleting
+                ? "Removing..."
+                : deleteItem?.repeat_every_cycle
+                  ? "Remove This Cycle"
+                  : "Delete"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
