@@ -862,6 +862,10 @@ export default function FixedSpending() {
                   <p className="mt-0.5 text-lg font-medium tracking-tight text-emerald-700">
                     {formatMoney(total)}
                   </p>
+                  <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-500">
+                    Track commitments and mark them paid so you never miss one
+                    due.
+                  </p>
                 </div>
 
                 <div className="w-[96px] shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50/80 text-[10px] font-medium">
@@ -920,7 +924,7 @@ export default function FixedSpending() {
                   <button
                     type="button"
                     disabled={arrangeMode}
-                    className="fixed-cycle-selector-glow h-9 shrink-0 rounded-xl border border-emerald-300 bg-emerald-50/90 px-2 text-[11px] font-semibold text-emerald-700 shadow-sm transition-transform active:scale-[0.98] disabled:opacity-60"
+                    className="h-9 shrink-0 rounded-xl border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 shadow-sm disabled:opacity-60"
                     aria-label="Choose salary cycle"
                   >
                     <span className="inline-flex items-center gap-1">
