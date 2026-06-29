@@ -11,10 +11,6 @@ function fmtCurrency(value = 0) {
   })}`;
 }
 
-function formatExpenseMetaDate(value) {
-  return formatDisplayDate(value);
-}
-
 function groupExpensesByDate(expenses = []) {
   const map = new Map();
 
@@ -50,7 +46,7 @@ function ExpenseListItem({ expense, onEdit, onDelete, showActions = false }) {
           {expense.description || expense.category || "Expense"}
         </p>
         <p className="truncate text-[10px] font-medium text-slate-500">
-          {formatExpenseMetaDate(expense.date)} · <span className={`font-semibold ${tone.text}`}>{expense.category || "Uncategorized"}</span>
+          <span className={`font-semibold ${tone.text}`}>{expense.category || "Uncategorized"}</span>
           {expense.payment_method ? ` · ${expense.payment_method}` : ""}
         </p>
       </div>
