@@ -1,4 +1,5 @@
-import { CalendarDays, Pencil, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { CalendarDays, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { formatDisplayDate, parseDateOnly, toDateOnly } from "@/utils/cycleFilters";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
@@ -75,39 +76,62 @@ export default function GroupedExpenseSections({
   showActions = false,
   compact = false,
 }) {
-  const groupedExpenses = groupExpensesByDate(expenses);
+  const groupedExpenses = useMemo(() => groupExpensesByDate(expenses), [expenses]);
+  const [expandedGroupKey, setExpandedGroupKey] = useState(null);
+
+  useEffect(() => {
+    setExpandedGroupKey(groupedExpenses[0]?.key || null);
+  }, [groupedExpenses]);
+
+  const toggleGroup = (key) => {
+    setExpandedGroupKey((current) => (current === key ? null : key));
+  };
 
   return (
-    <div className="space-y-3">
-      {groupedExpenses.map((group) => (
-        <div key={group.key} className="rounded-[1.35rem] border border-slate-200/80 bg-white p-3 shadow-sm">
-          <div className="mb-3 flex items-center justify-between gap-3 rounded-[1rem] border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-            <div className="flex min-w-0 items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+    <div className="space-y-2.5">
+      {groupedExpenses.map((group) => {
+        const isExpanded = expandedGroupKey === group.key;
+        return (
+          <div key={group.key} className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+            <button
+              type="button"
+              className="flex w-full items-center gap-3 px-3 py-2.5 text-left"
+              onClick={() => toggleGroup(group.key)}
+              aria-expanded={isExpanded}
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 ring-1 ring-slate-200">
                 <CalendarDays className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[13px] font-semibold text-slate-900">{formatDisplayDate(group.date)}</p>
+                <p className="text-[10px] font-medium text-slate-400">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
               </div>
-              <p className="truncate text-[13px] font-semibold text-slate-900">{formatDisplayDate(group.date)}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] font-medium text-slate-500">Total spending</p>
-              <p className="text-[13px] font-extrabold text-emerald-600">-{fmtCurrency(group.total)}</p>
-            </div>
-          </div>
+              <div className="text-right">
+                <p className="text-[10px] font-medium text-slate-500">Total spending</p>
+                <p className="text-[13px] font-extrabold text-emerald-600">-{fmtCurrency(group.total)}</p>
+              </div>
+              <ChevronDown className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+            </button>
 
-          <div className="space-y-2">
-            {group.items.map((expense) => (
-              <ExpenseListItem
-                key={expense.id}
-                expense={expense}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                showActions={showActions}
-                compact={compact}
-              />
-            ))}
+            {isExpanded && (
+              <div className="border-t border-slate-100 px-2.5 pb-2.5 pt-2">
+                <div className="space-y-2">
+                  {group.items.map((expense) => (
+                    <ExpenseListItem
+                      key={expense.id}
+                      expense={expense}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      showActions={showActions}
+                      compact={compact}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
