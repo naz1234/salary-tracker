@@ -497,7 +497,6 @@ export default function Expenses() {
                         </div>
                         <div>
                           <h3 className="text-[13px] font-semibold text-slate-900">Recent Transactions</h3>
-                          <p className="text-[10px] font-medium text-slate-400">Latest spending activity</p>
                         </div>
                       </div>
                       <button type="button" className="text-[11px] font-medium text-emerald-600" onClick={() => setActiveView("transactions")}>View all</button>

@@ -234,7 +234,6 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <h3 className="text-[13px] font-semibold text-slate-900">Recent Expenses</h3>
-                        <p className="text-[10px] font-medium text-slate-400">Latest spending activity</p>
                       </div>
                     </div>
                     <Link to="/expenses" className="text-[11px] font-medium text-emerald-600">View all</Link>
