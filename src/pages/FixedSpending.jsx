@@ -864,16 +864,16 @@ export default function FixedSpending() {
                   </p>
                 </div>
 
-                <div className="shrink-0 space-y-1 text-right text-[10px] font-medium">
-                  <div className="flex items-center justify-end gap-1.5 text-emerald-700">
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                <div className="shrink-0 space-y-1.5 text-[11px] font-medium">
+                  <div className="grid grid-cols-[1rem_2.5rem_auto] items-center gap-x-1.5 text-emerald-700">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 self-center" />
                     <span className="text-slate-500">Paid</span>
-                    <span className="font-semibold text-emerald-700">{formatMoney(paidTotal)}</span>
+                    <span className="text-right font-semibold tabular-nums text-emerald-700">{formatMoney(paidTotal)}</span>
                   </div>
-                  <div className="flex items-center justify-end gap-1.5 text-orange-600">
-                    <Clock3 className="h-3.5 w-3.5 shrink-0" />
+                  <div className="grid grid-cols-[1rem_2.5rem_auto] items-center gap-x-1.5 text-orange-600">
+                    <Clock3 className="h-4 w-4 shrink-0 self-center" />
                     <span className="text-slate-500">Due</span>
-                    <span className="font-semibold text-orange-600">{formatMoney(dueTotal)}</span>
+                    <span className="text-right font-semibold tabular-nums text-orange-600">{formatMoney(dueTotal)}</span>
                   </div>
                 </div>
               </div>
