@@ -881,7 +881,9 @@ export default function FixedSpending() {
                     aria-pressed={active}
                     className={`h-9 rounded-xl border px-1.5 text-[11px] font-medium transition-all disabled:opacity-60 ${
                       active
-                        ? "border-emerald-100 bg-emerald-50 text-emerald-700 shadow-sm"
+                        ? filter.key === "all"
+                          ? "border-slate-200 bg-white text-slate-700 shadow-sm ring-1 ring-slate-100"
+                          : "border-emerald-100 bg-emerald-50 text-emerald-700 shadow-sm"
                         : "border-slate-100 bg-white/80 text-slate-500 shadow-sm hover:bg-slate-50"
                     }`}
                   >
