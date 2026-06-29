@@ -1,8 +1,25 @@
 import { useMemo, useState } from "react";
 import { CalendarDays, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { formatDisplayDate, parseDateOnly, toDateOnly } from "@/utils/cycleFilters";
-import { EXPENSE_DATE_TONES } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
+
+
+const DATE_GROUP_TONES = [
+  {
+    rowBg: "bg-white",
+    iconBg: "bg-slate-50",
+    border: "border-slate-200",
+    ring: "ring-slate-200",
+    text: "text-slate-700",
+  },
+  {
+    rowBg: "bg-slate-100/80",
+    iconBg: "bg-slate-200/80",
+    border: "border-slate-200",
+    ring: "ring-slate-300",
+    text: "text-slate-700",
+  },
+];
 
 function fmtCurrency(value = 0) {
   return `⃁ ${Number(value || 0).toLocaleString("en-MY", {
@@ -81,7 +98,7 @@ export default function GroupedExpenseSections({
     <div className="space-y-2.5">
       {groupedExpenses.map((group, groupIndex) => {
         const isExpanded = expandedGroupKey === group.key;
-        const tone = EXPENSE_DATE_TONES[groupIndex % EXPENSE_DATE_TONES.length];
+        const tone = DATE_GROUP_TONES[groupIndex % DATE_GROUP_TONES.length];
         return (
           <div key={group.key} className={`overflow-hidden rounded-2xl border ${tone.border} bg-white shadow-sm`}>
             <button
