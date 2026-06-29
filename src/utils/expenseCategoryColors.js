@@ -297,3 +297,28 @@ export function getDistinctExpenseCategoryTone(category = "") {
 export function getDistinctExpenseCategoryHex(category = "") {
   return getDistinctExpenseCategoryTone(category).hex;
 }
+
+
+const CATEGORY_DISPLAY_PALETTE = [
+  DISTINCT_CATEGORY_TONES[6],  // rose
+  DISTINCT_CATEGORY_TONES[1],  // blue
+  DISTINCT_CATEGORY_TONES[7],  // orange
+  DISTINCT_CATEGORY_TONES[0],  // emerald
+  DISTINCT_CATEGORY_TONES[3],  // violet
+  DISTINCT_CATEGORY_TONES[8],  // amber
+  DISTINCT_CATEGORY_TONES[9],  // teal
+  DISTINCT_CATEGORY_TONES[4],  // fuchsia
+  DISTINCT_CATEGORY_TONES[10], // cyan
+  DISTINCT_CATEGORY_TONES[11], // lime
+  DISTINCT_CATEGORY_TONES[2],  // indigo
+  DISTINCT_CATEGORY_TONES[5],  // pink
+];
+
+export function getExpenseCategoryPaletteTone(index = 0) {
+  const safeIndex = Number.isFinite(Number(index)) ? Math.abs(Number(index)) : 0;
+  return CATEGORY_DISPLAY_PALETTE[safeIndex % CATEGORY_DISPLAY_PALETTE.length] || OTHER_TONE;
+}
+
+export function getExpenseCategoryPaletteHex(index = 0) {
+  return getExpenseCategoryPaletteTone(index).hex;
+}

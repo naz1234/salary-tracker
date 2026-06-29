@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { cloudflare } from "@/api/cloudflareClient";
 import { filterExpensesForCycle, formatDisplayDate, isDateInSalaryCycle } from "@/utils/cycleFilters";
-import { getDistinctExpenseCategoryHex, getDistinctExpenseCategoryTone } from "@/utils/expenseCategoryColors";
+import { getExpenseCategoryPaletteHex, getExpenseCategoryPaletteTone } from "@/utils/expenseCategoryColors";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
 import GroupedExpenseSections from "@/components/GroupedExpenseSections";
@@ -165,9 +165,9 @@ function CategoryBreakdown({ data, total, compact = false }) {
         <>
           {!compact && <DonutChart data={visibleData} total={total} />}
           <div className={compact ? "space-y-2" : "mt-2 space-y-2"}>
-            {visibleData.map((item) => {
+            {visibleData.map((item, index) => {
               const percent = total > 0 ? (item.amount / total) * 100 : 0;
-              const tone = getDistinctExpenseCategoryTone(item.name);
+              const tone = getExpenseCategoryPaletteTone(item.colorIndex ?? index);
               const CategoryIcon = getExpenseIcon(item.name);
               const isExpanded = expandedCategory === item.name;
               return (
@@ -331,7 +331,11 @@ export default function Expenses() {
         expenses: [...item.expenses].sort((a, b) => (parseLocalDate(b.date) || 0) - (parseLocalDate(a.date) || 0)),
       }))
       .sort((a, b) => b.amount - a.amount)
-      .map((item) => ({ ...item, color: getDistinctExpenseCategoryHex(item.name) }));
+      .map((item, index) => ({
+        ...item,
+        colorIndex: index,
+        color: getExpenseCategoryPaletteHex(index),
+      }));
 
     return {
       total,
