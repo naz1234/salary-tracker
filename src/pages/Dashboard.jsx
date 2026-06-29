@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, ArrowRightLeft, Info, CalendarDays, Clock3 } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
 import SummaryCards from "../components/SummaryCards";
-import { filterExpensesForCycle, formatDisplayDate, parseDateOnly } from "@/utils/cycleFilters";
+import { filterExpensesForCycle, formatDisplayDate, getRecentExpensesByDays } from "@/utils/cycleFilters";
 import GroupedExpenseSections from "@/components/GroupedExpenseSections";
 
 const DASHBOARD_CACHE_KEY = "salary-cycle-dashboard-cache-v1";
@@ -104,9 +104,7 @@ export default function Dashboard() {
   const fixedTotal = fixed.reduce((s, i) => s + (i.amount || 0), 0);
   const expenseTotal = expenses.reduce((s, i) => s + (i.amount || 0), 0);
   const fmt = formatDisplayDate;
-  const recentExpenses = [...expenses]
-    .sort((a, b) => (parseDateOnly(b.date) || 0) - (parseDateOnly(a.date) || 0))
-    .slice(0, 5);
+  const recentExpenses = getRecentExpensesByDays(expenses, 3);
 
   if (loading) {
     return (

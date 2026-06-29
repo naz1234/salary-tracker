@@ -74,3 +74,33 @@ export function isDateInSalaryCycle(dateValue, cycle) {
 export function filterExpensesForCycle(expenses = [], cycle) {
   return expenses.filter((expense) => isDateInSalaryCycle(expense.date, cycle));
 }
+
+
+export function getRecentExpensesByDays(expenses = [], dayLimit = 3) {
+  const limit = Math.max(1, Number(dayLimit) || 3);
+  const sorted = [...expenses].sort((a, b) => {
+    const dateA = toDateOnly(a?.date);
+    const dateB = toDateOnly(b?.date);
+    const dateCompare = dateB.localeCompare(dateA);
+    if (dateCompare !== 0) return dateCompare;
+
+    return String(b?.created_date || "").localeCompare(String(a?.created_date || ""));
+  });
+
+  const selectedDates = new Set();
+  const recent = [];
+
+  for (const expense of sorted) {
+    const dateKey = toDateOnly(expense?.date);
+    if (!dateKey) continue;
+
+    if (!selectedDates.has(dateKey)) {
+      if (selectedDates.size >= limit) continue;
+      selectedDates.add(dateKey);
+    }
+
+    recent.push(expense);
+  }
+
+  return recent;
+}

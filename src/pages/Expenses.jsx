@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { cloudflare } from "@/api/cloudflareClient";
-import { filterExpensesForCycle, formatDisplayDate, isDateInSalaryCycle } from "@/utils/cycleFilters";
+import { filterExpensesForCycle, formatDisplayDate, getRecentExpensesByDays, isDateInSalaryCycle } from "@/utils/cycleFilters";
 import { getExpenseCategoryPaletteHex, getExpenseCategoryPaletteTone } from "@/utils/expenseCategoryColors";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
@@ -344,7 +344,7 @@ export default function Expenses() {
       rangeDays,
       averagePerDay,
       byCategory,
-      recent: [...expenses].sort((a, b) => (parseLocalDate(b.date) || 0) - (parseLocalDate(a.date) || 0)).slice(0, 5),
+      recent: getRecentExpensesByDays(expenses, 3),
     };
   }, [expenses]);
 
