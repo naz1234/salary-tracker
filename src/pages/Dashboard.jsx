@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { cloudflare } from "@/api/cloudflareClient";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowRightLeft, Info, CalendarDays } from "lucide-react";
+import { Plus, ArrowRightLeft, Info, CalendarDays, Clock3 } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
 import SummaryCards from "../components/SummaryCards";
 import { filterExpensesForCycle, formatDisplayDate, parseDateOnly } from "@/utils/cycleFilters";
@@ -226,10 +226,18 @@ export default function Dashboard() {
 
               {/* Recent expenses */}
               {recentExpenses.length > 0 && (
-                <div>
-                  <div className="mb-3 flex items-center justify-between">
-                    <h3 className="text-[13px] font-medium text-slate-900">Recent Expenses</h3>
-                    <Link to="/expenses" className="text-[11px] font-medium text-indigo-600">View all</Link>
+                <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                        <Clock3 className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-[13px] font-semibold text-slate-900">Recent Expenses</h3>
+                        <p className="text-[10px] font-medium text-slate-400">Latest spending activity</p>
+                      </div>
+                    </div>
+                    <Link to="/expenses" className="text-[11px] font-medium text-emerald-600">View all</Link>
                   </div>
                   <div className="space-y-2">
                     {recentExpenses.map((e) => {
@@ -238,22 +246,18 @@ export default function Dashboard() {
                       return (
                         <div
                           key={e.id}
-                          className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} p-3 shadow-sm backdrop-blur`}
+                          className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`}
                         >
-                          <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
-                            <ExpenseIcon className="h-4 w-4" strokeWidth={2.1} />
+                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+                            <ExpenseIcon className="h-4 w-4" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[12px] font-medium text-slate-900">{e.description || e.category}</p>
-                            <div className="mt-1 flex min-w-0 items-center gap-1.5 text-[11px] text-slate-500">
-                              <span className="shrink-0">{fmt(e.date)}</span>
-                              <span className="text-slate-300">·</span>
-                              <span className={`truncate rounded-full px-2 py-0.5 text-[9px] font-medium ${tone.chipBg} ${tone.chipText}`}>
-                                {e.category || "Uncategorized"}
-                              </span>
-                            </div>
+                            <p className="truncate text-xs font-bold text-slate-900">{e.description || e.category}</p>
+                            <p className="truncate text-[10px] font-medium text-slate-500">
+                              {fmt(e.date)} · <span className={`font-bold ${tone.text}`}>{e.category || "Uncategorized"}</span>{e.payment_method ? ` · ${e.payment_method}` : ""}
+                            </p>
                           </div>
-                          <p className={`shrink-0 text-[12px] font-medium ${tone.text}`}>-⃁ {Number(e.amount || 0).toFixed(2)}</p>
+                          <p className={`shrink-0 text-xs font-extrabold ${tone.text}`}>-⃁ {Number(e.amount || 0).toFixed(2)}</p>
                         </div>
                       );
                     })}
