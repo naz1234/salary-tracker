@@ -32,6 +32,7 @@ import {
   CheckCircle2,
   ChevronDown,
   CircleAlert,
+  Clock3,
   Flame,
   HandCoins,
   Home,
@@ -981,26 +982,6 @@ export default function FixedSpending() {
                         <p className="truncate text-[13px] font-medium text-slate-900">
                           {i.name}
                         </p>
-                        {i.repeat_every_cycle && (
-                          <Repeat className="h-3 w-3 shrink-0 text-emerald-500" />
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => togglePaid(i)}
-                          disabled={isSavingPaid || arrangeMode || savingOrder}
-                          className={`shrink-0 rounded-md px-1.5 py-0.5 text-[9px] font-medium transition-colors disabled:cursor-default disabled:opacity-70 ${
-                            i.is_paid
-                              ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                              : "bg-orange-50 text-orange-700 hover:bg-orange-100"
-                          }`}
-                          aria-label={
-                            i.is_paid
-                              ? `Mark ${i.name} as due`
-                              : `Mark ${i.name} as paid`
-                          }
-                        >
-                          {i.is_paid ? "Paid" : "Due"}
-                        </button>
                       </div>
                       <p className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[11px] font-normal leading-4 text-slate-500">
                         <span
@@ -1016,7 +997,7 @@ export default function FixedSpending() {
                       </p>
                     </div>
 
-                    <div className="ml-1 flex w-[84px] shrink-0 flex-col items-end gap-0.5">
+                    <div className="ml-1 flex w-[90px] shrink-0 flex-col items-end gap-0.5">
                       <p
                         className={`text-right text-[12px] font-medium leading-tight tabular-nums ${amount}`}
                       >
@@ -1049,6 +1030,29 @@ export default function FixedSpending() {
                           </>
                         ) : (
                           <>
+                            <button
+                              type="button"
+                              onClick={() => togglePaid(i)}
+                              disabled={isSavingPaid || savingOrder}
+                              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors disabled:cursor-default disabled:opacity-70 ${
+                                i.is_paid
+                                  ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                                  : "bg-orange-50 text-orange-600 hover:bg-orange-100"
+                              }`}
+                              aria-label={
+                                i.is_paid
+                                  ? `Paid. Mark ${i.name} as due`
+                                  : `Due. Mark ${i.name} as paid`
+                              }
+                              title={i.is_paid ? "Paid" : "Due"}
+                            >
+                              {i.is_paid ? (
+                                <CheckCircle2 className="h-3.5 w-3.5" />
+                              ) : (
+                                <Clock3 className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+
                             <button
                               type="button"
                               className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-50"
