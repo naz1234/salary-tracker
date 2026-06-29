@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { cloudflare } from "@/api/cloudflareClient";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -31,7 +32,6 @@ import {
   Building2,
   CalendarDays,
   CheckCircle2,
-  ChevronDown,
   CircleAlert,
   Clock3,
   Flame,
@@ -126,17 +126,6 @@ const toAmount = (value) => {
 const formatMoney = (value) =>
   `⃁ ${toAmount(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-const formatCycleShortLabel = (cycle) => {
-  if (!cycle?.start_date) return "Select Cycle";
-
-  const date = new Date(`${String(cycle.start_date).split("T")[0]}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return formatDisplayDate(cycle.start_date);
-
-  return date.toLocaleDateString("en-MY", {
-    day: "numeric",
-    month: "short",
-  });
-};
 
 const CATEGORY_VISUALS = {
   Rent: {
@@ -754,50 +743,10 @@ export default function FixedSpending() {
         }}
       >
         <div className="space-y-3">
-          <header className="flex items-start justify-between gap-3">
-            <div className="min-w-0 space-y-2">
-              <h1 className="text-xl font-semibold tracking-[0.02em] text-slate-950">
-                Fixed Spending
-              </h1>
-              {cycle && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1.5 rounded-full text-xs font-normal text-slate-500 transition-colors hover:text-slate-700"
-                      aria-label="Select salary cycle"
-                    >
-                      <CalendarDays className="h-3.5 w-3.5" />
-                      <span>{formatDisplayDate(cycle.start_date)}</span>
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="max-h-72 w-64 overflow-y-auto rounded-2xl">
-                    {availableCycles.map((salaryCycle) => (
-                      <DropdownMenuItem
-                        key={salaryCycle.id}
-                        onClick={() => openSalaryCycle(salaryCycle.id)}
-                        className="flex items-center justify-between gap-3 py-2.5"
-                      >
-                        <span className="min-w-0">
-                          <span className="block truncate text-xs font-medium text-slate-800">
-                            {formatDisplayDate(salaryCycle.start_date)}
-                          </span>
-                          <span className="block truncate text-[10px] text-slate-500">
-                            {salaryCycle.end_date
-                              ? `Until ${formatDisplayDate(salaryCycle.end_date)}`
-                              : "Current active cycle"}
-                          </span>
-                        </span>
-                        {String(salaryCycle.id) === String(cycle.id) && (
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-                        )}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
+          <header className="flex items-center justify-between gap-3">
+            <h1 className="text-xl font-extrabold tracking-tight text-slate-950">
+              Fixed Spending
+            </h1>
             {cycle && (
               <div className="flex shrink-0 items-center gap-1.5">
                 {items.length > 1 && (
@@ -806,7 +755,7 @@ export default function FixedSpending() {
                     size="sm"
                     variant="outline"
                     disabled={savingOrder}
-                    className={`h-9 rounded-full px-3 text-xs font-medium shadow-sm ${
+                    className={`h-10 rounded-2xl px-3 text-[13px] font-bold shadow-sm ${
                       arrangeMode
                         ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
                         : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
@@ -824,7 +773,7 @@ export default function FixedSpending() {
                 <Button
                   size="sm"
                   disabled={arrangeMode || savingOrder}
-                  className="h-9 shrink-0 rounded-full bg-emerald-600 px-3 text-xs font-medium shadow-[0_10px_22px_rgba(5,150,105,0.22)] hover:bg-emerald-700 disabled:bg-slate-300 disabled:shadow-none"
+                  className="h-10 shrink-0 rounded-2xl bg-emerald-500 px-3.5 text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600 disabled:bg-slate-300 disabled:shadow-none"
                   onClick={() => {
                     setEditing(null);
                     setSheetOpen(true);
@@ -836,45 +785,77 @@ export default function FixedSpending() {
             )}
           </header>
 
+          {availableCycles.length > 0 && (
+            <section className="rounded-[1.25rem] bg-white p-3 shadow-sm ring-1 ring-slate-200/70">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                    <CalendarDays className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-semibold text-slate-900">Salary Cycle</p>
+                    <p className="text-[10px] font-medium text-slate-400">Choose which cycle to view</p>
+                  </div>
+                </div>
+                {cycle && (
+                  <Badge
+                    variant="secondary"
+                    className={`rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
+                      cycle.status === "active"
+                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                        : "bg-slate-100 text-slate-500 hover:bg-slate-100"
+                    }`}
+                  >
+                    {cycle.status === "active" ? "Active" : "Closed"}
+                  </Badge>
+                )}
+              </div>
+              <Select
+                value={cycle?.id ? String(cycle.id) : ""}
+                onValueChange={openSalaryCycle}
+                disabled={arrangeMode || savingOrder}
+              >
+                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 bg-emerald-50/60 px-3 text-[12px] font-semibold text-slate-800 shadow-sm focus:ring-emerald-300">
+                  <SelectValue placeholder="Select salary cycle" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableCycles.map((salaryCycle) => (
+                    <SelectItem key={salaryCycle.id} value={String(salaryCycle.id)} className="text-[12px]">
+                      {formatDisplayDate(salaryCycle.start_date)} — {salaryCycle.end_date ? formatDisplayDate(salaryCycle.end_date) : "Current"}
+                      {salaryCycle.status === "active" ? " · Active" : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </section>
+          )}
+
           {cycle && (
-            <section className="overflow-hidden rounded-[1.25rem] border border-slate-200/80 bg-white/90 p-3 shadow-[0_14px_36px_rgba(15,23,42,0.07)] backdrop-blur">
+            <section className="rounded-[1.5rem] bg-gradient-to-r from-emerald-50 via-teal-50 to-white p-4 shadow-sm ring-1 ring-emerald-100">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-50 shadow-inner">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-[0_10px_20px_rgba(16,185,129,0.24)]">
-                    <Wallet className="h-4 w-4" />
-                  </div>
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                  <Wallet className="h-7 w-7" />
                 </div>
-
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs font-medium text-slate-900">
-                      Total Fixed
-                    </p>
-                    {cycle.status !== "active" && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-amber-100 text-amber-700 hover:bg-amber-100"
-                      >
-                        Closed
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="mt-0.5 text-lg font-medium tracking-tight text-emerald-700">
-                    {formatMoney(total)}
-                  </p>
+                  <p className="text-[11px] font-bold text-slate-500">Total Fixed Spending</p>
+                  <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950">{formatMoney(total)}</h2>
                 </div>
-
-                <div className="shrink-0 space-y-1.5 text-[11px] font-medium">
-                  <div className="grid grid-cols-[1rem_2.5rem_auto] items-center gap-x-1.5 text-emerald-700">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 self-center" />
-                    <span className="text-slate-500">Paid</span>
-                    <span className="text-right font-semibold tabular-nums text-emerald-700">{formatMoney(paidTotal)}</span>
-                  </div>
-                  <div className="grid grid-cols-[1rem_2.5rem_auto] items-center gap-x-1.5 text-orange-600">
-                    <Clock3 className="h-4 w-4 shrink-0 self-center" />
-                    <span className="text-slate-500">Due</span>
-                    <span className="text-right font-semibold tabular-nums text-orange-600">{formatMoney(dueTotal)}</span>
-                  </div>
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-extrabold text-emerald-700">
+                  {items.length} item{items.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 px-3 py-2 ring-1 ring-emerald-100">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Paid
+                  </span>
+                  <span className="text-[11px] font-extrabold tabular-nums text-emerald-700">{formatMoney(paidTotal)}</span>
+                </div>
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 px-3 py-2 ring-1 ring-orange-100">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+                    <Clock3 className="h-4 w-4 text-orange-600" /> Due
+                  </span>
+                  <span className="text-[11px] font-extrabold tabular-nums text-orange-600">{formatMoney(dueTotal)}</span>
                 </div>
               </div>
             </section>
@@ -888,73 +869,31 @@ export default function FixedSpending() {
           )}
 
           {cycle && (
-            <div className="flex items-center gap-1.5">
-              <div className="grid min-w-0 flex-1 grid-cols-3 gap-1.5">
-                {filters.map((filter) => {
-                  const active = statusFilter === filter.key;
-                  return (
-                    <button
-                      key={filter.key}
-                      type="button"
-                      onClick={() => setStatusFilter(filter.key)}
-                      disabled={arrangeMode}
-                      aria-pressed={active}
-                      className={`h-9 rounded-xl border px-1.5 text-[11px] font-medium transition-all disabled:opacity-60 ${
-                        active
-                          ? "border-emerald-100 bg-emerald-50 text-emerald-700 shadow-sm"
-                          : "border-slate-100 bg-white/80 text-slate-500 shadow-sm hover:bg-slate-50"
-                      }`}
-                    >
-                      <span className="inline-flex items-center justify-center gap-1.5">
-                        {filter.key !== "all" && (
-                          <span
-                            className={`h-2 w-2 rounded-full ${filter.dot}`}
-                          />
-                        )}
-                        {filter.label} ({filter.count})
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+            <div className="grid grid-cols-3 gap-1.5">
+              {filters.map((filter) => {
+                const active = statusFilter === filter.key;
+                return (
                   <button
+                    key={filter.key}
                     type="button"
+                    onClick={() => setStatusFilter(filter.key)}
                     disabled={arrangeMode}
-                    className="fixed-cycle-selector-glow h-9 shrink-0 rounded-xl border border-emerald-300 bg-emerald-50/90 px-2 text-[11px] font-semibold text-emerald-700 shadow-sm transition-transform active:scale-[0.98] disabled:opacity-60"
-                    aria-label="Choose salary cycle"
+                    aria-pressed={active}
+                    className={`h-9 rounded-xl border px-1.5 text-[11px] font-medium transition-all disabled:opacity-60 ${
+                      active
+                        ? "border-emerald-100 bg-emerald-50 text-emerald-700 shadow-sm"
+                        : "border-slate-100 bg-white/80 text-slate-500 shadow-sm hover:bg-slate-50"
+                    }`}
                   >
-                    <span className="inline-flex items-center gap-1">
-                      {formatCycleShortLabel(cycle)}
-                      <ChevronDown className="h-3 w-3" />
+                    <span className="inline-flex items-center justify-center gap-1.5">
+                      {filter.key !== "all" && (
+                        <span className={`h-2 w-2 rounded-full ${filter.dot}`} />
+                      )}
+                      {filter.label} ({filter.count})
                     </span>
                   </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="max-h-72 w-64 overflow-y-auto rounded-2xl">
-                  {availableCycles.map((salaryCycle) => (
-                    <DropdownMenuItem
-                      key={salaryCycle.id}
-                      onClick={() => openSalaryCycle(salaryCycle.id)}
-                      className="flex items-center justify-between gap-3 py-2.5"
-                    >
-                      <span className="min-w-0">
-                        <span className="block truncate text-xs font-medium text-slate-800">
-                          {formatDisplayDate(salaryCycle.start_date)}
-                        </span>
-                        <span className="block truncate text-[10px] text-slate-500">
-                          {salaryCycle.end_date
-                            ? `Until ${formatDisplayDate(salaryCycle.end_date)}`
-                            : "Current active cycle"}
-                        </span>
-                      </span>
-                      {String(salaryCycle.id) === String(cycle.id) && (
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                );
+              })}
             </div>
           )}
 
