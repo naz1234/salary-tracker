@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { CalendarDays, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { formatDisplayDate, parseDateOnly, toDateOnly } from "@/utils/cycleFilters";
+import { getExpenseCategoryPaletteTone } from "@/utils/expenseCategoryColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
-
 
 const DATE_GROUP_TONES = [
   {
@@ -28,6 +28,13 @@ function fmtCurrency(value = 0) {
   })}`;
 }
 
+function normalizeCategory(category = "") {
+  return String(category || "Uncategorized")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
 function groupExpensesByDate(expenses = []) {
   const map = new Map();
 
@@ -47,6 +54,30 @@ function groupExpensesByDate(expenses = []) {
     });
 
   return Array.from(map.values());
+}
+
+function buildCategoryToneMap(expenses = []) {
+  const categoryTotals = new Map();
+
+  expenses.forEach((expense) => {
+    const key = normalizeCategory(expense.category);
+    const current = categoryTotals.get(key) || {
+      key,
+      label: expense.category || "Uncategorized",
+      total: 0,
+    };
+    current.total += Number(expense.amount || 0);
+    categoryTotals.set(key, current);
+  });
+
+  const orderedCategories = Array.from(categoryTotals.values()).sort((a, b) => b.total - a.total);
+  const toneMap = new Map();
+
+  orderedCategories.forEach((item, index) => {
+    toneMap.set(item.key, getExpenseCategoryPaletteTone(index));
+  });
+
+  return toneMap;
 }
 
 function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false }) {
@@ -88,6 +119,7 @@ export default function GroupedExpenseSections({
   showActions = false,
 }) {
   const groupedExpenses = useMemo(() => groupExpensesByDate(expenses), [expenses]);
+  const categoryToneMap = useMemo(() => buildCategoryToneMap(expenses), [expenses]);
   const [expandedGroupKey, setExpandedGroupKey] = useState(null);
 
   const toggleGroup = (key) => {
@@ -98,42 +130,45 @@ export default function GroupedExpenseSections({
     <div className="space-y-2.5">
       {groupedExpenses.map((group, groupIndex) => {
         const isExpanded = expandedGroupKey === group.key;
-        const tone = DATE_GROUP_TONES[groupIndex % DATE_GROUP_TONES.length];
+        const headerTone = DATE_GROUP_TONES[groupIndex % DATE_GROUP_TONES.length];
         return (
-          <div key={group.key} className={`overflow-hidden rounded-2xl border ${tone.border} bg-white shadow-sm`}>
+          <div key={group.key} className={`overflow-hidden rounded-2xl border ${headerTone.border} bg-white shadow-sm`}>
             <button
               type="button"
-              className={`flex w-full items-center gap-3 px-3 py-2.5 text-left ${tone.rowBg}`}
+              className={`flex w-full items-center gap-3 px-3 py-2.5 text-left ${headerTone.rowBg}`}
               onClick={() => toggleGroup(group.key)}
               aria-expanded={isExpanded}
             >
-              <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+              <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${headerTone.iconBg} ${headerTone.text} ring-1 ${headerTone.ring}`}>
                 <CalendarDays className="h-4 w-4" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className={`truncate text-[13px] font-semibold ${tone.text}`}>{formatDisplayDate(group.date)}</p>
+                <p className={`truncate text-[13px] font-semibold ${headerTone.text}`}>{formatDisplayDate(group.date)}</p>
                 <p className="text-[10px] font-medium text-slate-400">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
               </div>
               <div className="text-right">
                 <p className="text-[10px] font-medium text-slate-500">Total spending</p>
-                <p className={`text-[13px] font-extrabold ${tone.text}`}>-{fmtCurrency(group.total)}</p>
+                <p className={`text-[13px] font-extrabold ${headerTone.text}`}>-{fmtCurrency(group.total)}</p>
               </div>
-              <ChevronDown className={`h-4 w-4 shrink-0 ${tone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-4 w-4 shrink-0 ${headerTone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
             </button>
 
             {isExpanded && (
-              <div className={`border-t ${tone.border} bg-white px-2.5 pb-2.5 pt-2`}>
+              <div className={`border-t ${headerTone.border} bg-white px-2.5 pb-2.5 pt-2`}>
                 <div className="space-y-2">
-                  {group.items.map((expense) => (
-                    <ExpenseListItem
-                      key={expense.id}
-                      expense={expense}
-                      tone={tone}
-                      onEdit={onEdit}
-                      onDelete={onDelete}
-                      showActions={showActions}
-                                          />
-                  ))}
+                  {group.items.map((expense) => {
+                    const expenseTone = categoryToneMap.get(normalizeCategory(expense.category)) || getExpenseCategoryPaletteTone(0);
+                    return (
+                      <ExpenseListItem
+                        key={expense.id}
+                        expense={expense}
+                        tone={expenseTone}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        showActions={showActions}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             )}
