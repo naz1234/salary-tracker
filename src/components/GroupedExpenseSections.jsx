@@ -78,10 +78,10 @@ export default function GroupedExpenseSections({
   const groupedExpenses = groupExpensesByDate(expenses);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {groupedExpenses.map((group) => (
-        <div key={group.key} className="space-y-2.5">
-          <div className="flex items-center justify-between gap-3 rounded-[1.15rem] border border-slate-200/80 bg-slate-50/80 px-3 py-2.5 shadow-sm">
+        <div key={group.key} className="rounded-[1.35rem] border border-slate-200/80 bg-white p-3 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3 rounded-[1rem] border border-slate-100 bg-slate-50/70 px-3 py-2.5">
             <div className="flex min-w-0 items-center gap-2.5">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
                 <CalendarDays className="h-4 w-4" />

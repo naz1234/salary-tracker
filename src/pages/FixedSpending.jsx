@@ -862,20 +862,18 @@ export default function FixedSpending() {
                   <p className="mt-0.5 text-lg font-medium tracking-tight text-emerald-700">
                     {formatMoney(total)}
                   </p>
-                  <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-slate-500">
-                    Track commitments and mark them paid so you never miss one
-                    due.
-                  </p>
                 </div>
 
-                <div className="w-[96px] shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50/80 text-[10px] font-medium">
-                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 bg-emerald-50 px-2 py-1.5 text-emerald-700">
-                    <span>Paid:</span>
-                    <span>{formatMoney(paidTotal)}</span>
+                <div className="shrink-0 space-y-1 text-right text-[10px] font-medium">
+                  <div className="flex items-center justify-end gap-1.5 text-emerald-700">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                    <span className="text-slate-500">Paid</span>
+                    <span className="font-semibold text-emerald-700">{formatMoney(paidTotal)}</span>
                   </div>
-                  <div className="flex items-center justify-between gap-2 bg-orange-50 px-2 py-1.5 text-orange-600">
-                    <span>Due:</span>
-                    <span>{formatMoney(dueTotal)}</span>
+                  <div className="flex items-center justify-end gap-1.5 text-orange-600">
+                    <Clock3 className="h-3.5 w-3.5 shrink-0" />
+                    <span className="text-slate-500">Due</span>
+                    <span className="font-semibold text-orange-600">{formatMoney(dueTotal)}</span>
                   </div>
                 </div>
               </div>
@@ -924,7 +922,7 @@ export default function FixedSpending() {
                   <button
                     type="button"
                     disabled={arrangeMode}
-                    className="h-9 shrink-0 rounded-xl border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 shadow-sm disabled:opacity-60"
+                    className="fixed-cycle-selector-glow h-9 shrink-0 rounded-xl border border-emerald-300 bg-emerald-50/90 px-2 text-[11px] font-semibold text-emerald-700 shadow-sm transition-transform active:scale-[0.98] disabled:opacity-60"
                     aria-label="Choose salary cycle"
                   >
                     <span className="inline-flex items-center gap-1">
