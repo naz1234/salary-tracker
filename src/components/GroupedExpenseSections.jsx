@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { CalendarDays, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { formatDisplayDate, parseDateOnly, toDateOnly } from "@/utils/cycleFilters";
-import { getExpenseDateTone } from "@/utils/expenseDateColors";
+import { EXPENSE_DATE_TONES } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
 
 function fmtCurrency(value = 0) {
@@ -32,9 +32,8 @@ function groupExpensesByDate(expenses = []) {
   return Array.from(map.values());
 }
 
-function ExpenseListItem({ expense, onEdit, onDelete, showActions = false }) {
+function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false }) {
   const Icon = getExpenseIcon(expense.category, expense.description);
-  const tone = getExpenseDateTone(expense.date);
 
   return (
     <div className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`}>
@@ -80,37 +79,39 @@ export default function GroupedExpenseSections({
 
   return (
     <div className="space-y-2.5">
-      {groupedExpenses.map((group) => {
+      {groupedExpenses.map((group, groupIndex) => {
         const isExpanded = expandedGroupKey === group.key;
+        const tone = EXPENSE_DATE_TONES[groupIndex % EXPENSE_DATE_TONES.length];
         return (
-          <div key={group.key} className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+          <div key={group.key} className={`overflow-hidden rounded-2xl border ${tone.border} bg-white shadow-sm`}>
             <button
               type="button"
-              className="flex w-full items-center gap-3 px-3 py-2.5 text-left"
+              className={`flex w-full items-center gap-3 px-3 py-2.5 text-left ${tone.rowBg}`}
               onClick={() => toggleGroup(group.key)}
               aria-expanded={isExpanded}
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 ring-1 ring-slate-200">
+              <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
                 <CalendarDays className="h-4 w-4" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-semibold text-slate-900">{formatDisplayDate(group.date)}</p>
+                <p className={`truncate text-[13px] font-semibold ${tone.text}`}>{formatDisplayDate(group.date)}</p>
                 <p className="text-[10px] font-medium text-slate-400">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
               </div>
               <div className="text-right">
                 <p className="text-[10px] font-medium text-slate-500">Total spending</p>
-                <p className="text-[13px] font-extrabold text-emerald-600">-{fmtCurrency(group.total)}</p>
+                <p className={`text-[13px] font-extrabold ${tone.text}`}>-{fmtCurrency(group.total)}</p>
               </div>
-              <ChevronDown className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-4 w-4 shrink-0 ${tone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
             </button>
 
             {isExpanded && (
-              <div className="border-t border-slate-100 px-2.5 pb-2.5 pt-2">
+              <div className={`border-t ${tone.border} bg-white px-2.5 pb-2.5 pt-2`}>
                 <div className="space-y-2">
                   {group.items.map((expense) => (
                     <ExpenseListItem
                       key={expense.id}
                       expense={expense}
+                      tone={tone}
                       onEdit={onEdit}
                       onDelete={onDelete}
                       showActions={showActions}
