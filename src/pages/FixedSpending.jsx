@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { cloudflare } from "@/api/cloudflareClient";
 import { Button } from "@/components/ui/button";
 import {
@@ -124,6 +125,18 @@ const toAmount = (value) => {
 
 const formatMoney = (value) =>
   `⃁ ${toAmount(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+const formatCycleShortLabel = (cycle) => {
+  if (!cycle?.start_date) return "Select Cycle";
+
+  const date = new Date(`${String(cycle.start_date).split("T")[0]}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return formatDisplayDate(cycle.start_date);
+
+  return date.toLocaleDateString("en-MY", {
+    day: "numeric",
+    month: "short",
+  });
+};
 
 const CATEGORY_VISUALS = {
   Rent: {
@@ -408,7 +421,9 @@ const syncMissingPaidMarkers = async (fixedItems = []) => {
 };
 
 export default function FixedSpending() {
+  const navigate = useNavigate();
   const [cycle, setCycle] = useState(null);
+  const [availableCycles, setAvailableCycles] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -428,7 +443,7 @@ export default function FixedSpending() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [selectedCycleId]);
 
   useEffect(() => {
     if (params.get("add") === "1" && cycle) {
@@ -474,18 +489,22 @@ export default function FixedSpending() {
     }
 
     try {
+      const cycles = await cloudflare.entities.SalaryCycle.list("-start_date", 100);
+      setAvailableCycles(cycles);
+
       let selectedCycle = null;
 
       if (selectedCycleId) {
         selectedCycle =
-          await cloudflare.entities.SalaryCycle.get(selectedCycleId);
+          cycles.find((salaryCycle) =>
+            String(salaryCycle.id) === String(selectedCycleId),
+          ) ||
+          (await cloudflare.entities.SalaryCycle.get(selectedCycleId));
       } else {
-        const cycles = await cloudflare.entities.SalaryCycle.filter(
-          { status: "active" },
-          "-created_date",
-          1,
-        );
-        selectedCycle = cycles[0] || null;
+        selectedCycle =
+          cycles.find((salaryCycle) => salaryCycle.status === "active") ||
+          cycles[0] ||
+          null;
       }
 
       if (selectedCycle) {
@@ -690,6 +709,14 @@ export default function FixedSpending() {
     }
   };
 
+  const openSalaryCycle = (salaryCycleId) => {
+    if (!salaryCycleId || String(salaryCycleId) === String(cycle?.id)) return;
+
+    setStatusFilter("all");
+    setArrangeMode(false);
+    navigate(`/fixed?cycleId=${encodeURIComponent(salaryCycleId)}`);
+  };
+
   const total = items.reduce((s, i) => s + toAmount(i.amount), 0);
   const paidItems = items.filter((i) => i.is_paid);
   const dueItems = items.filter((i) => !i.is_paid);
@@ -733,14 +760,42 @@ export default function FixedSpending() {
                 Fixed Spending
               </h1>
               {cycle && (
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1.5 rounded-full text-xs font-normal text-slate-500"
-                >
-                  <CalendarDays className="h-3.5 w-3.5" />
-                  <span>{formatDisplayDate(cycle.start_date)}</span>
-                  <ChevronDown className="h-3.5 w-3.5" />
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1.5 rounded-full text-xs font-normal text-slate-500 transition-colors hover:text-slate-700"
+                      aria-label="Select salary cycle"
+                    >
+                      <CalendarDays className="h-3.5 w-3.5" />
+                      <span>{formatDisplayDate(cycle.start_date)}</span>
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="max-h-72 w-64 overflow-y-auto rounded-2xl">
+                    {availableCycles.map((salaryCycle) => (
+                      <DropdownMenuItem
+                        key={salaryCycle.id}
+                        onClick={() => openSalaryCycle(salaryCycle.id)}
+                        className="flex items-center justify-between gap-3 py-2.5"
+                      >
+                        <span className="min-w-0">
+                          <span className="block truncate text-xs font-medium text-slate-800">
+                            {formatDisplayDate(salaryCycle.start_date)}
+                          </span>
+                          <span className="block truncate text-[10px] text-slate-500">
+                            {salaryCycle.end_date
+                              ? `Until ${formatDisplayDate(salaryCycle.end_date)}`
+                              : "Current active cycle"}
+                          </span>
+                        </span>
+                        {String(salaryCycle.id) === String(cycle.id) && (
+                          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </div>
             {cycle && (
@@ -864,15 +919,44 @@ export default function FixedSpending() {
                   );
                 })}
               </div>
-              <button
-                type="button"
-                disabled={arrangeMode}
-                className="h-9 shrink-0 rounded-xl border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 shadow-sm disabled:opacity-60"
-              >
-                <span className="inline-flex items-center gap-1">
-                  This Month <ChevronDown className="h-3 w-3" />
-                </span>
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    disabled={arrangeMode}
+                    className="h-9 shrink-0 rounded-xl border border-slate-200 bg-white px-2 text-[11px] font-medium text-slate-600 shadow-sm disabled:opacity-60"
+                    aria-label="Choose salary cycle"
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      {formatCycleShortLabel(cycle)}
+                      <ChevronDown className="h-3 w-3" />
+                    </span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="max-h-72 w-64 overflow-y-auto rounded-2xl">
+                  {availableCycles.map((salaryCycle) => (
+                    <DropdownMenuItem
+                      key={salaryCycle.id}
+                      onClick={() => openSalaryCycle(salaryCycle.id)}
+                      className="flex items-center justify-between gap-3 py-2.5"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-xs font-medium text-slate-800">
+                          {formatDisplayDate(salaryCycle.start_date)}
+                        </span>
+                        <span className="block truncate text-[10px] text-slate-500">
+                          {salaryCycle.end_date
+                            ? `Until ${formatDisplayDate(salaryCycle.end_date)}`
+                            : "Current active cycle"}
+                        </span>
+                      </span>
+                      {String(salaryCycle.id) === String(cycle.id) && (
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
 
