@@ -6,8 +6,7 @@ import { Plus, ArrowRightLeft, Info, CalendarDays, Clock3 } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
 import SummaryCards from "../components/SummaryCards";
 import { filterExpensesForCycle, formatDisplayDate, parseDateOnly } from "@/utils/cycleFilters";
-import { getExpenseDateTone } from "@/utils/expenseDateColors";
-import { getExpenseIcon } from "@/utils/expenseIcons";
+import GroupedExpenseSections from "@/components/GroupedExpenseSections";
 
 const DASHBOARD_CACHE_KEY = "salary-cycle-dashboard-cache-v1";
 
@@ -233,34 +232,12 @@ export default function Dashboard() {
                         <Clock3 className="h-4 w-4" />
                       </div>
                       <div>
-                        <h3 className="text-[13px] font-semibold text-slate-900">Recent Expenses</h3>
+                        <h3 className="text-[13px] font-semibold text-slate-900">Recent Transactions</h3>
                       </div>
                     </div>
                     <Link to="/expenses" className="text-[11px] font-medium text-emerald-600">View all</Link>
                   </div>
-                  <div className="space-y-2">
-                    {recentExpenses.map((e) => {
-                      const tone = getExpenseDateTone(e.date);
-                      const ExpenseIcon = getExpenseIcon(e.category, e.description);
-                      return (
-                        <div
-                          key={e.id}
-                          className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`}
-                        >
-                          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
-                            <ExpenseIcon className="h-4 w-4" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-xs font-bold text-slate-900">{e.description || e.category}</p>
-                            <p className="truncate text-[10px] font-medium text-slate-500">
-                              {fmt(e.date)} · <span className={`font-bold ${tone.text}`}>{e.category || "Uncategorized"}</span>{e.payment_method ? ` · ${e.payment_method}` : ""}
-                            </p>
-                          </div>
-                          <p className={`shrink-0 text-xs font-extrabold ${tone.text}`}>-⃁ {Number(e.amount || 0).toFixed(2)}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <GroupedExpenseSections expenses={recentExpenses} compact />
                 </div>
               )}
             </>

@@ -4,6 +4,7 @@ import { filterExpensesForCycle, formatDisplayDate, isDateInSalaryCycle } from "
 import { getExpenseCategoryHex, getExpenseCategoryTone } from "@/utils/expenseCategoryColors";
 import { getExpenseDateTone } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
+import GroupedExpenseSections from "@/components/GroupedExpenseSections";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -12,11 +13,9 @@ import {
   CalendarDays,
   ChevronDown,
   Clock3,
-  Pencil,
   PieChart,
   Plus,
   ReceiptText,
-  Trash2,
   TrendingDown,
   WalletCards,
 } from "lucide-react";
@@ -212,62 +211,6 @@ function CategoryBreakdown({ data, total, compact = false }) {
           )}
         </>
       )}
-    </div>
-  );
-}
-
-function ExpenseRow({ expense, onEdit, onDelete, showActions = true, softText = false, compact = false }) {
-  const Icon = getExpenseIcon(expense.category, expense.description);
-  const tone = getExpenseDateTone(expense.date);
-  const titleClass = compact
-    ? "truncate text-xs font-bold text-slate-900"
-    : softText
-      ? "truncate text-[13px] font-medium text-slate-900"
-      : "truncate text-sm font-extrabold text-slate-950";
-  const metaClass = compact
-    ? "truncate text-[10px] font-medium text-slate-500"
-    : softText
-      ? "truncate text-[10px] font-normal text-slate-500"
-      : "truncate text-[11px] font-medium text-slate-500";
-  const categoryClass = compact
-    ? `font-bold ${tone.text}`
-    : softText
-      ? `font-medium ${tone.text}`
-      : `font-extrabold ${tone.text}`;
-  const amountClass = compact
-    ? `shrink-0 text-xs font-extrabold ${tone.text}`
-    : softText
-      ? `shrink-0 text-[13px] font-medium ${tone.text}`
-      : `shrink-0 text-sm font-extrabold ${tone.text}`;
-  const rowClass = compact
-    ? `flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`
-    : `flex items-center gap-3 rounded-[1.25rem] border border-l-4 ${tone.border} ${tone.rowBg} p-3 shadow-sm`;
-  const iconWrapClass = compact
-    ? `flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`
-    : `flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`;
-
-  return (
-    <div className={rowClass}>
-      <div className={iconWrapClass}>
-        <Icon className={compact ? "h-4 w-4" : "h-5 w-5"} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className={titleClass}>{expense.description || expense.category}</p>
-        <p className={metaClass}>
-          {fmtDate(expense.date, true)} · <span className={categoryClass}>{expense.category || "Uncategorized"}</span>{expense.payment_method ? ` · ${expense.payment_method}` : ""}
-        </p>
-      </div>
-      <p className={amountClass}>-{fmtCurrency(expense.amount)}</p>
-      {showActions ? (
-        <div className="flex shrink-0 gap-1">
-          <button type="button" className="rounded-xl p-2 hover:bg-slate-100" onClick={() => onEdit(expense)} aria-label="Edit expense">
-            <Pencil className="h-3.5 w-3.5 text-slate-500" />
-          </button>
-          <button type="button" className="rounded-xl p-2 hover:bg-rose-50" onClick={() => onDelete(expense.id)} aria-label="Delete expense">
-            <Trash2 className="h-3.5 w-3.5 text-rose-500" />
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -501,11 +444,7 @@ export default function Expenses() {
                       </div>
                       <button type="button" className="text-[11px] font-medium text-emerald-600" onClick={() => setActiveView("transactions")}>View all</button>
                     </div>
-                    <div className="space-y-2">
-                      {overview.recent.map((expense) => (
-                        <ExpenseRow key={expense.id} expense={expense} onEdit={handleEdit} onDelete={setDeleteId} showActions={false} softText compact />
-                      ))}
-                    </div>
+                    <GroupedExpenseSections expenses={overview.recent} compact />
                   </div>
 
                   <div className="flex items-center justify-between rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
@@ -521,9 +460,7 @@ export default function Expenses() {
                     <p className="text-[13px] font-medium text-slate-900">All Daily Expenses</p>
                     <p className="text-[11px] font-normal text-slate-500">Edit or delete any transaction here.</p>
                   </div>
-                  {expenses.map((expense) => (
-                    <ExpenseRow key={expense.id} expense={expense} onEdit={handleEdit} onDelete={setDeleteId} softText />
-                  ))}
+                  <GroupedExpenseSections expenses={expenses} onEdit={handleEdit} onDelete={setDeleteId} showActions />
                 </div>
               )}
 
