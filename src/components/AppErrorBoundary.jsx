@@ -24,7 +24,7 @@ export default class AppErrorBoundary extends React.Component {
     return (
       <div className="min-h-dvh bg-background px-4 py-10 text-center text-foreground">
         <div className="mx-auto max-w-sm rounded-2xl border border-border bg-card p-5 shadow-sm">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-xl font-bold text-red-600">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950 text-xl font-bold text-red-600 dark:text-red-400">
             !
           </div>
           <h1 className="text-lg font-semibold">App cannot load</h1>

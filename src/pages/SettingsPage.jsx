@@ -59,9 +59,9 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="rounded-[24px] border border-rose-200/60 bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 p-4 shadow-sm dark:border-rose-500/30 dark:from-rose-950/40 dark:via-orange-950/30 dark:to-amber-950/30">
+        <div className="rounded-[24px] border border-rose-200/60 dark:border-rose-800/60 bg-gradient-to-br from-rose-50 dark:from-rose-950 via-orange-50 dark:via-orange-950 to-amber-50 dark:to-amber-950 p-4 shadow-sm dark:border-rose-500/30 dark:from-rose-950/40 dark:via-orange-950/30 dark:to-amber-950/30">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 text-rose-500 shadow-sm dark:bg-white/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 dark:bg-slate-900/80 text-rose-500 shadow-sm dark:bg-white/10">
               <Heart className="h-5 w-5 fill-current" />
             </div>
             <div>
