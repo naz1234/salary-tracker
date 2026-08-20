@@ -1,0 +1,46 @@
+services:
+  install:
+    image: node:22
+    working_dir: /app
+    command: sh -c "npm install"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+  api:
+    image: node:22
+    working_dir: /app
+    command: >
+      sh -c "mkdir -p dist &&
+      npx wrangler@4 pages dev dist --ip 0.0.0.0 --port 8788 --persist-to /data/wrangler"
+    environment:
+      - CI=1
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - wrangler_state:/data
+    ports:
+      - "8788:8788"
+    depends_on:
+      install:
+        condition: service_completed_successfully
+
+  web:
+    image: node:22
+    working_dir: /app
+    command: sh -c "npm run dev -- --host 0.0.0.0 --port 3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - API_PROXY_TARGET=http://api:8788
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      install:
+        condition: service_completed_successfully
+
+volumes:
+  node_modules:
+  wrangler_state:
