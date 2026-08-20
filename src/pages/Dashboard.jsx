@@ -121,7 +121,7 @@ export default function Dashboard() {
     return (
       <MobileLayout>
         <div className="space-y-4 py-10 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400">
             !
           </div>
           <div>
@@ -139,19 +139,19 @@ export default function Dashboard() {
   return (
     <MobileLayout>
       <div className="-mx-4 -mb-6 -mt-4 min-h-[calc(100dvh-74px)] overflow-hidden bg-[radial-gradient(circle_at_top_left,_#eef2ff_0%,_#f8fafc_43%,_#ffffff_100%)] px-4 pb-8 pt-5">
-        <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-violet-200/30 blur-3xl" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-violet-200/30 dark:bg-violet-800/30 blur-3xl" />
 
         <div className="relative space-y-4">
           {/* Header */}
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-[24px] font-semibold leading-tight tracking-tight text-slate-900">Salary Cycle</h1>
-              <p className="mt-0.5 text-[13px] font-normal tracking-wide text-slate-500">Spending Tracker</p>
+              <h1 className="text-[24px] font-semibold leading-tight tracking-tight text-slate-900 dark:text-slate-100">Salary Cycle</h1>
+              <p className="mt-0.5 text-[13px] font-normal tracking-wide text-slate-500 dark:text-slate-400">Spending Tracker</p>
             </div>
             <button
               type="button"
               onClick={() => navigate("/cycles")}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-200 bg-white/75 text-violet-600 shadow-[0_8px_24px_rgba(124,58,237,0.10)] backdrop-blur transition active:scale-95"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-200 dark:border-violet-800 bg-white/75 dark:bg-slate-900/75 text-violet-600 dark:text-violet-400 shadow-[0_8px_24px_rgba(124,58,237,0.10)] backdrop-blur transition active:scale-95"
               aria-label="Open salary cycles"
             >
               <CalendarDays className="h-4 w-4" />
@@ -159,19 +159,19 @@ export default function Dashboard() {
           </div>
 
           {(fromCache || syncNotice) && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50/90 px-3 py-2 text-[12px] leading-5 text-amber-800 shadow-sm">
+            <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50/90 dark:bg-amber-950/90 px-3 py-2 text-[12px] leading-5 text-amber-800 dark:text-amber-200 shadow-sm">
               {syncNotice || "Showing saved dashboard while Cloudflare refreshes in the background."}
             </div>
           )}
 
           {!cycle ? (
-            <div className="rounded-[1.35rem] border border-white/80 bg-white/85 p-5 text-center shadow-[0_14px_36px_rgba(15,23,42,0.07)] backdrop-blur">
+            <div className="rounded-[1.35rem] border border-white/80 dark:border-slate-700/80 bg-white/85 dark:bg-slate-900/85 p-5 text-center shadow-[0_14px_36px_rgba(15,23,42,0.07)] backdrop-blur">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 text-white shadow-[0_10px_24px_rgba(99,102,241,0.22)]">
                 <ArrowRightLeft className="h-6 w-6" />
               </div>
               <div className="mt-4">
-                <h2 className="text-base font-semibold text-slate-900">No Active Cycle</h2>
-                <p className="mx-auto mt-1 max-w-xs text-[13px] leading-5 text-slate-500">
+                <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">No Active Cycle</h2>
+                <p className="mx-auto mt-1 max-w-xs text-[13px] leading-5 text-slate-500 dark:text-slate-400">
                   Start by creating your first salary cycle. This tracker follows your salary date, not calendar month.
                 </p>
               </div>
@@ -185,12 +185,12 @@ export default function Dashboard() {
           ) : (
             <>
               {/* Cycle info */}
-              <div className="flex items-start gap-2.5 rounded-[1.2rem] border border-indigo-100 bg-white/70 p-3 shadow-[0_10px_26px_rgba(59,130,246,0.07)] backdrop-blur">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+              <div className="flex items-start gap-2.5 rounded-[1.2rem] border border-indigo-100 dark:border-indigo-900 bg-white/70 dark:bg-slate-900/70 p-3 shadow-[0_10px_26px_rgba(59,130,246,0.07)] backdrop-blur">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 ring-1 ring-blue-100 dark:ring-blue-900">
                   <Info className="h-4 w-4" />
                 </div>
-                <p className="text-[12px] leading-5 text-slate-600">
-                  Current cycle started <strong className="font-medium text-indigo-600">{fmt(cycle.start_date)}</strong>.
+                <p className="text-[12px] leading-5 text-slate-600 dark:text-slate-300">
+                  Current cycle started <strong className="font-medium text-indigo-600 dark:text-indigo-400">{fmt(cycle.start_date)}</strong>.
                   {cycle.end_date ? ` Ends ${fmt(cycle.end_date)}.` : " End date not set — cycle stays active until next salary."}
                 </p>
               </div>
@@ -201,14 +201,14 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 gap-2.5">
                 <Button
                   variant="outline"
-                  className="h-11 rounded-2xl border-violet-200 bg-white/75 text-[13px] font-medium text-indigo-600 shadow-sm backdrop-blur hover:bg-violet-50 hover:text-indigo-700"
+                  className="h-11 rounded-2xl border-violet-200 dark:border-violet-800 bg-white/75 dark:bg-slate-900/75 text-[13px] font-medium text-indigo-600 dark:text-indigo-400 shadow-sm backdrop-blur hover:bg-violet-50 dark:hover:bg-violet-950 hover:text-indigo-700 dark:hover:text-indigo-300"
                   onClick={() => navigate("/expenses?add=1")}
                 >
                   <Plus className="h-4 w-4" /> Add Expense
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-11 rounded-2xl border-violet-200 bg-white/75 text-[13px] font-medium text-indigo-600 shadow-sm backdrop-blur hover:bg-violet-50 hover:text-indigo-700"
+                  className="h-11 rounded-2xl border-violet-200 dark:border-violet-800 bg-white/75 dark:bg-slate-900/75 text-[13px] font-medium text-indigo-600 dark:text-indigo-400 shadow-sm backdrop-blur hover:bg-violet-50 dark:hover:bg-violet-950 hover:text-indigo-700 dark:hover:text-indigo-300"
                   onClick={() => navigate("/fixed?add=1")}
                 >
                   <Plus className="h-4 w-4" /> Fixed Spending
@@ -223,17 +223,17 @@ export default function Dashboard() {
 
               {/* Recent expenses */}
               {recentExpenses.length > 0 && (
-                <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
+                <div className="rounded-[1.5rem] bg-white dark:bg-slate-900 p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                         <Clock3 className="h-4 w-4" />
                       </div>
                       <div>
-                        <h3 className="text-[13px] font-semibold text-slate-900">Recent Transactions</h3>
+                        <h3 className="text-[13px] font-semibold text-slate-900 dark:text-slate-100">Recent Transactions</h3>
                       </div>
                     </div>
-                    <Link to="/expenses" className="text-[11px] font-medium text-emerald-600">View all</Link>
+                    <Link to="/expenses" className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">View all</Link>
                   </div>
                   <GroupedExpenseSections expenses={recentExpenses} compact />
                 </div>

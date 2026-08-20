@@ -6,18 +6,18 @@ import { getExpenseIcon } from "@/utils/expenseIcons";
 
 const DATE_GROUP_TONES = [
   {
-    rowBg: "bg-white",
-    iconBg: "bg-slate-50",
-    border: "border-slate-200",
-    ring: "ring-slate-200",
-    text: "text-slate-700",
+    rowBg: "bg-white dark:bg-slate-900",
+    iconBg: "bg-slate-50 dark:bg-slate-900",
+    border: "border-slate-200 dark:border-slate-700",
+    ring: "ring-slate-200 dark:ring-slate-700",
+    text: "text-slate-700 dark:text-slate-200",
   },
   {
-    rowBg: "bg-slate-100/80",
-    iconBg: "bg-slate-200/80",
-    border: "border-slate-200",
-    ring: "ring-slate-300",
-    text: "text-slate-700",
+    rowBg: "bg-slate-100/80 dark:bg-slate-800/80",
+    iconBg: "bg-slate-200/80 dark:bg-slate-700/80",
+    border: "border-slate-200 dark:border-slate-700",
+    ring: "ring-slate-300 dark:ring-slate-600",
+    text: "text-slate-700 dark:text-slate-200",
   },
 ];
 
@@ -89,10 +89,10 @@ function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false 
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[13px] font-semibold text-slate-900">
+        <p className="truncate text-[13px] font-semibold text-slate-900 dark:text-slate-100">
           {expense.description || expense.category || "Expense"}
         </p>
-        <p className="truncate text-[10px] font-medium text-slate-500">
+        <p className="truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
           <span className={`font-semibold ${tone.text}`}>{expense.category || "Uncategorized"}</span>
           {expense.payment_method ? ` · ${expense.payment_method}` : ""}
         </p>
@@ -100,10 +100,10 @@ function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false 
       <p className={`shrink-0 text-[13px] font-extrabold ${tone.text}`}>-{fmtCurrency(expense.amount)}</p>
       {showActions ? (
         <div className="flex shrink-0 gap-0.5">
-          <button type="button" className="rounded-lg p-1.5 hover:bg-slate-100" onClick={() => onEdit?.(expense)} aria-label="Edit expense">
-            <Pencil className="h-3.5 w-3.5 text-slate-500" />
+          <button type="button" className="rounded-lg p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => onEdit?.(expense)} aria-label="Edit expense">
+            <Pencil className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
           </button>
-          <button type="button" className="rounded-lg p-1.5 hover:bg-rose-50" onClick={() => onDelete?.(expense.id)} aria-label="Delete expense">
+          <button type="button" className="rounded-lg p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950" onClick={() => onDelete?.(expense.id)} aria-label="Delete expense">
             <Trash2 className="h-3.5 w-3.5 text-rose-500" />
           </button>
         </div>
@@ -132,7 +132,7 @@ export default function GroupedExpenseSections({
         const isExpanded = expandedGroupKey === group.key;
         const headerTone = DATE_GROUP_TONES[groupIndex % DATE_GROUP_TONES.length];
         return (
-          <div key={group.key} className={`overflow-hidden rounded-2xl border ${headerTone.border} bg-white shadow-sm`}>
+          <div key={group.key} className={`overflow-hidden rounded-2xl border ${headerTone.border} bg-white dark:bg-slate-900 shadow-sm`}>
             <button
               type="button"
               className={`flex w-full items-center gap-3 px-3 py-2.5 text-left ${headerTone.rowBg}`}
@@ -144,17 +144,17 @@ export default function GroupedExpenseSections({
               </span>
               <div className="min-w-0 flex-1">
                 <p className={`truncate text-[13px] font-semibold ${headerTone.text}`}>{formatDisplayDate(group.date)}</p>
-                <p className="text-[10px] font-medium text-slate-400">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
+                <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-medium text-slate-500">Total spending</p>
+                <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Total spending</p>
                 <p className={`text-[13px] font-extrabold ${headerTone.text}`}>-{fmtCurrency(group.total)}</p>
               </div>
               <ChevronDown className={`h-4 w-4 shrink-0 ${headerTone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
             </button>
 
             {isExpanded && (
-              <div className={`border-t ${headerTone.border} bg-white px-2.5 pb-2.5 pt-2`}>
+              <div className={`border-t ${headerTone.border} bg-white dark:bg-slate-900 px-2.5 pb-2.5 pt-2`}>
                 <div className="space-y-2">
                   {group.items.map((expense) => {
                     const expenseTone = categoryToneMap.get(normalizeCategory(expense.category)) || getExpenseCategoryPaletteTone(0);

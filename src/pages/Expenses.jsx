@@ -55,22 +55,22 @@ function getDaysBetween(start, end) {
 
 function StatCard({ icon: Icon, label, value, helper, tone = "rose" }) {
   const toneClasses = {
-    rose: "from-rose-50 to-pink-50 text-rose-600 ring-rose-100",
-    blue: "from-blue-50 to-sky-50 text-blue-600 ring-blue-100",
-    green: "from-emerald-50 to-teal-50 text-emerald-600 ring-emerald-100",
-    amber: "from-amber-50 to-orange-50 text-amber-600 ring-amber-100",
+    rose: "from-rose-50 dark:from-rose-950 to-pink-50 dark:to-pink-950 text-rose-600 dark:text-rose-400 ring-rose-100 dark:ring-rose-900",
+    blue: "from-blue-50 dark:from-blue-950 to-sky-50 dark:to-sky-950 text-blue-600 dark:text-blue-400 ring-blue-100 dark:ring-blue-900",
+    green: "from-emerald-50 dark:from-emerald-950 to-teal-50 dark:to-teal-950 text-emerald-600 dark:text-emerald-400 ring-emerald-100 dark:ring-emerald-900",
+    amber: "from-amber-50 dark:from-amber-950 to-orange-50 dark:to-orange-950 text-amber-600 dark:text-amber-400 ring-amber-100 dark:ring-amber-900",
   };
 
   return (
-    <div className="rounded-[1.4rem] bg-white/90 p-4 shadow-sm ring-1 ring-slate-200/70">
+    <div className="rounded-[1.4rem] bg-white/90 dark:bg-slate-900/90 p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
       <div className="flex items-start gap-3">
         <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${toneClasses[tone]}`}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold text-slate-500">{label}</p>
-          <p className="mt-1 break-words text-[0.95rem] font-extrabold leading-tight text-slate-950">{value}</p>
-          {helper && <p className="mt-0.5 text-[9px] font-medium text-slate-400">{helper}</p>}
+          <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{label}</p>
+          <p className="mt-1 break-words text-[0.95rem] font-extrabold leading-tight text-slate-950 dark:text-slate-50">{value}</p>
+          {helper && <p className="mt-0.5 text-[9px] font-medium text-slate-400 dark:text-slate-500">{helper}</p>}
         </div>
       </div>
     </div>
@@ -108,8 +108,8 @@ function DonutChart({ data, total }) {
         })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-xs font-semibold text-slate-400">Total</span>
-        <span className="mt-1 text-lg font-extrabold text-slate-950">{fmtCurrency(total)}</span>
+        <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">Total</span>
+        <span className="mt-1 text-lg font-extrabold text-slate-950 dark:text-slate-50">{fmtCurrency(total)}</span>
       </div>
     </div>
   );
@@ -125,8 +125,8 @@ function CategoryExpenseDetailRow({ expense }) {
         <Icon className="h-3.5 w-3.5" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[11px] font-bold text-slate-800">{expense.description || expense.category || "Expense"}</p>
-        <p className="truncate text-[9px] font-medium text-slate-500">
+        <p className="truncate text-[11px] font-bold text-slate-800 dark:text-slate-200">{expense.description || expense.category || "Expense"}</p>
+        <p className="truncate text-[9px] font-medium text-slate-500 dark:text-slate-400">
           {fmtDate(expense.date, true)}{expense.payment_method ? ` · ${expense.payment_method}` : ""}
         </p>
       </div>
@@ -144,21 +144,21 @@ function CategoryBreakdown({ data, total, compact = false }) {
   };
 
   return (
-    <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
+    <div className="rounded-[1.5rem] bg-white dark:bg-slate-900 p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-50 text-violet-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-violet-400">
             <PieChart className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-extrabold text-slate-950">Expenses by Category</h3>
-            <p className="text-[10px] font-medium text-slate-400">Tap a category to see its expenses</p>
+            <h3 className="text-sm font-extrabold text-slate-950 dark:text-slate-50">Expenses by Category</h3>
+            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Tap a category to see its expenses</p>
           </div>
         </div>
       </div>
 
       {visibleData.length === 0 ? (
-        <div className="flex h-36 items-center justify-center rounded-2xl bg-slate-50 text-xs font-medium text-slate-400">
+        <div className="flex h-36 items-center justify-center rounded-2xl bg-slate-50 dark:bg-slate-900 text-xs font-medium text-slate-400 dark:text-slate-500">
           No category data yet.
         </div>
       ) : (
@@ -183,17 +183,17 @@ function CategoryBreakdown({ data, total, compact = false }) {
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className={`truncate text-xs font-bold ${tone.text}`}>{item.name}</p>
-                      <p className="text-[10px] font-medium text-slate-400">{item.count} item{item.count > 1 ? "s" : ""}</p>
+                      <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">{item.count} item{item.count > 1 ? "s" : ""}</p>
                     </div>
                     <div className="text-right">
                       <p className={`text-xs font-extrabold ${tone.text}`}>{fmtCurrency(item.amount)}</p>
-                      <p className="text-[10px] font-semibold text-slate-400">{percent.toFixed(1)}%</p>
+                      <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">{percent.toFixed(1)}%</p>
                     </div>
                     <ChevronDown className={`h-4 w-4 shrink-0 ${tone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                   </button>
 
                   {isExpanded && (
-                    <div className="border-t border-white/80 px-2.5 pb-2.5 pt-2">
+                    <div className="border-t border-white/80 dark:border-slate-700/80 px-2.5 pb-2.5 pt-2">
                       <div className="space-y-1.5">
                         {item.expenses.map((expense, index) => (
                           <CategoryExpenseDetailRow key={expense.id || `${item.name}-${index}`} expense={expense} />
@@ -206,7 +206,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
             })}
           </div>
           {compact && data.length > visibleData.length && (
-            <p className="mt-3 text-center text-[10px] font-medium text-slate-400">
+            <p className="mt-3 text-center text-[10px] font-medium text-slate-400 dark:text-slate-500">
               Showing top {visibleData.length} of {data.length} categories.
             </p>
           )}
@@ -355,16 +355,16 @@ export default function Expenses() {
 
   return (
     <MobileLayout>
-      <div className="-mx-4 -mt-4 min-h-[calc(100vh-5rem)] bg-gradient-to-b from-slate-50 via-white to-slate-100 px-4 pb-6 pt-4 text-slate-950">
+      <div className="-mx-4 -mt-4 min-h-[calc(100vh-5rem)] bg-gradient-to-b from-slate-50 dark:from-slate-900 via-white dark:via-slate-950 to-slate-100 dark:to-slate-800 px-4 pb-6 pt-4 text-slate-950 dark:text-slate-50">
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h1 className="text-xl font-extrabold tracking-tight text-slate-950">Daily Expenses</h1>
-              <p className="text-[11px] font-medium text-slate-500">
+              <h1 className="text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Daily Expenses</h1>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                 {cycle ? `${formatDisplayDate(cycle.start_date)} — ${formatDisplayDate(cycle.end_date)}` : "Overview for salary cycle"}
               </p>
               {cycle && cycle.status !== "active" && (
-                <Badge variant="secondary" className="mt-2 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-extrabold text-amber-700 hover:bg-amber-100">
+                <Badge variant="secondary" className="mt-2 rounded-full bg-amber-100 dark:bg-amber-900 px-2.5 py-1 text-[10px] font-extrabold text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900">
                   Editing Closed Cycle
                 </Badge>
               )}
@@ -377,15 +377,15 @@ export default function Expenses() {
           </div>
 
           {cycles.length > 0 && (
-            <div className="rounded-[1.25rem] bg-white p-3 shadow-sm ring-1 ring-slate-200/70">
+            <div className="rounded-[1.25rem] bg-white dark:bg-slate-900 p-3 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                     <CalendarDays className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[12px] font-semibold text-slate-900">Salary Cycle</p>
-                    <p className="text-[10px] font-medium text-slate-400">Choose which cycle to view</p>
+                    <p className="text-[12px] font-semibold text-slate-900 dark:text-slate-100">Salary Cycle</p>
+                    <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Choose which cycle to view</p>
                   </div>
                 </div>
                 {cycle && (
@@ -393,8 +393,8 @@ export default function Expenses() {
                     variant="secondary"
                     className={`rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
                       cycle.status === "active"
-                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                        : "bg-slate-100 text-slate-500 hover:bg-slate-100"
+                        ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                     }`}
                   >
                     {cycle.status === "active" ? "Active" : "Closed"}
@@ -402,7 +402,7 @@ export default function Expenses() {
                 )}
               </div>
               <Select value={cycle?.id ? String(cycle.id) : ""} onValueChange={handleCycleChange}>
-                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 bg-emerald-50/60 px-3 text-[12px] font-semibold text-slate-800 shadow-sm focus:ring-emerald-300">
+                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-slate-800 dark:text-slate-200 shadow-sm focus:ring-emerald-300 dark:focus:ring-emerald-700">
                   <SelectValue placeholder="Select salary cycle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -418,13 +418,13 @@ export default function Expenses() {
           )}
 
           {!cycle && !loading && (
-            <p className="rounded-[1.5rem] bg-white p-5 text-center text-sm font-medium text-slate-500 shadow-sm ring-1 ring-slate-200/70">
+            <p className="rounded-[1.5rem] bg-white dark:bg-slate-900 p-5 text-center text-sm font-medium text-slate-500 dark:text-slate-400 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
               No salary cycle selected. Create one first from the Dashboard or open one from Salary Cycles.
             </p>
           )}
 
           {cycle && cycle.status !== "active" && (
-            <div className="rounded-[1.35rem] border border-amber-200 bg-amber-50 p-3 text-xs font-medium text-amber-700">
+            <div className="rounded-[1.35rem] border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3 text-xs font-medium text-amber-700 dark:text-amber-300">
               You are editing a closed/previous salary cycle. New expenses will be saved only inside this selected cycle.
             </div>
           )}
@@ -434,25 +434,25 @@ export default function Expenses() {
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
             </div>
           ) : expenses.length === 0 && cycle ? (
-            <div className="rounded-[1.5rem] bg-white p-8 text-center shadow-sm ring-1 ring-slate-200/70">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+            <div className="rounded-[1.5rem] bg-white dark:bg-slate-900 p-8 text-center shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                 <ReceiptText className="h-7 w-7" />
               </div>
-              <h2 className="mt-4 text-base font-extrabold text-slate-950">No expenses yet</h2>
-              <p className="mx-auto mt-1 max-w-xs text-xs font-medium text-slate-500">Tap Add to record your spending and view the expense overview here.</p>
+              <h2 className="mt-4 text-base font-extrabold text-slate-950 dark:text-slate-50">No expenses yet</h2>
+              <p className="mx-auto mt-1 max-w-xs text-xs font-medium text-slate-500 dark:text-slate-400">Tap Add to record your spending and view the expense overview here.</p>
               <Button className="mt-5 h-11 rounded-2xl bg-emerald-500 px-6 font-bold text-white hover:bg-emerald-600" onClick={openAddSheet}>
                 <Plus className="mr-1 h-4 w-4" /> Add Expense
               </Button>
             </div>
           ) : cycle ? (
             <>
-              <div className="grid grid-cols-3 rounded-[1.2rem] bg-white p-1 shadow-sm ring-1 ring-slate-200/70">
+              <div className="grid grid-cols-3 rounded-[1.2rem] bg-white dark:bg-slate-900 p-1 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
                 {["overview", "transactions", "categories"].map((view) => (
                   <button
                     key={view}
                     type="button"
                     className={`rounded-2xl px-2 py-2 text-[11px] font-extrabold capitalize transition-all ${
-                      activeView === view ? "bg-emerald-500 text-white shadow-sm" : "text-slate-500 hover:bg-slate-50"
+                      activeView === view ? "bg-emerald-500 text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
                     }`}
                     onClick={() => setActiveView(view)}
                   >
@@ -463,16 +463,16 @@ export default function Expenses() {
 
               {activeView === "overview" && (
                 <div className="space-y-4">
-                  <div className="rounded-[1.5rem] bg-gradient-to-r from-rose-50 via-pink-50 to-white p-4 shadow-sm ring-1 ring-rose-100">
+                  <div className="rounded-[1.5rem] bg-gradient-to-r from-rose-50 dark:from-rose-950 via-pink-50 dark:via-pink-950 to-white dark:to-slate-950 p-4 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400">
                         <TrendingDown className="h-7 w-7" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-bold text-slate-500">Total Expenses</p>
-                        <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950">{fmtCurrency(overview.total)}</h2>
+                        <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">Total Expenses</p>
+                        <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950 dark:text-slate-50">{fmtCurrency(overview.total)}</h2>
                       </div>
-                      <span className="rounded-full bg-rose-100 px-3 py-1 text-[11px] font-extrabold text-rose-700">
+                      <span className="rounded-full bg-rose-100 dark:bg-rose-900 px-3 py-1 text-[11px] font-extrabold text-rose-700 dark:text-rose-300">
                         {expenses.length} item{expenses.length > 1 ? "s" : ""}
                       </span>
                     </div>
@@ -493,33 +493,33 @@ export default function Expenses() {
 
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
-                  <div className="rounded-[1.5rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
+                  <div className="rounded-[1.5rem] bg-white dark:bg-slate-900 p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                           <Clock3 className="h-4 w-4" />
                         </div>
                         <div>
-                          <h3 className="text-[13px] font-semibold text-slate-900">Recent Transactions</h3>
+                          <h3 className="text-[13px] font-semibold text-slate-900 dark:text-slate-100">Recent Transactions</h3>
                         </div>
                       </div>
-                      <button type="button" className="text-[11px] font-medium text-emerald-600" onClick={() => setActiveView("transactions")}>View all</button>
+                      <button type="button" className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400" onClick={() => setActiveView("transactions")}>View all</button>
                     </div>
                     <GroupedExpenseSections expenses={overview.recent} compact />
                   </div>
 
-                  <div className="flex items-center justify-between rounded-[1.25rem] bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
-                    <p className="text-xs font-extrabold text-slate-800">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
-                    <p className="text-xl font-black text-rose-600">{fmtCurrency(overview.total)}</p>
+                  <div className="flex items-center justify-between rounded-[1.25rem] bg-white dark:bg-slate-900 p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
+                    <p className="text-xs font-extrabold text-slate-800 dark:text-slate-200">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
+                    <p className="text-xl font-black text-rose-600 dark:text-rose-400">{fmtCurrency(overview.total)}</p>
                   </div>
                 </div>
               )}
 
               {activeView === "transactions" && (
                 <div className="space-y-3">
-                  <div className="rounded-[1.25rem] bg-white p-3 shadow-sm ring-1 ring-slate-200/70">
-                    <p className="text-[13px] font-medium text-slate-900">All Daily Expenses</p>
-                    <p className="text-[11px] font-normal text-slate-500">Viewing {cycle ? `${formatDisplayDate(cycle.start_date)} — ${cycle.end_date ? formatDisplayDate(cycle.end_date) : "Current"}` : "selected salary cycle"}.</p>
+                  <div className="rounded-[1.25rem] bg-white dark:bg-slate-900 p-3 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
+                    <p className="text-[13px] font-medium text-slate-900 dark:text-slate-100">All Daily Expenses</p>
+                    <p className="text-[11px] font-normal text-slate-500 dark:text-slate-400">Viewing {cycle ? `${formatDisplayDate(cycle.start_date)} — ${cycle.end_date ? formatDisplayDate(cycle.end_date) : "Current"}` : "selected salary cycle"}.</p>
                   </div>
                   <GroupedExpenseSections expenses={expenses} onEdit={handleEdit} onDelete={setDeleteId} showActions />
                 </div>
