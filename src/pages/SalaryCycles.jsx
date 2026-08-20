@@ -311,7 +311,7 @@ export default function SalaryCycles() {
                     />
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <p className={`text-xs font-medium ${remaining >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                    <p className={`text-xs font-medium ${remaining >= 0 ? "text-emerald-600" : "text-red-600"}`}>
                       Remaining: {fmtCurrency(remaining)}
                     </p>
                     <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[10px] font-semibold text-muted-foreground">
@@ -329,8 +329,8 @@ export default function SalaryCycles() {
         <SheetContent side="bottom" className="rounded-t-2xl">
           <SheetHeader><SheetTitle>New Salary Cycle</SheetTitle></SheetHeader>
           <div className="mt-4 space-y-4 pb-6">
-            <div className="bg-blue-50 dark:bg-blue-950 rounded-xl p-3 border border-blue-200 dark:border-blue-800">
-              <p className="text-xs text-blue-700 dark:text-blue-300">
+            <div className="bg-blue-50 rounded-xl p-3 border border-blue-200">
+              <p className="text-xs text-blue-700">
                 Your spending cycle starts from your salary received date. If you create an older/backfill cycle, it will stay Closed and can still be edited. Only the latest cycle will be Active.
               </p>
             </div>

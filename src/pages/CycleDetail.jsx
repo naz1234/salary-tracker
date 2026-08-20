@@ -53,7 +53,7 @@ export default function CycleDetail() {
         </div>
 
         {cycle.status !== "active" && (
-          <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 p-3 text-xs font-medium text-amber-700 dark:text-amber-300">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs font-medium text-amber-700">
             This is a closed salary cycle. You can still add, edit or delete expenses for this selected cycle.
           </div>
         )}
@@ -85,7 +85,7 @@ export default function CycleDetail() {
                     <p className="text-sm font-medium">{i.name}</p>
                     <p className="text-xs text-muted-foreground">{i.category}</p>
                   </div>
-                  <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">⃁ {i.amount?.toFixed(2)}</p>
+                  <p className="text-sm font-semibold text-amber-600">⃁ {i.amount?.toFixed(2)}</p>
                 </div>
               ))}
             </div>

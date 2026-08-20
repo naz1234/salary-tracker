@@ -130,99 +130,99 @@ const formatMoney = (value) =>
 const CATEGORY_VISUALS = {
   Rent: {
     Icon: Home,
-    card: "border-blue-100 dark:border-blue-900 bg-gradient-to-r from-blue-50/95 dark:from-blue-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-blue-100/80 dark:bg-blue-900/80",
-    icon: "text-blue-600 dark:text-blue-400",
-    pill: "bg-blue-100/80 dark:bg-blue-900/80 text-blue-700 dark:text-blue-300",
-    amount: "text-blue-700 dark:text-blue-300",
+    card: "border-blue-100 bg-gradient-to-r from-blue-50/95 via-white to-white",
+    wrap: "bg-blue-100/80",
+    icon: "text-blue-600",
+    pill: "bg-blue-100/80 text-blue-700",
+    amount: "text-blue-700",
   },
   Loan: {
     Icon: Building2,
-    card: "border-sky-100 dark:border-sky-900 bg-gradient-to-r from-sky-50/95 dark:from-sky-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-sky-100/80 dark:bg-sky-900/80",
-    icon: "text-sky-600 dark:text-sky-400",
-    pill: "bg-sky-100/80 dark:bg-sky-900/80 text-sky-700 dark:text-sky-300",
-    amount: "text-sky-700 dark:text-sky-300",
+    card: "border-sky-100 bg-gradient-to-r from-sky-50/95 via-white to-white",
+    wrap: "bg-sky-100/80",
+    icon: "text-sky-600",
+    pill: "bg-sky-100/80 text-sky-700",
+    amount: "text-sky-700",
   },
   Hutang: {
     Icon: HandCoins,
-    card: "border-amber-100 dark:border-amber-900 bg-gradient-to-r from-amber-50/95 dark:from-amber-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-amber-100/80 dark:bg-amber-900/80",
-    icon: "text-amber-600 dark:text-amber-400",
-    pill: "bg-amber-100/80 dark:bg-amber-900/80 text-amber-700 dark:text-amber-300",
-    amount: "text-amber-700 dark:text-amber-300",
+    card: "border-amber-100 bg-gradient-to-r from-amber-50/95 via-white to-white",
+    wrap: "bg-amber-100/80",
+    icon: "text-amber-600",
+    pill: "bg-amber-100/80 text-amber-700",
+    amount: "text-amber-700",
   },
   "Pika & (mak abah)": {
     Icon: HandCoins,
-    card: "border-pink-100 dark:border-pink-900 bg-gradient-to-r from-pink-50/95 dark:from-pink-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-pink-100/80 dark:bg-pink-900/80",
-    icon: "text-pink-600 dark:text-pink-400",
-    pill: "bg-pink-100/80 dark:bg-pink-900/80 text-pink-700 dark:text-pink-300",
-    amount: "text-pink-700 dark:text-pink-300",
+    card: "border-pink-100 bg-gradient-to-r from-pink-50/95 via-white to-white",
+    wrap: "bg-pink-100/80",
+    icon: "text-pink-600",
+    pill: "bg-pink-100/80 text-pink-700",
+    amount: "text-pink-700",
   },
   Anak: {
     Icon: HandCoins,
-    card: "border-purple-100 dark:border-purple-900 bg-gradient-to-r from-purple-50/95 dark:from-purple-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-purple-100/80 dark:bg-purple-900/80",
-    icon: "text-purple-600 dark:text-purple-400",
-    pill: "bg-purple-100/80 dark:bg-purple-900/80 text-purple-700 dark:text-purple-300",
-    amount: "text-purple-700 dark:text-purple-300",
+    card: "border-purple-100 bg-gradient-to-r from-purple-50/95 via-white to-white",
+    wrap: "bg-purple-100/80",
+    icon: "text-purple-600",
+    pill: "bg-purple-100/80 text-purple-700",
+    amount: "text-purple-700",
   },
   "Loan ASB (Saving)": {
     Icon: Landmark,
-    card: "border-yellow-100 dark:border-yellow-900 bg-gradient-to-r from-yellow-50/95 dark:from-yellow-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-yellow-100/80 dark:bg-yellow-900/80",
-    icon: "text-yellow-600 dark:text-yellow-400",
-    pill: "bg-yellow-100/80 dark:bg-yellow-900/80 text-yellow-700 dark:text-yellow-300",
-    amount: "text-yellow-700 dark:text-yellow-300",
+    card: "border-yellow-100 bg-gradient-to-r from-yellow-50/95 via-white to-white",
+    wrap: "bg-yellow-100/80",
+    icon: "text-yellow-600",
+    pill: "bg-yellow-100/80 text-yellow-700",
+    amount: "text-yellow-700",
   },
   "Loan Rumah": {
     Icon: Home,
-    card: "border-indigo-100 dark:border-indigo-900 bg-gradient-to-r from-indigo-50/95 dark:from-indigo-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-indigo-100/80 dark:bg-indigo-900/80",
-    icon: "text-indigo-600 dark:text-indigo-400",
-    pill: "bg-indigo-100/80 dark:bg-indigo-900/80 text-indigo-700 dark:text-indigo-300",
-    amount: "text-indigo-700 dark:text-indigo-300",
+    card: "border-indigo-100 bg-gradient-to-r from-indigo-50/95 via-white to-white",
+    wrap: "bg-indigo-100/80",
+    icon: "text-indigo-600",
+    pill: "bg-indigo-100/80 text-indigo-700",
+    amount: "text-indigo-700",
   },
   Internet: {
     Icon: Wifi,
-    card: "border-violet-100 dark:border-violet-900 bg-gradient-to-r from-violet-50/95 dark:from-violet-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-violet-100/80 dark:bg-violet-900/80",
-    icon: "text-violet-600 dark:text-violet-400",
-    pill: "bg-violet-100/80 dark:bg-violet-900/80 text-violet-700 dark:text-violet-300",
-    amount: "text-violet-700 dark:text-violet-300",
+    card: "border-violet-100 bg-gradient-to-r from-violet-50/95 via-white to-white",
+    wrap: "bg-violet-100/80",
+    icon: "text-violet-600",
+    pill: "bg-violet-100/80 text-violet-700",
+    amount: "text-violet-700",
   },
   Insurance: {
     Icon: ShieldCheck,
-    card: "border-emerald-100 dark:border-emerald-900 bg-gradient-to-r from-emerald-50/95 dark:from-emerald-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-emerald-100/80 dark:bg-emerald-900/80",
-    icon: "text-emerald-600 dark:text-emerald-400",
-    pill: "bg-emerald-100/80 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300",
-    amount: "text-emerald-700 dark:text-emerald-300",
+    card: "border-emerald-100 bg-gradient-to-r from-emerald-50/95 via-white to-white",
+    wrap: "bg-emerald-100/80",
+    icon: "text-emerald-600",
+    pill: "bg-emerald-100/80 text-emerald-700",
+    amount: "text-emerald-700",
   },
   Utilities: {
     Icon: Zap,
-    card: "border-orange-100 dark:border-orange-900 bg-gradient-to-r from-orange-50/95 dark:from-orange-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-orange-100/80 dark:bg-orange-900/80",
-    icon: "text-orange-600 dark:text-orange-400",
-    pill: "bg-orange-100/80 dark:bg-orange-900/80 text-orange-700 dark:text-orange-300",
-    amount: "text-orange-700 dark:text-orange-300",
+    card: "border-orange-100 bg-gradient-to-r from-orange-50/95 via-white to-white",
+    wrap: "bg-orange-100/80",
+    icon: "text-orange-600",
+    pill: "bg-orange-100/80 text-orange-700",
+    amount: "text-orange-700",
   },
   Subscription: {
     Icon: Repeat,
-    card: "border-fuchsia-100 dark:border-fuchsia-900 bg-gradient-to-r from-fuchsia-50/95 dark:from-fuchsia-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-fuchsia-100/80 dark:bg-fuchsia-900/80",
-    icon: "text-fuchsia-600 dark:text-fuchsia-400",
-    pill: "bg-fuchsia-100/80 dark:bg-fuchsia-900/80 text-fuchsia-700 dark:text-fuchsia-300",
-    amount: "text-fuchsia-700 dark:text-fuchsia-300",
+    card: "border-fuchsia-100 bg-gradient-to-r from-fuchsia-50/95 via-white to-white",
+    wrap: "bg-fuchsia-100/80",
+    icon: "text-fuchsia-600",
+    pill: "bg-fuchsia-100/80 text-fuchsia-700",
+    amount: "text-fuchsia-700",
   },
   Other: {
     Icon: Wallet,
-    card: "border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-50/95 dark:from-slate-900/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-    wrap: "bg-slate-100/80 dark:bg-slate-800/80",
-    icon: "text-slate-600 dark:text-slate-300",
-    pill: "bg-slate-100/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200",
-    amount: "text-slate-700 dark:text-slate-200",
+    card: "border-slate-100 bg-gradient-to-r from-slate-50/95 via-white to-white",
+    wrap: "bg-slate-100/80",
+    icon: "text-slate-600",
+    pill: "bg-slate-100/80 text-slate-700",
+    amount: "text-slate-700",
   },
 };
 
@@ -269,11 +269,11 @@ const getCategoryVisual = (item = {}) => {
   ) {
     return {
       Icon: Phone,
-      card: "border-rose-100 dark:border-rose-900 bg-gradient-to-r from-rose-50/95 dark:from-rose-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-      wrap: "bg-rose-100/80 dark:bg-rose-900/80",
-      icon: "text-rose-600 dark:text-rose-400",
-      pill: "bg-rose-100/80 dark:bg-rose-900/80 text-rose-700 dark:text-rose-300",
-      amount: "text-rose-700 dark:text-rose-300",
+      card: "border-rose-100 bg-gradient-to-r from-rose-50/95 via-white to-white",
+      wrap: "bg-rose-100/80",
+      icon: "text-rose-600",
+      pill: "bg-rose-100/80 text-rose-700",
+      amount: "text-rose-700",
     };
   }
   if (
@@ -305,11 +305,11 @@ const getCategoryVisual = (item = {}) => {
   ) {
     return {
       Icon: Flame,
-      card: "border-red-100 dark:border-red-900 bg-gradient-to-r from-red-50/95 dark:from-red-950/95 via-white dark:via-slate-950 to-white dark:to-slate-950",
-      wrap: "bg-red-100/80 dark:bg-red-900/80",
-      icon: "text-red-600 dark:text-red-400",
-      pill: "bg-red-100/80 dark:bg-red-900/80 text-red-700 dark:text-red-300",
-      amount: "text-red-700 dark:text-red-300",
+      card: "border-red-100 bg-gradient-to-r from-red-50/95 via-white to-white",
+      wrap: "bg-red-100/80",
+      icon: "text-red-600",
+      pill: "bg-red-100/80 text-red-700",
+      amount: "text-red-700",
     };
   }
   if (text.includes("saving") || text.includes("deposit")) {
@@ -744,7 +744,7 @@ export default function FixedSpending() {
       >
         <div className="space-y-3">
           <header className="flex items-center justify-between gap-3">
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+            <h1 className="text-xl font-extrabold tracking-tight text-slate-950">
               Fixed Spending
             </h1>
             {cycle && (
@@ -757,8 +757,8 @@ export default function FixedSpending() {
                     disabled={savingOrder}
                     className={`h-10 rounded-2xl px-3 text-[13px] font-bold shadow-sm ${
                       arrangeMode
-                        ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                        : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                     }`}
                     onClick={toggleArrangeMode}
                   >
@@ -773,7 +773,7 @@ export default function FixedSpending() {
                 <Button
                   size="sm"
                   disabled={arrangeMode || savingOrder}
-                  className="h-10 shrink-0 rounded-2xl bg-emerald-500 px-3.5 text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600 disabled:bg-slate-300 dark:disabled:bg-slate-600 disabled:shadow-none"
+                  className="h-10 shrink-0 rounded-2xl bg-emerald-500 px-3.5 text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600 disabled:bg-slate-300 disabled:shadow-none"
                   onClick={() => {
                     setEditing(null);
                     setSheetOpen(true);
@@ -786,15 +786,15 @@ export default function FixedSpending() {
           </header>
 
           {availableCycles.length > 0 && (
-            <section className="rounded-[1.25rem] bg-white dark:bg-slate-900 p-3 shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-700/70">
+            <section className="rounded-[1.25rem] bg-white p-3 shadow-sm ring-1 ring-slate-200/70">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                     <CalendarDays className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[12px] font-semibold text-slate-900 dark:text-slate-100">Salary Cycle</p>
-                    <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Choose which cycle to view</p>
+                    <p className="text-[12px] font-semibold text-slate-900">Salary Cycle</p>
+                    <p className="text-[10px] font-medium text-slate-400">Choose which cycle to view</p>
                   </div>
                 </div>
                 {cycle && (
@@ -802,8 +802,8 @@ export default function FixedSpending() {
                     variant="secondary"
                     className={`rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
                       cycle.status === "active"
-                        ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                        : "bg-slate-100 text-slate-500 hover:bg-slate-100"
                     }`}
                   >
                     {cycle.status === "active" ? "Active" : "Closed"}
@@ -815,7 +815,7 @@ export default function FixedSpending() {
                 onValueChange={openSalaryCycle}
                 disabled={arrangeMode || savingOrder}
               >
-                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-slate-800 dark:text-slate-200 shadow-sm focus:ring-emerald-300 dark:focus:ring-emerald-700">
+                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 bg-emerald-50/60 px-3 text-[12px] font-semibold text-slate-800 shadow-sm focus:ring-emerald-300">
                   <SelectValue placeholder="Select salary cycle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -831,38 +831,38 @@ export default function FixedSpending() {
           )}
 
           {cycle && (
-            <section className="rounded-[1.5rem] bg-gradient-to-r from-emerald-50 dark:from-emerald-950 via-teal-50 dark:via-teal-950 to-white dark:to-slate-950 p-4 shadow-sm ring-1 ring-emerald-100 dark:ring-emerald-900">
+            <section className="rounded-[1.5rem] bg-gradient-to-r from-emerald-50 via-teal-50 to-white p-4 shadow-sm ring-1 ring-emerald-100">
               <div className="flex items-center gap-3">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                   <Wallet className="h-7 w-7" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">Total Fixed Spending</p>
-                  <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950 dark:text-slate-50">{formatMoney(total)}</h2>
+                  <p className="text-[11px] font-bold text-slate-500">Total Fixed Spending</p>
+                  <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950">{formatMoney(total)}</h2>
                 </div>
-                <span className="rounded-full bg-emerald-100 dark:bg-emerald-900 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300">
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-extrabold text-emerald-700">
                   {items.length} item{items.length !== 1 ? "s" : ""}
                 </span>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-slate-900/70 px-3 py-2 ring-1 ring-emerald-100 dark:ring-emerald-900">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> Paid
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 px-3 py-2 ring-1 ring-emerald-100">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Paid
                   </span>
-                  <span className="text-[11px] font-extrabold tabular-nums text-emerald-700 dark:text-emerald-300">{formatMoney(paidTotal)}</span>
+                  <span className="text-[11px] font-extrabold tabular-nums text-emerald-700">{formatMoney(paidTotal)}</span>
                 </div>
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-slate-900/70 px-3 py-2 ring-1 ring-orange-100 dark:ring-orange-900">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                    <Clock3 className="h-4 w-4 text-orange-600 dark:text-orange-400" /> Due
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 px-3 py-2 ring-1 ring-orange-100">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+                    <Clock3 className="h-4 w-4 text-orange-600" /> Due
                   </span>
-                  <span className="text-[11px] font-extrabold tabular-nums text-orange-600 dark:text-orange-400">{formatMoney(dueTotal)}</span>
+                  <span className="text-[11px] font-extrabold tabular-nums text-orange-600">{formatMoney(dueTotal)}</span>
                 </div>
               </div>
             </section>
           )}
 
           {!cycle && !loading && !loadError && (
-            <p className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-center text-sm text-slate-500 dark:text-slate-400 shadow-sm">
+            <p className="rounded-3xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500 shadow-sm">
               No salary cycle selected. Create one first from the Dashboard or
               open one from Salary Cycles.
             </p>
@@ -882,9 +882,9 @@ export default function FixedSpending() {
                     className={`h-9 rounded-xl border px-1.5 text-[11px] font-medium transition-all disabled:opacity-60 ${
                       active
                         ? filter.key === "all"
-                          ? "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 shadow-sm ring-1 ring-slate-100 dark:ring-slate-800"
-                          : "border-emerald-100 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 shadow-sm"
-                        : "border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-900"
+                          ? "border-slate-200 bg-white text-slate-700 shadow-sm ring-1 ring-slate-100"
+                          : "border-emerald-100 bg-emerald-50 text-emerald-700 shadow-sm"
+                        : "border-slate-100 bg-white/80 text-slate-500 shadow-sm hover:bg-slate-50"
                     }`}
                   >
                     <span className="inline-flex items-center justify-center gap-1.5">
@@ -900,7 +900,7 @@ export default function FixedSpending() {
           )}
 
           {arrangeMode && (
-            <div className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-100 dark:border-emerald-900 bg-emerald-50/90 dark:bg-emerald-950/90 px-3 py-2 text-[11px] leading-4 text-emerald-800 dark:text-emerald-200 shadow-sm">
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/90 px-3 py-2 text-[11px] leading-4 text-emerald-800 shadow-sm">
               <span>
                 {savingOrder
                   ? "Saving order to D1..."
@@ -908,7 +908,7 @@ export default function FixedSpending() {
               </span>
               <button
                 type="button"
-                className="shrink-0 rounded-full bg-white/80 dark:bg-slate-900/80 px-2 py-1 text-[10px] font-medium text-emerald-700 dark:text-emerald-300"
+                className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[10px] font-medium text-emerald-700"
                 onClick={toggleArrangeMode}
                 disabled={savingOrder}
               >
@@ -918,11 +918,11 @@ export default function FixedSpending() {
           )}
 
           {loadWarning && (
-            <div className="flex items-center justify-between gap-2 rounded-2xl border border-amber-100 dark:border-amber-900 bg-amber-50/90 dark:bg-amber-950/90 px-3 py-2 text-[11px] leading-4 text-amber-800 dark:text-amber-200 shadow-sm">
+            <div className="flex items-center justify-between gap-2 rounded-2xl border border-amber-100 bg-amber-50/90 px-3 py-2 text-[11px] leading-4 text-amber-800 shadow-sm">
               <span>{loadWarning}</span>
               <button
                 type="button"
-                className="shrink-0 rounded-full bg-white/80 dark:bg-slate-900/80 px-2 py-1 text-[10px] font-medium text-amber-700 dark:text-amber-300"
+                className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[10px] font-medium text-amber-700"
                 onClick={load}
               >
                 Retry
@@ -935,19 +935,19 @@ export default function FixedSpending() {
               {[1, 2, 3, 4].map((key) => (
                 <div
                   key={key}
-                  className="h-16 animate-pulse rounded-[1rem] border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 shadow-sm"
+                  className="h-16 animate-pulse rounded-[1rem] border border-slate-100 bg-white/80 shadow-sm"
                 />
               ))}
             </div>
           ) : loadError ? (
-            <div className="rounded-[1.5rem] border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950 p-5 text-center shadow-sm">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900">
-                <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+            <div className="rounded-[1.5rem] border border-red-100 bg-red-50 p-5 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
-              <p className="mt-3 text-sm font-bold text-red-800 dark:text-red-200">
+              <p className="mt-3 text-sm font-bold text-red-800">
                 Fixed Spending could not load.
               </p>
-              <p className="mt-1 break-words text-xs leading-5 text-red-600 dark:text-red-400">
+              <p className="mt-1 break-words text-xs leading-5 text-red-600">
                 {loadError}
               </p>
               <Button
@@ -961,20 +961,20 @@ export default function FixedSpending() {
               </Button>
             </div>
           ) : items.length === 0 && cycle ? (
-            <div className="rounded-[1.5rem] border border-dashed border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/70 p-8 text-center shadow-sm">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+            <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-white/70 p-8 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
                 <ReceiptText className="h-5 w-5" />
               </div>
-              <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+              <p className="mt-3 text-sm font-semibold text-slate-700">
                 No fixed spending yet.
               </p>
-              <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-xs leading-5 text-slate-500">
                 Tap Add to record commitments like rent, loans, utilities, or
                 family support.
               </p>
             </div>
           ) : visibleItems.length === 0 && cycle ? (
-            <div className="rounded-[1.5rem] border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 text-center text-sm text-slate-500 dark:text-slate-400 shadow-sm">
+            <div className="rounded-[1.5rem] border border-slate-100 bg-white/80 p-6 text-center text-sm text-slate-500 shadow-sm">
               No {statusFilter} fixed spending item found.
             </div>
           ) : (
@@ -991,7 +991,7 @@ export default function FixedSpending() {
                     draggable={false}
                     onDragStart={(event) => event.preventDefault()}
                     className={`group relative flex select-none items-center gap-2 rounded-[1.05rem] border px-2.5 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.055)] transition-[box-shadow,border-color,opacity,transform] duration-200 ${card} ${
-                      arrangeMode ? "ring-1 ring-emerald-200 dark:ring-emerald-800" : ""
+                      arrangeMode ? "ring-1 ring-emerald-200" : ""
                     } ${i.is_paid ? "saturate-[0.92]" : ""} ${isSavingPaid || savingOrder ? "opacity-70" : ""}`}
                   >
                     <div
@@ -1002,18 +1002,18 @@ export default function FixedSpending() {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex min-w-0 items-center gap-1.5 leading-tight">
-                        <p className="truncate text-[13px] font-medium text-slate-900 dark:text-slate-100">
+                        <p className="truncate text-[13px] font-medium text-slate-900">
                           {i.name}
                         </p>
                       </div>
-                      <p className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[11px] font-normal leading-4 text-slate-500 dark:text-slate-400">
+                      <p className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[11px] font-normal leading-4 text-slate-500">
                         <span
                           className={`inline-flex shrink-0 items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium leading-none ${pill}`}
                         >
                           {i.category || "Other"}
                         </span>
                         {cleanNote && (
-                          <span className="truncate text-slate-500 dark:text-slate-400">
+                          <span className="truncate text-slate-500">
                             {cleanNote}
                           </span>
                         )}
@@ -1033,7 +1033,7 @@ export default function FixedSpending() {
                             <button
                               type="button"
                               disabled={savingOrder || index === 0}
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:bg-slate-50 dark:disabled:bg-slate-900 disabled:text-slate-300 dark:disabled:text-slate-600 disabled:opacity-70"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 transition-colors hover:bg-emerald-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-70"
                               onClick={() => moveFixedSpendingItem(i.id, -1)}
                               aria-label={`Move ${i.name} up`}
                             >
@@ -1044,7 +1044,7 @@ export default function FixedSpending() {
                               disabled={
                                 savingOrder || index === visibleItems.length - 1
                               }
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:bg-slate-50 dark:disabled:bg-slate-900 disabled:text-slate-300 dark:disabled:text-slate-600 disabled:opacity-70"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 transition-colors hover:bg-emerald-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-70"
                               onClick={() => moveFixedSpendingItem(i.id, 1)}
                               aria-label={`Move ${i.name} down`}
                             >
@@ -1059,8 +1059,8 @@ export default function FixedSpending() {
                               disabled={isSavingPaid || savingOrder}
                               className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors disabled:cursor-default disabled:opacity-70 ${
                                 i.is_paid
-                                  ? "bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                                  : "bg-orange-50 dark:bg-orange-950 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900"
+                                  ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                                  : "bg-orange-50 text-orange-600 hover:bg-orange-100"
                               }`}
                               aria-label={
                                 i.is_paid
@@ -1078,7 +1078,7 @@ export default function FixedSpending() {
 
                             <button
                               type="button"
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-50"
                               onClick={() => {
                                 setEditing(i);
                                 setSheetOpen(true);
@@ -1092,7 +1092,7 @@ export default function FixedSpending() {
                               <DropdownMenuTrigger asChild>
                                 <button
                                   type="button"
-                                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+                                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-50"
                                   aria-label={`More options for ${i.name}`}
                                 >
                                   <MoreVertical className="h-3.5 w-3.5" />
@@ -1116,7 +1116,7 @@ export default function FixedSpending() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => setDeleteId(i.id)}
-                                  className="gap-2 text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+                                  className="gap-2 text-red-600 focus:text-red-600"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                   {i.repeat_every_cycle ? "Remove This Cycle" : "Delete"}
