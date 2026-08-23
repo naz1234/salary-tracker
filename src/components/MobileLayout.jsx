@@ -37,7 +37,7 @@ export default function MobileLayout({ children }) {
         </main>
 
         <nav
-          className="mobile-bottom-nav mobile-no-select z-50 shrink-0 border-t border-border bg-card/95 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-lg"
+          className="mobile-bottom-nav mobile-no-select z-50 shrink-0 border-t border-border bg-card/95 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-lg dark:border-white/10 dark:bg-[#05080c]/95 dark:shadow-[0_-12px_32px_rgba(0,0,0,0.4)]"
           style={{
             paddingBottom: "env(safe-area-inset-bottom)",
             WebkitTouchCallout: "none",

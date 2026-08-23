@@ -1,15 +1,23 @@
 import {
   BadgeCheck,
-  BookOpen,
   CalendarRange,
   CreditCard,
   Heart,
+  Moon,
   MoveVertical,
   PiggyBank,
   Receipt,
+  Settings,
   Sparkles,
+  Sun,
 } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
+import { useTheme } from "../hooks/use-theme";
+
+const themeOptions = [
+  { value: "light", label: "Light", description: "Bright and clean", icon: Sun },
+  { value: "dark", label: "Dark", description: "Easy on your eyes", icon: Moon },
+];
 
 const tutorialSteps = [
   {
@@ -45,33 +53,67 @@ const tutorialSteps = [
 ];
 
 export default function SettingsPage() {
+  const { theme, setTheme } = useTheme();
+
   return (
     <MobileLayout>
       <div className="space-y-5 pb-4 mobile-no-select">
-        <div className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-emerald-500/10 p-5 shadow-sm">
+        <div className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-emerald-500/10 p-5 shadow-sm dark:border-white/10 dark:via-card dark:to-card">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary">
-              <BookOpen className="h-5 w-5" />
+              <Settings className="h-5 w-5" />
             </div>
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/80">
-                Guide
+                Preferences
               </p>
-              <h1 className="text-xl font-bold tracking-tight">Settings &amp; Help</h1>
+              <h1 className="text-xl font-bold tracking-tight">Settings</h1>
             </div>
           </div>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Simple tutorial to use the Salary Tracker app.
+            Customize how the Salary Tracker app looks.
           </p>
         </div>
 
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              <Sparkles className="h-4 w-4 text-primary" />
-              Tutorial
-            </h2>
+          <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <Sun className="h-4 w-4 text-primary" />
+            Appearance
+          </h2>
+          <div className="rounded-[24px] border border-border/70 bg-card p-4 shadow-sm">
+            <p className="text-sm font-semibold leading-tight">Theme</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Choose the look that feels right for you. Your choice is saved automatically.
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-2.5" role="group" aria-label="Choose app theme">
+              {themeOptions.map(({ value, label, description, icon: Icon }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setTheme(value)}
+                  aria-pressed={theme === value}
+                  className={`flex min-h-[88px] flex-col items-start justify-center gap-1 rounded-2xl border px-3 py-3 text-left transition-colors ${
+                    theme === value
+                      ? "border-primary bg-primary/10 text-primary shadow-[0_0_18px_rgba(34,197,94,0.12)]"
+                      : "border-border/70 bg-background text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  <span className="flex items-center gap-2 text-sm font-semibold">
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </span>
+                  <span className="text-[10px] font-medium opacity-75">{description}</span>
+                </button>
+              ))}
+            </div>
           </div>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <Sparkles className="h-4 w-4 text-primary" />
+            Tutorial
+          </h2>
 
           <div className="space-y-2.5">
             {tutorialSteps.map(({ icon: Icon, title, text }) => (
@@ -95,16 +137,16 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="rounded-[24px] border border-rose-200/60 bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 p-4 shadow-sm">
+        <div className="rounded-[24px] border border-rose-200/60 bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 p-4 shadow-sm dark:border-rose-500/25 dark:from-rose-950/35 dark:via-card dark:to-card">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 text-rose-500 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 text-rose-500 shadow-sm dark:bg-rose-500/10">
               <Heart className="h-5 w-5 fill-current" />
             </div>
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-rose-500">
                 Credit
               </p>
-              <h3 className="text-base font-bold text-slate-900">Created by Nazif Jaafar</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Created by Nazif Jaafar</h3>
             </div>
           </div>
         </div>
