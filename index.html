@@ -10,7 +10,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Salary Tracker" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <script>
       try {
         if (localStorage.getItem("salary-tracker-theme") === "dark") {
@@ -36,6 +36,14 @@
       #root {
         min-height: 100%;
         margin: 0;
+      }
+
+      html {
+        background: #f8fafc;
+      }
+
+      html.dark {
+        background: #05080c;
       }
 
       #root:empty::before {

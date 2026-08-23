@@ -29,7 +29,10 @@ export default function MobileLayout({ children }) {
         WebkitTouchCallout: "none",
       }}
     >
-      <div className="relative mx-auto flex h-[100dvh] max-w-lg flex-col overflow-hidden bg-background">
+      <div
+        className="relative mx-auto flex h-[100dvh] max-w-lg flex-col overflow-hidden bg-background"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
         <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain no-scrollbar">
           <div className="px-4 pb-6 pt-4">
             {children}
