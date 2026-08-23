@@ -11,6 +11,20 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Salary Tracker" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <script>
+      try {
+        if (localStorage.getItem("salary-tracker-theme") === "dark") {
+          document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = "dark";
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#05080c");
+          document
+            .querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
+            .setAttribute("content", "black-translucent");
+        }
+      } catch (error) {
+        console.warn("Unable to restore the saved theme", error);
+      }
+    </script>
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16.png" />
@@ -33,6 +47,11 @@
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #64748b;
         background: #f8fafc;
+      }
+
+      html.dark #root:empty::before {
+        color: #98a2b3;
+        background: #05080c;
       }
     </style>
   </head>
