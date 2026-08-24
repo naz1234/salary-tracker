@@ -1,130 +1,159 @@
 import { Link } from "react-router-dom";
-import { Wallet, CreditCard, TrendingDown, PiggyBank, Calendar, Activity } from "lucide-react";
-import { parseDateOnly } from "@/utils/cycleFilters";
+import { CalendarDays, ShieldCheck, Tag } from "lucide-react";
+import { formatDisplayDate } from "@/utils/cycleFilters";
 
-const toneStyles = {
-  emerald: {
-    icon: "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400",
-    wave: "from-emerald-50 via-emerald-100/70 to-transparent",
-    line: "bg-emerald-300/60 dark:bg-emerald-400/80",
-    glow: "34, 197, 94",
-  },
-  teal: {
-    icon: "bg-teal-100 text-teal-600 dark:bg-teal-500/10 dark:text-teal-400",
-    wave: "from-teal-50 via-cyan-100/70 to-transparent",
-    line: "bg-teal-300/60 dark:bg-teal-400/80",
-    glow: "20, 184, 166",
-  },
-  blue: {
-    icon: "bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
-    wave: "from-blue-50 via-blue-100/70 to-transparent",
-    line: "bg-blue-300/60 dark:bg-blue-400/80",
-    glow: "59, 130, 246",
-  },
-  amber: {
-    icon: "bg-amber-100 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400",
-    wave: "from-amber-50 via-orange-100/70 to-transparent",
-    line: "bg-amber-300/60 dark:bg-amber-400/80",
-    glow: "245, 158, 11",
-  },
-  rose: {
-    icon: "bg-rose-100 text-rose-600 dark:bg-pink-500/10 dark:text-pink-400",
-    wave: "from-rose-50 via-pink-100/70 to-transparent",
-    line: "bg-rose-300/60 dark:bg-pink-400/80",
-    glow: "236, 72, 153",
-  },
-  violet: {
-    icon: "bg-violet-100 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400",
-    wave: "from-violet-50 via-violet-100/70 to-transparent",
-    line: "bg-violet-300/60 dark:bg-violet-400/80",
-    glow: "139, 92, 246",
-  },
-  red: {
-    icon: "bg-red-100 text-red-600 dark:bg-red-500/10 dark:text-red-400",
-    wave: "from-red-50 via-red-100/70 to-transparent",
-    line: "bg-red-300/60 dark:bg-red-400/80",
-    glow: "239, 68, 68",
-  },
-};
+function formatCurrency(value = 0) {
+  return `RM ${Number(value || 0).toLocaleString("en-MY", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
 
-function Card({ icon: Icon, label, value, tone = "emerald", sub, to }) {
-  const style = toneStyles[tone] || toneStyles.emerald;
-  const cardClassName = `group relative min-h-[102px] overflow-hidden rounded-[1.2rem] border border-white/80 dark:border-[#202733]/80 bg-white/85 dark:bg-[#090d12]/85 p-3 shadow-[0_10px_28px_rgba(15,23,42,0.07)] backdrop-blur transition ${
-    to
-      ? "block cursor-pointer active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-indigo-300/70 dark:focus:ring-indigo-700/70"
-      : ""
-  }`;
+function clampPercentage(value) {
+  return Math.min(100, Math.max(0, Number.isFinite(value) ? value : 0));
+}
 
-  const content = (
-    <>
-      <div className={`pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-tr dark:hidden ${style.wave}`} />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-14 dark:block"
-        style={{
-          backgroundImage: `radial-gradient(ellipse 100% 80% at 74% 125%, rgba(${style.glow}, 0.22) 0%, rgba(${style.glow}, 0.09) 42%, transparent 74%)`,
-        }}
-      />
-      <div className="pointer-events-none absolute -bottom-7 left-10 right-[-20%] h-14 rounded-[100%] border-t border-white/70 opacity-80 dark:hidden" />
-      <div
-        className="pointer-events-none absolute -bottom-12 -right-[12%] hidden h-16 w-[112%] rounded-[50%] border-t dark:block"
-        style={{ borderColor: `rgba(${style.glow}, 0.13)` }}
-      />
-      <div className="relative">
-        <div className="mb-4 flex items-center gap-2.5">
-          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${style.icon}`}>
-            <Icon className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-[12px] font-normal tracking-wide text-slate-600 dark:text-slate-400">{label}</span>
-        </div>
-        <p className="text-[18px] font-semibold leading-none tracking-[0.04em] text-slate-900 dark:text-slate-100">{value}</p>
-        {sub && <p className="mt-1.5 text-[11px] font-normal text-slate-500 dark:text-slate-400">{sub}</p>}
-        <div className={`mt-2.5 h-0.5 w-10 rounded-full ${style.line}`} />
+function SpendingRing({ percentage, overBudget }) {
+  const ringValue = clampPercentage(percentage);
+
+  return (
+    <div className="relative h-[5.6rem] w-[5.6rem] shrink-0" aria-label={`${Math.round(percentage)}% of salary used`}>
+      <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="rgba(148, 163, 184, 0.16)"
+          strokeWidth="11"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          pathLength="100"
+          stroke={overBudget ? "#fb7185" : "#2ee68a"}
+          strokeWidth="11"
+          strokeDasharray={`${ringValue} ${100 - ringValue}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <span className={`text-[1.05rem] font-extrabold tabular-nums ${overBudget ? "text-rose-300" : "text-white"}`}>
+          {Math.round(percentage)}%
+        </span>
+        <span className="mt-0.5 text-[0.66rem] font-semibold text-slate-400">used</span>
       </div>
-    </>
+    </div>
   );
+}
 
-  if (to) {
-    return (
-      <Link to={to} className={cardClassName} aria-label={`Open ${label} page`}>
-        {content}
-      </Link>
-    );
-  }
-
-  return <div className={cardClassName}>{content}</div>;
+function SpendingBreakdownLink({ to, icon: Icon, label, value }) {
+  return (
+    <Link
+      to={to}
+      className="group flex min-w-0 items-center gap-2.5 rounded-[1.15rem] border border-white/[0.07] bg-black/10 px-3 py-3 transition hover:border-emerald-400/20 hover:bg-emerald-400/[0.04] active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+        <Icon className="h-[1.15rem] w-[1.15rem]" strokeWidth={2.2} />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-[0.72rem] font-semibold text-slate-400">{label}</span>
+        <span className="mt-0.5 block truncate text-[clamp(0.72rem,3.2vw,0.95rem)] font-bold tabular-nums text-white">{value}</span>
+      </span>
+    </Link>
+  );
 }
 
 export default function SummaryCards({ cycle, fixedTotal, expenseTotal }) {
-  const salary = cycle?.salary_amount || 0;
-  const totalSpent = fixedTotal + expenseTotal;
+  const salary = Number(cycle?.salary_amount || 0);
+  const totalSpent = Number(fixedTotal || 0) + Number(expenseTotal || 0);
   const remaining = salary - totalSpent;
-  const startDate = cycle?.start_date ? parseDateOnly(cycle.start_date) : null;
-  const endDate = cycle?.end_date ? parseDateOnly(cycle.end_date) : new Date();
-  const daysSince = startDate && endDate ? Math.max(1, Math.floor((endDate - startDate) / 86400000) + 1) : 0;
-  const avgPerDay = daysSince > 0 ? (expenseTotal / daysSince) : 0;
-
-  const fmt = (n) => `⃁ ${n.toLocaleString("en-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const usedPercentage = salary > 0 ? (totalSpent / salary) * 100 : 0;
+  const remainingPercentage = salary > 0 ? (remaining / salary) * 100 : 0;
+  const remainingBar = clampPercentage(remainingPercentage);
+  const overBudget = remaining < 0;
+  const cycleRange = cycle?.end_date
+    ? `${formatDisplayDate(cycle.start_date)} — ${formatDisplayDate(cycle.end_date)}`
+    : `${formatDisplayDate(cycle?.start_date)} — Current`;
 
   return (
-    <div className="grid grid-cols-2 gap-2.5">
-      <Card icon={Wallet} label="Salary" value={fmt(salary)} tone="emerald" />
-      <Card
-        icon={Activity}
-        label="Remaining"
-        value={fmt(remaining)}
-        tone={remaining >= 0 ? "teal" : "red"}
-        sub={remaining < 0 ? "Over budget!" : ""}
-      />
-      <Card icon={CreditCard} label="Daily Expenses" value={fmt(expenseTotal)} tone="blue" to="/expenses" />
-      <Card icon={PiggyBank} label="Fixed Spending" value={fmt(fixedTotal)} tone="amber" to="/fixed" />
-      <Card icon={TrendingDown} label="Total Spent" value={fmt(totalSpent)} tone="rose" />
-      <Card
-        icon={Calendar}
-        label="Days / Avg"
-        value={`${daysSince} days`}
-        tone="violet"
-        sub={`~${fmt(avgPerDay)}/day`}
-      />
+    <div className="space-y-4">
+      <section className="overflow-hidden rounded-[1.75rem] border border-emerald-300/[0.09] bg-[linear-gradient(135deg,rgba(5,62,43,0.78)_0%,rgba(8,21,22,0.94)_48%,rgba(7,16,19,0.98)_100%)] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.34)]">
+        <div className="flex items-center gap-3">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.05rem] bg-emerald-400/[0.12] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.08]">
+            <CalendarDays className="h-[1.35rem] w-[1.35rem]" strokeWidth={2.1} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[0.92rem] font-bold text-slate-300">Current Cycle</h2>
+            <p className="mt-0.5 truncate text-[0.75rem] font-semibold text-slate-400">{cycleRange}</p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-400/[0.11] px-3 py-1.5 text-[0.74rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(46,230,138,0.75)]" />
+            Active
+          </span>
+        </div>
+
+        <div className="mt-4 grid grid-cols-[1fr_1px_1fr] items-stretch gap-4 rounded-[1.35rem] border border-white/[0.07] bg-black/[0.13] px-4 py-4">
+          <div className="min-w-0">
+            <p className="text-[0.78rem] font-semibold text-slate-400">Salary</p>
+            <p className="mt-2 whitespace-nowrap text-[clamp(1.05rem,4.8vw,1.6rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+              {formatCurrency(salary)}
+            </p>
+          </div>
+
+          <div className="h-full min-h-[4.8rem] bg-white/[0.09]" />
+
+          <div className="min-w-0">
+            <p className="text-[0.78rem] font-semibold text-slate-400">Remaining</p>
+            <p className={`mt-2 whitespace-nowrap text-[clamp(1rem,4.5vw,1.45rem)] font-extrabold leading-none tracking-tight tabular-nums ${overBudget ? "text-rose-300" : "text-emerald-400"}`}>
+              {formatCurrency(remaining)}
+            </p>
+            <div className="mt-3 flex items-center gap-2.5">
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-700/55">
+                <div
+                  className={`h-full rounded-full transition-[width] duration-500 ${overBudget ? "bg-rose-400" : "bg-gradient-to-r from-emerald-500 to-emerald-300"}`}
+                  style={{ width: `${overBudget ? 100 : remainingBar}%` }}
+                />
+              </div>
+              <span className={`text-[0.72rem] font-bold tabular-nums ${overBudget ? "text-rose-300" : "text-slate-400"}`}>
+                {overBudget ? "Over" : `${Math.round(remainingBar)}%`}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-[1.75rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] p-4 shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
+        <div className="flex items-center gap-3">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.05rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+            <Tag className="h-[1.35rem] w-[1.35rem]" strokeWidth={2.2} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[0.98rem] font-bold text-white">Spent This Cycle</h2>
+            <p className="mt-2 truncate text-[clamp(1.45rem,7vw,2rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+              {formatCurrency(totalSpent)}
+            </p>
+          </div>
+          <SpendingRing percentage={usedPercentage} overBudget={overBudget} />
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2.5">
+          <SpendingBreakdownLink
+            to="/expenses"
+            icon={CalendarDays}
+            label="Daily Expenses"
+            value={formatCurrency(expenseTotal)}
+          />
+          <SpendingBreakdownLink
+            to="/fixed"
+            icon={ShieldCheck}
+            label="Fixed Spending"
+            value={formatCurrency(fixedTotal)}
+          />
+        </div>
+      </section>
     </div>
   );
 }

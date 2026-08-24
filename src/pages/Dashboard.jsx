@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { cloudflare } from "@/api/cloudflareClient";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowRightLeft, Info, CalendarDays, Clock3 } from "lucide-react";
+import { ArrowRightLeft, CalendarDays, ChevronRight, Clock3, Plus } from "lucide-react";
 import MobileLayout from "../components/MobileLayout";
 import SummaryCards from "../components/SummaryCards";
 import { filterExpensesForCycle, formatDisplayDate, getRecentExpensesByDays } from "@/utils/cycleFilters";
-import GroupedExpenseSections from "@/components/GroupedExpenseSections";
+import { getExpenseIcon } from "@/utils/expenseIcons";
 
 const DASHBOARD_CACHE_KEY = "salary-cycle-dashboard-cache-v1";
 
@@ -42,6 +42,55 @@ function saveDashboardCache(data) {
   } catch {
     // Cache is only a speed/fallback helper. Ignore storage errors.
   }
+}
+
+function formatCurrency(value = 0) {
+  return `RM ${Number(value || 0).toLocaleString("en-MY", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function DashboardSurface({ children }) {
+  return (
+    <div className="relative -mx-4 -mb-6 -mt-4 min-h-[calc(100dvh-env(safe-area-inset-top))] overflow-hidden bg-[#02070a] px-4 pb-10 pt-5 text-white">
+      <div className="pointer-events-none absolute inset-x-[-30%] top-[-10rem] h-[25rem] rounded-full bg-emerald-500/[0.055] blur-3xl" />
+      <div className="pointer-events-none absolute -right-28 top-72 h-64 w-64 rounded-full bg-emerald-500/[0.035] blur-3xl" />
+      <div className="relative mx-auto max-w-md">{children}</div>
+    </div>
+  );
+}
+
+function RecentTransaction({ expense }) {
+  const Icon = getExpenseIcon(expense.category, expense.description);
+
+  return (
+    <Link
+      to="/expenses"
+      className="group flex items-center gap-3 rounded-[1.3rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] px-3.5 py-3.5 shadow-[0_12px_28px_rgba(0,0,0,0.2)] transition hover:border-emerald-400/20 hover:bg-emerald-400/[0.03] active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+    >
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[1rem] bg-emerald-400/[0.1] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+        <Icon className="h-5 w-5" strokeWidth={2.2} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[0.92rem] font-bold text-white">
+          {expense.description || expense.category || "Expense"}
+        </span>
+        <span className="mt-1 block truncate text-[0.72rem] font-semibold text-slate-400">
+          {expense.category || "Uncategorized"}
+        </span>
+      </span>
+      <span className="shrink-0 text-right">
+        <span className="block text-[0.72rem] font-semibold text-slate-400">
+          {formatDisplayDate(expense.date)}
+        </span>
+        <span className="mt-1 block text-[0.9rem] font-extrabold tabular-nums text-white">
+          -{formatCurrency(expense.amount)}
+        </span>
+      </span>
+      <ChevronRight className="h-5 w-5 shrink-0 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-emerald-400" />
+    </Link>
+  );
 }
 
 export default function Dashboard() {
@@ -101,18 +150,19 @@ export default function Dashboard() {
     loadDashboard();
   }, [loadDashboard]);
 
-  const fixedTotal = fixed.reduce((s, i) => s + (i.amount || 0), 0);
-  const expenseTotal = expenses.reduce((s, i) => s + (i.amount || 0), 0);
-  const fmt = formatDisplayDate;
-  const recentExpenses = getRecentExpensesByDays(expenses, 3);
+  const fixedTotal = fixed.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const expenseTotal = expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const recentExpenses = getRecentExpensesByDays(expenses, 3).slice(0, 3);
 
   if (loading) {
     return (
       <MobileLayout>
-        <div className="flex h-60 flex-col items-center justify-center gap-3 text-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Loading dashboard…</p>
-        </div>
+        <DashboardSurface>
+          <div className="flex min-h-[70dvh] flex-col items-center justify-center gap-3 text-center">
+            <div className="h-7 w-7 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
+            <p className="text-sm font-medium text-slate-400">Loading dashboard…</p>
+          </div>
+        </DashboardSurface>
       </MobileLayout>
     );
   }
@@ -120,128 +170,109 @@ export default function Dashboard() {
   if (error) {
     return (
       <MobileLayout>
-        <div className="space-y-4 py-10 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400">
-            !
+        <DashboardSurface>
+          <div className="flex min-h-[70dvh] flex-col items-center justify-center text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-400/[0.1] text-xl font-bold text-rose-300 ring-1 ring-inset ring-rose-400/20">
+              !
+            </div>
+            <h1 className="mt-4 text-lg font-bold text-white">Dashboard cannot load</h1>
+            <p className="mt-2 max-w-xs break-words text-sm text-slate-400">{error}</p>
+            <Button
+              className="mt-5 h-11 rounded-2xl bg-emerald-500 px-7 font-bold text-white hover:bg-emerald-400"
+              onClick={() => loadDashboard({ useCache: false })}
+            >
+              Refresh
+            </Button>
           </div>
-          <div>
-            <h1 className="text-lg font-semibold">Dashboard cannot load</h1>
-            <p className="mt-2 break-words text-sm text-muted-foreground">{error}</p>
-          </div>
-          <Button className="h-11 rounded-xl" onClick={() => loadDashboard({ useCache: false })}>
-            Refresh
-          </Button>
-        </div>
+        </DashboardSurface>
       </MobileLayout>
     );
   }
 
   return (
     <MobileLayout>
-      <div className="-mx-4 -mb-6 -mt-4 min-h-[calc(100dvh-74px)] overflow-hidden bg-[radial-gradient(circle_at_top_left,_#eef2ff_0%,_#f8fafc_43%,_#ffffff_100%)] px-4 pb-8 pt-5 dark:bg-[radial-gradient(circle_at_top_left,_rgba(124,58,237,0.08)_0%,_#05080c_38%,_#030609_100%)]">
-        <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-violet-200/30 dark:bg-violet-800/30 blur-3xl" />
-
-        <div className="relative space-y-4">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-3">
+      <DashboardSurface>
+        <div className="space-y-4">
+          <header className="flex items-start justify-between gap-3 pb-1 pt-1">
             <div>
-              <h1 className="text-[24px] font-semibold leading-tight tracking-tight text-slate-900 dark:text-slate-100">Salary Cycle</h1>
-              <p className="mt-0.5 text-[13px] font-normal tracking-wide text-slate-500 dark:text-slate-400">Spending Tracker</p>
+              <h1 className="text-[1.72rem] font-extrabold leading-tight tracking-tight text-white">Salary Cycle</h1>
+              <p className="mt-1 text-[0.88rem] font-semibold text-slate-400">Spending Tracker</p>
             </div>
             <button
               type="button"
               onClick={() => navigate("/cycles")}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-200 dark:border-violet-800 bg-white/75 dark:bg-[#090d12]/75 text-violet-600 dark:text-violet-400 shadow-[0_8px_24px_rgba(124,58,237,0.10)] backdrop-blur transition active:scale-95"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.05rem] border border-white/[0.06] bg-white/[0.045] text-emerald-400 shadow-[0_12px_28px_rgba(0,0,0,0.2)] transition hover:border-emerald-400/20 hover:bg-emerald-400/[0.08] active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
               aria-label="Open salary cycles"
             >
-              <CalendarDays className="h-4 w-4" />
+              <CalendarDays className="h-[1.3rem] w-[1.3rem]" strokeWidth={2.2} />
             </button>
-          </div>
+          </header>
 
           {(fromCache || syncNotice) && (
-            <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50/90 dark:bg-amber-950/90 px-3 py-2 text-[12px] leading-5 text-amber-800 dark:text-amber-200 shadow-sm">
+            <div className="rounded-2xl border border-amber-300/15 bg-amber-300/[0.07] px-3.5 py-3 text-[0.75rem] leading-5 text-amber-100">
               {syncNotice || "Showing saved dashboard while Cloudflare refreshes in the background."}
             </div>
           )}
 
           {!cycle ? (
-            <div className="rounded-[1.35rem] border border-white/80 dark:border-[#202733]/80 bg-white/85 dark:bg-[#090d12]/85 p-5 text-center shadow-[0_14px_36px_rgba(15,23,42,0.07)] backdrop-blur">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-500 text-white shadow-[0_10px_24px_rgba(99,102,241,0.22)]">
-                <ArrowRightLeft className="h-6 w-6" />
+            <section className="rounded-[1.75rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] p-6 text-center shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.25rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.08]">
+                <ArrowRightLeft className="h-7 w-7" />
               </div>
-              <div className="mt-4">
-                <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">No Active Cycle</h2>
-                <p className="mx-auto mt-1 max-w-xs text-[13px] leading-5 text-slate-500 dark:text-slate-400">
-                  Start by creating your first salary cycle. This tracker follows your salary date, not calendar month.
-                </p>
-              </div>
+              <h2 className="mt-5 text-lg font-bold text-white">No Active Cycle</h2>
+              <p className="mx-auto mt-2 max-w-xs text-[0.8rem] leading-5 text-slate-400">
+                Create your first salary cycle to start tracking salary, fixed commitments, and daily expenses.
+              </p>
               <Button
-                className="mt-4 h-11 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-500 px-7 text-sm font-medium text-white shadow-[0_12px_24px_rgba(99,102,241,0.22)] hover:from-violet-600 hover:to-indigo-500"
+                className="mt-5 h-12 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-7 text-sm font-bold text-white shadow-[0_12px_28px_rgba(16,185,129,0.18)] hover:from-emerald-500 hover:to-emerald-400"
                 onClick={() => navigate("/cycles?new=1")}
               >
                 Start New Salary Cycle
               </Button>
-            </div>
+            </section>
           ) : (
             <>
-              {/* Cycle info */}
-              <div className="flex items-start gap-2.5 rounded-[1.2rem] border border-indigo-100 dark:border-indigo-900 bg-white/70 dark:bg-[#090d12]/70 p-3 shadow-[0_10px_26px_rgba(59,130,246,0.07)] backdrop-blur">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 ring-1 ring-blue-100 dark:ring-blue-900">
-                  <Info className="h-4 w-4" />
-                </div>
-                <p className="text-[12px] leading-5 text-slate-600 dark:text-slate-300">
-                  Current cycle started <strong className="font-medium text-indigo-600 dark:text-indigo-400">{fmt(cycle.start_date)}</strong>.
-                  {cycle.end_date ? ` Ends ${fmt(cycle.end_date)}.` : " End date not set — cycle stays active until next salary."}
-                </p>
-              </div>
-
               <SummaryCards cycle={cycle} fixedTotal={fixedTotal} expenseTotal={expenseTotal} />
 
-              {/* Quick actions */}
-              <div className="grid grid-cols-2 gap-2.5">
-                <Button
-                  variant="outline"
-                  className="h-11 rounded-2xl border-violet-200 dark:border-violet-800 bg-white/75 dark:bg-[#090d12]/75 text-[13px] font-medium text-indigo-600 dark:text-indigo-400 shadow-sm backdrop-blur hover:bg-violet-50 dark:hover:bg-violet-950 hover:text-indigo-700 dark:hover:text-indigo-300"
-                  onClick={() => navigate("/expenses?add=1")}
-                >
-                  <Plus className="h-4 w-4" /> Add Expense
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-11 rounded-2xl border-violet-200 dark:border-violet-800 bg-white/75 dark:bg-[#090d12]/75 text-[13px] font-medium text-indigo-600 dark:text-indigo-400 shadow-sm backdrop-blur hover:bg-violet-50 dark:hover:bg-violet-950 hover:text-indigo-700 dark:hover:text-indigo-300"
-                  onClick={() => navigate("/fixed?add=1")}
-                >
-                  <Plus className="h-4 w-4" /> Fixed Spending
-                </Button>
-              </div>
               <Button
-                className="h-11 w-full rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-500 text-[13px] font-medium text-white shadow-[0_14px_28px_rgba(99,102,241,0.22)] hover:from-violet-600 hover:to-indigo-500 active:scale-[0.99]"
-                onClick={() => navigate("/cycles?new=1")}
+                className="h-[3.35rem] w-full rounded-full bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-700 text-[0.98rem] font-extrabold text-white shadow-[0_14px_30px_rgba(16,185,129,0.17)] ring-1 ring-inset ring-emerald-300/10 transition hover:from-emerald-600 hover:via-emerald-500 hover:to-emerald-600 active:scale-[0.99]"
+                onClick={() => navigate("/expenses?add=1")}
               >
-                <ArrowRightLeft className="h-4 w-4" /> Create Next Salary Cycle
+                <Plus className="mr-1 h-5 w-5 text-emerald-300" strokeWidth={2.4} /> Add Expense
               </Button>
 
-              {/* Recent expenses */}
-              {recentExpenses.length > 0 && (
-                <div className="rounded-[1.5rem] bg-white dark:bg-[#090d12] p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
-                        <Clock3 className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <h3 className="text-[13px] font-semibold text-slate-900 dark:text-slate-100">Recent Transactions</h3>
-                      </div>
-                    </div>
-                    <Link to="/expenses" className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">View all</Link>
+              <section className="pt-1">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.95rem] bg-emerald-400/[0.1] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+                      <Clock3 className="h-[1.15rem] w-[1.15rem]" strokeWidth={2.2} />
+                    </span>
+                    <h2 className="text-[1.05rem] font-extrabold text-white">Recent Transactions</h2>
                   </div>
-                  <GroupedExpenseSections expenses={recentExpenses} compact />
+                  <Link
+                    to="/expenses"
+                    className="inline-flex items-center gap-1 text-[0.78rem] font-bold text-emerald-400 transition hover:text-emerald-300"
+                  >
+                    View All <ChevronRight className="h-4 w-4" />
+                  </Link>
                 </div>
-              )}
+
+                {recentExpenses.length > 0 ? (
+                  <div className="space-y-2.5">
+                    {recentExpenses.map((expense, index) => (
+                      <RecentTransaction key={expense.id || `${expense.date}-${index}`} expense={expense} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-[1.3rem] border border-dashed border-white/[0.09] bg-white/[0.025] px-4 py-8 text-center text-[0.8rem] font-medium text-slate-500">
+                    No expenses recorded in this cycle yet.
+                  </div>
+                )}
+              </section>
             </>
           )}
         </div>
-      </div>
+      </DashboardSurface>
     </MobileLayout>
   );
 }
