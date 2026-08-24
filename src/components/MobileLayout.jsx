@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Receipt, PiggyBank, CalendarRange, Settings, Menu, WalletCards, X } from "lucide-react";
+import { LayoutDashboard, Receipt, PiggyBank, CalendarRange, Settings, WalletCards, X } from "lucide-react";
+
+const EDGE_SWIPE_ZONE_PX = 72;
+const SWIPE_DISTANCE_PX = 64;
+const HORIZONTAL_SWIPE_BIAS = 1.2;
 
 const tabs = [
   { path: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -15,13 +19,12 @@ export default function MobileLayout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const swipeGesture = useRef(null);
 
   const isTabActive = (path) =>
     path === "/"
       ? location.pathname === "/"
       : location.pathname === path || location.pathname.startsWith(`${path}/`);
-
-  const activeTab = tabs.find((tab) => isTabActive(tab.path));
 
   useEffect(() => {
     if (!sidebarOpen) return undefined;
@@ -41,9 +44,57 @@ export default function MobileLayout({ children }) {
     }
   };
 
+  const startOpenSwipe = (event) => {
+    if (sidebarOpen || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    if (touch.clientX > EDGE_SWIPE_ZONE_PX) return;
+
+    swipeGesture.current = {
+      mode: "open",
+      startX: touch.clientX,
+      startY: touch.clientY,
+    };
+  };
+
+  const startCloseSwipe = (event) => {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    swipeGesture.current = {
+      mode: "close",
+      startX: touch.clientX,
+      startY: touch.clientY,
+    };
+  };
+
+  const finishSwipe = (event) => {
+    const gesture = swipeGesture.current;
+    swipeGesture.current = null;
+    if (!gesture || event.changedTouches.length !== 1) return;
+
+    const touch = event.changedTouches[0];
+    const horizontalDistance = touch.clientX - gesture.startX;
+    const verticalDistance = Math.abs(touch.clientY - gesture.startY);
+    const isMostlyHorizontal = Math.abs(horizontalDistance) > verticalDistance * HORIZONTAL_SWIPE_BIAS;
+
+    if (gesture.mode === "open" && horizontalDistance >= SWIPE_DISTANCE_PX && isMostlyHorizontal) {
+      setSidebarOpen(true);
+    }
+
+    if (gesture.mode === "close" && horizontalDistance <= -SWIPE_DISTANCE_PX && isMostlyHorizontal) {
+      setSidebarOpen(false);
+    }
+  };
+
+  const cancelSwipe = () => {
+    swipeGesture.current = null;
+  };
+
   return (
     <div
       className="app-mobile-shell fixed inset-0 overflow-hidden bg-background"
+      onTouchStart={startOpenSwipe}
+      onTouchEnd={finishSwipe}
+      onTouchCancel={cancelSwipe}
       style={{
         height: "100dvh",
         minHeight: "100dvh",
@@ -55,27 +106,16 @@ export default function MobileLayout({ children }) {
         className="relative mx-auto flex h-[100dvh] max-w-lg flex-col overflow-hidden bg-background"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        <header className="mobile-no-select z-50 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-card/95 px-3 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-[#05080c]/95">
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(true)}
-            className="mobile-tab-button flex h-11 w-11 shrink-0 touch-manipulation items-center justify-center rounded-2xl border border-slate-200 bg-white/80 text-slate-700 shadow-sm transition active:scale-95 dark:border-[#202733] dark:bg-[#090d12]/90 dark:text-slate-200"
-            aria-label="Open navigation menu"
-            aria-expanded={sidebarOpen}
-            aria-controls="mobile-navigation-drawer"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-
-          <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-slate-900 dark:text-slate-100">
-              {activeTab?.label || "Salary Tracker"}
-            </p>
-            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
-              Salary Tracker
-            </p>
-          </div>
-        </header>
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          className="sr-only"
+          aria-label="Open navigation menu"
+          aria-expanded={sidebarOpen}
+          aria-controls="mobile-navigation-drawer"
+        >
+          Open navigation
+        </button>
 
         {sidebarOpen && (
           <div className="absolute inset-0 z-[100]">
@@ -91,6 +131,9 @@ export default function MobileLayout({ children }) {
               role="dialog"
               aria-modal="true"
               aria-label="Main navigation"
+              onTouchStart={startCloseSwipe}
+              onTouchEnd={finishSwipe}
+              onTouchCancel={cancelSwipe}
               className="mobile-sidebar absolute inset-y-0 left-0 w-[72vw] min-w-[15rem] max-w-[17rem] overflow-hidden border-r border-sidebar-border bg-sidebar text-sidebar-foreground shadow-[18px_0_44px_rgba(15,23,42,0.14)] backdrop-blur-xl animate-in slide-in-from-left duration-300 dark:shadow-[18px_0_48px_rgba(0,0,0,0.58)]"
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
