@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Receipt, PiggyBank, CalendarRange, Settings, Menu } from "lucide-react";
+import { LayoutDashboard, Receipt, PiggyBank, CalendarRange, Settings, Menu, WalletCards } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const tabs = [
   { path: "/", icon: LayoutDashboard, label: "Dashboard" },
   { path: "/expenses", icon: Receipt, label: "Expenses" },
   { path: "/fixed", icon: PiggyBank, label: "Fixed" },
+  { path: "/future", icon: WalletCards, label: "Future" },
   { path: "/cycles", icon: CalendarRange, label: "Cycles" },
   { path: "/settings", icon: Settings, label: "Settings" },
 ];
