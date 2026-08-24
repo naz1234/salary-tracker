@@ -419,7 +419,7 @@ export default function FixedSpending() {
   const [loadWarning, setLoadWarning] = useState("");
   const [saving, setSaving] = useState(false);
   const [savingPaidIds, setSavingPaidIds] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("due");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
