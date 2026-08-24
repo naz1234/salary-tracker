@@ -300,7 +300,7 @@ export default function FutureExpenses() {
                   setFormError("");
                 }}
                 placeholder="e.g. House rent"
-                className="mt-1 h-8 border-0 bg-transparent px-0 text-[0.8rem] font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="mt-1 h-8 border-0 bg-transparent px-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
 
@@ -324,7 +324,7 @@ export default function FutureExpenses() {
                     setFormError("");
                   }}
                   placeholder="0.00"
-                  className="h-8 border-0 bg-transparent pl-5 pr-0 text-[0.8rem] font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-8 border-0 bg-transparent pl-5 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
