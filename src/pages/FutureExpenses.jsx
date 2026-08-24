@@ -3,10 +3,13 @@ import {
   ArrowDownRight,
   BriefcaseBusiness,
   CircleDollarSign,
+  Landmark,
   Pencil,
+  PiggyBank,
   Plus,
   ReceiptText,
   Save,
+  Scale,
   Trash2,
   WalletCards,
 } from "lucide-react";
@@ -19,6 +22,7 @@ const STORAGE_KEY = "salary-cycle-future-expense-plan-v1";
 
 const emptyPlan = {
   expectedSalary: "",
+  savings: "",
   commitments: [],
 };
 
@@ -41,6 +45,10 @@ function loadPlan() {
         stored.expectedSalary === "" || Number.isFinite(Number(stored.expectedSalary))
           ? String(stored.expectedSalary ?? "")
           : "",
+      savings:
+        stored.savings === "" || Number.isFinite(Number(stored.savings))
+          ? String(stored.savings ?? "")
+          : "",
       commitments: Array.isArray(stored.commitments)
         ? stored.commitments
             .filter((item) => item && item.name && Number(item.amount) > 0)
@@ -48,6 +56,7 @@ function loadPlan() {
               id: String(item.id || makeId()),
               name: String(item.name),
               amount: Number(item.amount),
+              remainingLoan: Math.max(0, Number(item.remainingLoan) || 0),
             }))
         : [],
     };
@@ -65,7 +74,7 @@ function formatCurrency(value) {
 
 export default function FutureExpenses() {
   const [plan, setPlan] = useState(loadPlan);
-  const [form, setForm] = useState({ name: "", amount: "" });
+  const [form, setForm] = useState({ name: "", amount: "", remainingLoan: "" });
   const [editingId, setEditingId] = useState(null);
   const [formError, setFormError] = useState("");
 
@@ -74,22 +83,29 @@ export default function FutureExpenses() {
   }, [plan]);
 
   const expectedSalary = Math.max(0, Number(plan.expectedSalary) || 0);
+  const savings = Math.max(0, Number(plan.savings) || 0);
   const totalCommitments = useMemo(
     () => plan.commitments.reduce((sum, item) => sum + Number(item.amount || 0), 0),
     [plan.commitments],
   );
+  const totalLoanBalance = useMemo(
+    () => plan.commitments.reduce((sum, item) => sum + Number(item.remainingLoan || 0), 0),
+    [plan.commitments],
+  );
   const remaining = expectedSalary - totalCommitments;
   const overBudget = remaining < 0;
+  const netPosition = savings - totalLoanBalance;
+  const hasNetDeficit = netPosition < 0;
   const commitmentPercent =
     expectedSalary > 0 ? Math.min(100, (totalCommitments / expectedSalary) * 100) : 0;
 
-  const updateExpectedSalary = (value) => {
+  const updatePlanAmount = (field, value) => {
     if (value !== "" && Number(value) < 0) return;
-    setPlan((current) => ({ ...current, expectedSalary: value }));
+    setPlan((current) => ({ ...current, [field]: value }));
   };
 
   const resetForm = () => {
-    setForm({ name: "", amount: "" });
+    setForm({ name: "", amount: "", remainingLoan: "" });
     setEditingId(null);
     setFormError("");
   };
@@ -98,9 +114,15 @@ export default function FutureExpenses() {
     event.preventDefault();
     const name = form.name.trim();
     const amount = Number(form.amount);
+    const remainingLoan = form.remainingLoan === "" ? 0 : Number(form.remainingLoan);
 
     if (!name || !Number.isFinite(amount) || amount <= 0) {
-      setFormError("Enter a commitment name and an amount above zero.");
+      setFormError("Enter a commitment name and a monthly payment above zero.");
+      return;
+    }
+
+    if (!Number.isFinite(remainingLoan) || remainingLoan < 0) {
+      setFormError("Remaining loan balance must be zero or more.");
       return;
     }
 
@@ -108,16 +130,20 @@ export default function FutureExpenses() {
       ...current,
       commitments: editingId
         ? current.commitments.map((item) =>
-            item.id === editingId ? { ...item, name, amount } : item,
+            item.id === editingId ? { ...item, name, amount, remainingLoan } : item,
           )
-        : [...current.commitments, { id: makeId(), name, amount }],
+        : [...current.commitments, { id: makeId(), name, amount, remainingLoan }],
     }));
     resetForm();
   };
 
   const editCommitment = (item) => {
     setEditingId(item.id);
-    setForm({ name: item.name, amount: String(item.amount) });
+    setForm({
+      name: item.name,
+      amount: String(item.amount),
+      remainingLoan: item.remainingLoan > 0 ? String(item.remainingLoan) : "",
+    });
     setFormError("");
   };
 
@@ -165,7 +191,7 @@ export default function FutureExpenses() {
             <div className="rounded-2xl border border-orange-500/20 bg-white/65 p-3 dark:bg-black/15">
               <div className="flex items-center gap-1.5 text-orange-600 dark:text-orange-400">
                 <ArrowDownRight className="h-4 w-4" />
-                <span className="text-[11px] font-semibold">Commitments</span>
+                <span className="text-[11px] font-semibold">Monthly commitments</span>
               </div>
               <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
                 {formatCurrency(totalCommitments)}
@@ -201,6 +227,56 @@ export default function FutureExpenses() {
             </div>
           </div>
 
+          <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+            <div className="rounded-2xl border border-blue-500/20 bg-white/65 p-3 dark:bg-black/15">
+              <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                <PiggyBank className="h-4 w-4" />
+                <span className="text-[11px] font-semibold">Current savings</span>
+              </div>
+              <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
+                {formatCurrency(savings)}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-violet-500/20 bg-white/65 p-3 dark:bg-black/15">
+              <div className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400">
+                <Landmark className="h-4 w-4" />
+                <span className="text-[11px] font-semibold">Loan balances</span>
+              </div>
+              <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
+                {formatCurrency(totalLoanBalance)}
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`mt-2.5 flex items-center justify-between gap-3 rounded-2xl border bg-white/65 px-3 py-2.5 dark:bg-black/15 ${
+              hasNetDeficit ? "border-rose-500/25" : "border-emerald-500/20"
+            }`}
+          >
+            <div
+              className={`flex min-w-0 items-center gap-2 ${
+                hasNetDeficit
+                  ? "text-rose-600 dark:text-rose-400"
+                  : "text-emerald-600 dark:text-emerald-400"
+              }`}
+            >
+              <Scale className="h-4 w-4 shrink-0" />
+              <span className="truncate text-[11px] font-semibold">
+                {hasNetDeficit ? "Loans above savings" : "Savings after loans"}
+              </span>
+            </div>
+            <p
+              className={`shrink-0 text-sm font-extrabold ${
+                hasNetDeficit
+                  ? "text-rose-600 dark:text-rose-400"
+                  : "text-slate-900 dark:text-slate-100"
+              }`}
+            >
+              {formatCurrency(Math.abs(netPosition))}
+            </p>
+          </div>
+
           <div className="mt-4">
             <div className="mb-1.5 flex justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400">
               <span>Salary allocated</span>
@@ -225,9 +301,9 @@ export default function FutureExpenses() {
               <BriefcaseBusiness className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-[0.88rem] font-extrabold text-white">Next-job salary</h2>
+              <h2 className="text-[0.88rem] font-extrabold text-white">Income and savings</h2>
               <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
-                Set the take-home amount for your next plan.
+                Set the next take-home amount and savings on hand.
               </p>
             </div>
             <span className="shrink-0 rounded-full bg-emerald-400/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
@@ -235,27 +311,54 @@ export default function FutureExpenses() {
             </span>
           </div>
 
-          <div className="relative mt-3 flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
-              ⃁
-            </span>
-            <div className="min-w-0 flex-1">
-              <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
-                Expected take-home
-              </Label>
-              <Input
-                id="future-salary"
-                type="number"
-                min="0"
-                step="0.01"
-                inputMode="decimal"
-                value={plan.expectedSalary}
-                onChange={(event) => updateExpectedSalary(event.target.value)}
-                placeholder="0.00"
-                className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-              />
+          <div className="relative mt-3 grid gap-2.5 sm:grid-cols-2">
+            <div className="flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
+                ⃁
+              </span>
+              <div className="min-w-0 flex-1">
+                <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
+                  Expected take-home
+                </Label>
+                <Input
+                  id="future-salary"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  inputMode="decimal"
+                  value={plan.expectedSalary}
+                  onChange={(event) => updatePlanAmount("expectedSalary", event.target.value)}
+                  placeholder="0.00"
+                  className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
+                <PiggyBank className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <Label htmlFor="future-savings" className="text-[0.62rem] font-semibold text-slate-400">
+                  Current savings
+                </Label>
+                <Input
+                  id="future-savings"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  inputMode="decimal"
+                  value={plan.savings}
+                  onChange={(event) => updatePlanAmount("savings", event.target.value)}
+                  placeholder="0.00"
+                  className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
             </div>
           </div>
+          <p className="relative mt-2 text-[0.62rem] font-medium text-slate-500">
+            Savings are shown in the summary and are not deducted from your next salary.
+          </p>
         </section>
 
         <form
@@ -306,7 +409,7 @@ export default function FutureExpenses() {
 
             <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
               <Label htmlFor="future-amount" className="text-[0.62rem] font-semibold text-slate-400">
-                Amount
+                Monthly payment
               </Label>
               <div className="relative mt-1">
                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-emerald-400">
@@ -328,6 +431,37 @@ export default function FutureExpenses() {
                 />
               </div>
             </div>
+          </div>
+
+          <div className="relative mt-2.5 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <Label htmlFor="future-loan-balance" className="text-[0.62rem] font-semibold text-slate-400">
+                Remaining loan balance
+              </Label>
+              <span className="text-[0.58rem] font-semibold text-slate-500">Optional — loans only</span>
+            </div>
+            <div className="relative mt-1">
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-violet-400">
+                ⃁
+              </span>
+              <Input
+                id="future-loan-balance"
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                value={form.remainingLoan}
+                onChange={(event) => {
+                  setForm((current) => ({ ...current, remainingLoan: event.target.value }));
+                  setFormError("");
+                }}
+                placeholder="0.00"
+                className="h-8 border-0 bg-transparent pl-5 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </div>
+            <p className="mt-1 text-[0.6rem] font-medium text-slate-500">
+              Enter the total still owed; the monthly payment remains separate above.
+            </p>
           </div>
 
           {formError && (
@@ -352,7 +486,7 @@ export default function FutureExpenses() {
                 Planned commitments
               </h2>
               <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
-                Total {formatCurrency(totalCommitments)}
+                Monthly total {formatCurrency(totalCommitments)} · Loans {formatCurrency(totalLoanBalance)}
               </p>
             </div>
             <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500 dark:bg-[#10151c] dark:text-slate-400">
@@ -384,9 +518,16 @@ export default function FutureExpenses() {
                     <p className="truncate text-sm font-bold text-slate-900 dark:text-slate-100">
                       {item.name}
                     </p>
-                    <p className="mt-0.5 text-xs font-semibold text-orange-600 dark:text-orange-400">
-                      {formatCurrency(item.amount)}
-                    </p>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <p className="text-xs font-semibold text-orange-600 dark:text-orange-400">
+                        Monthly {formatCurrency(item.amount)}
+                      </p>
+                      {item.remainingLoan > 0 && (
+                        <p className="text-[11px] font-semibold text-violet-600 dark:text-violet-400">
+                          Balance {formatCurrency(item.remainingLoan)}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <button
                     type="button"
