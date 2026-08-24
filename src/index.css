@@ -140,8 +140,8 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .mobile-bottom-nav,
-  .mobile-bottom-nav *,
+  .mobile-sidebar,
+  .mobile-sidebar *,
   .mobile-tab-button,
   .mobile-tab-button * {
     -webkit-user-select: none;
