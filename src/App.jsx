@@ -6,6 +6,7 @@ import PageNotFound from "./lib/PageNotFound";
 import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
 import FixedSpending from "./pages/FixedSpending";
+import FutureExpenses from "./pages/FutureExpenses";
 import SalaryCycles from "./pages/SalaryCycles";
 import CycleDetail from "./pages/CycleDetail";
 import SettingsPage from "./pages/SettingsPage";
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/fixed" element={<FixedSpending />} />
+          <Route path="/future" element={<FutureExpenses />} />
           <Route path="/cycles" element={<SalaryCycles />} />
           <Route path="/cycle/:cycleId" element={<CycleDetail />} />
           <Route path="/settings" element={<SettingsPage />} />
