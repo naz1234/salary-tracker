@@ -195,7 +195,7 @@ export default function Dashboard() {
         <div className="space-y-3">
           <header className="flex items-start justify-between gap-2 pb-0.5">
             <div>
-              <h1 className="text-[1.35rem] font-extrabold leading-tight tracking-tight text-white">Salary Cycle</h1>
+              <h1 className="text-[1.35rem] font-extrabold leading-tight tracking-tight text-white">Dashboard</h1>
               <p className="mt-0.5 text-[0.75rem] font-semibold text-slate-400">Spending Tracker</p>
             </div>
             <button
