@@ -556,9 +556,12 @@ export default function Expenses() {
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={(open) => { setSheetOpen(open); if (!open) setEditing(null); }}>
-        <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto rounded-t-3xl">
-          <SheetHeader><SheetTitle>{editing ? "Edit Expense" : "Add Expense"}</SheetTitle></SheetHeader>
-          <div className="mt-4 pb-6">
+        <SheetContent
+          side="bottom"
+          className="w-full max-w-full touch-pan-y overflow-x-hidden overflow-y-auto overscroll-x-none overscroll-y-contain rounded-t-3xl max-h-[90dvh]"
+        >
+          <SheetHeader className="min-w-0"><SheetTitle>{editing ? "Edit Expense" : "Add Expense"}</SheetTitle></SheetHeader>
+          <div className="mt-4 w-full min-w-0 max-w-full overflow-x-hidden pb-6">
             <ExpenseForm onSubmit={handleSubmit} initial={editing} loading={saving} cycle={cycle} />
           </div>
         </SheetContent>

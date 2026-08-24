@@ -100,9 +100,9 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="w-full min-w-0 max-w-full space-y-4 overflow-x-hidden">
       {!initial && (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3 dark:border-emerald-900 dark:bg-emerald-950/30">
+        <div className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3 dark:border-emerald-900 dark:bg-emerald-950/30">
           <div className="flex items-start gap-3">
             <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
               <MessageSquareText className="h-4 w-4" />
@@ -115,8 +115,8 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
             </div>
           </div>
 
-          <div className="mt-3 flex gap-2">
-            <Button type="button" className="h-10 flex-1 rounded-xl bg-emerald-600 text-xs font-semibold text-white hover:bg-emerald-700" onClick={handlePasteAndRead}>
+          <div className="mt-3 flex min-w-0 gap-2">
+            <Button type="button" className="h-10 min-w-0 flex-1 rounded-xl bg-emerald-600 text-xs font-semibold text-white hover:bg-emerald-700" onClick={handlePasteAndRead}>
               <ClipboardPaste className="mr-1.5 h-4 w-4" /> Paste & Read
             </Button>
             <Button
@@ -135,7 +135,8 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
                 value={smsText}
                 onChange={(event) => setSmsText(event.target.value)}
                 placeholder="Paste the complete bank SMS here..."
-                className="min-h-32 bg-white text-sm dark:bg-slate-950"
+                wrap="soft"
+                className="min-h-32 max-w-full resize-none overflow-x-hidden whitespace-pre-wrap break-words bg-white text-base dark:bg-slate-950"
               />
               <Button type="button" variant="outline" className="h-10 w-full rounded-xl text-xs font-semibold" disabled={!smsText.trim()} onClick={() => applySms(smsText)}>
                 Read SMS
@@ -146,7 +147,7 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
           {smsStatus && (
             <p
               aria-live="polite"
-              className={`mt-2 rounded-xl px-3 py-2 text-xs leading-5 ${
+              className={`mt-2 max-w-full break-words rounded-xl px-3 py-2 text-xs leading-5 ${
                 smsStatus.type === "error"
                   ? "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300"
                   : smsStatus.type === "warning"
