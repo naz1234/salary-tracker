@@ -5,6 +5,7 @@ import { LayoutDashboard, Receipt, PiggyBank, CalendarRange, Settings, WalletCar
 const EDGE_SWIPE_ZONE_PX = 72;
 const SWIPE_DISTANCE_PX = 64;
 const HORIZONTAL_SWIPE_BIAS = 1.2;
+const POST_SWIPE_CLICK_GUARD_MS = 450;
 
 const tabs = [
   { path: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -20,6 +21,7 @@ export default function MobileLayout({ children }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const swipeGesture = useRef(null);
+  const blockClicksUntil = useRef(0);
 
   const isTabActive = (path) =>
     path === "/"
@@ -77,6 +79,8 @@ export default function MobileLayout({ children }) {
     const isMostlyHorizontal = Math.abs(horizontalDistance) > verticalDistance * HORIZONTAL_SWIPE_BIAS;
 
     if (gesture.mode === "open" && horizontalDistance >= SWIPE_DISTANCE_PX && isMostlyHorizontal) {
+      blockClicksUntil.current = Date.now() + POST_SWIPE_CLICK_GUARD_MS;
+      if (event.cancelable) event.preventDefault();
       setSidebarOpen(true);
     }
 
@@ -89,9 +93,16 @@ export default function MobileLayout({ children }) {
     swipeGesture.current = null;
   };
 
+  const blockPostSwipeClick = (event) => {
+    if (Date.now() >= blockClicksUntil.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
   return (
     <div
       className="app-mobile-shell fixed inset-0 overflow-hidden bg-background"
+      onClickCapture={blockPostSwipeClick}
       onTouchStart={startOpenSwipe}
       onTouchEnd={finishSwipe}
       onTouchCancel={cancelSwipe}
