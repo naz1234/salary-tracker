@@ -22,7 +22,7 @@ const STORAGE_KEY = "salary-cycle-future-expense-plan-v1";
 
 const emptyPlan = {
   expectedSalary: "",
-  savings: "",
+  savingsSources: [],
   commitments: [],
 };
 
@@ -31,6 +31,23 @@ function makeId() {
     return crypto.randomUUID();
   }
   return `future-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function loadSavingsSources(stored) {
+  if (Array.isArray(stored.savingsSources)) {
+    return stored.savingsSources
+      .filter((item) => item && item.source && Number(item.amount) > 0)
+      .map((item) => ({
+        id: String(item.id || makeId()),
+        source: String(item.source),
+        amount: Number(item.amount),
+      }));
+  }
+
+  const legacySavings = Number(stored.savings);
+  return Number.isFinite(legacySavings) && legacySavings > 0
+    ? [{ id: makeId(), source: "Previous savings", amount: legacySavings }]
+    : [];
 }
 
 function loadPlan() {
@@ -45,10 +62,7 @@ function loadPlan() {
         stored.expectedSalary === "" || Number.isFinite(Number(stored.expectedSalary))
           ? String(stored.expectedSalary ?? "")
           : "",
-      savings:
-        stored.savings === "" || Number.isFinite(Number(stored.savings))
-          ? String(stored.savings ?? "")
-          : "",
+      savingsSources: loadSavingsSources(stored),
       commitments: Array.isArray(stored.commitments)
         ? stored.commitments
             .filter((item) => item && item.name && Number(item.amount) > 0)
@@ -74,6 +88,9 @@ function formatCurrency(value) {
 
 export default function FutureExpenses() {
   const [plan, setPlan] = useState(loadPlan);
+  const [savingsForm, setSavingsForm] = useState({ source: "", amount: "" });
+  const [editingSavingsId, setEditingSavingsId] = useState(null);
+  const [savingsFormError, setSavingsFormError] = useState("");
   const [form, setForm] = useState({ name: "", amount: "", remainingLoan: "" });
   const [editingId, setEditingId] = useState(null);
   const [formError, setFormError] = useState("");
@@ -83,7 +100,10 @@ export default function FutureExpenses() {
   }, [plan]);
 
   const expectedSalary = Math.max(0, Number(plan.expectedSalary) || 0);
-  const savings = Math.max(0, Number(plan.savings) || 0);
+  const savings = useMemo(
+    () => plan.savingsSources.reduce((sum, item) => sum + Number(item.amount || 0), 0),
+    [plan.savingsSources],
+  );
   const totalCommitments = useMemo(
     () => plan.commitments.reduce((sum, item) => sum + Number(item.amount || 0), 0),
     [plan.commitments],
@@ -102,6 +122,47 @@ export default function FutureExpenses() {
   const updatePlanAmount = (field, value) => {
     if (value !== "" && Number(value) < 0) return;
     setPlan((current) => ({ ...current, [field]: value }));
+  };
+
+  const resetSavingsForm = () => {
+    setSavingsForm({ source: "", amount: "" });
+    setEditingSavingsId(null);
+    setSavingsFormError("");
+  };
+
+  const saveSavingsSource = (event) => {
+    event.preventDefault();
+    const source = savingsForm.source.trim();
+    const amount = Number(savingsForm.amount);
+
+    if (!source || !Number.isFinite(amount) || amount <= 0) {
+      setSavingsFormError("Enter a savings source and an amount above zero.");
+      return;
+    }
+
+    setPlan((current) => ({
+      ...current,
+      savingsSources: editingSavingsId
+        ? current.savingsSources.map((item) =>
+            item.id === editingSavingsId ? { ...item, source, amount } : item,
+          )
+        : [...current.savingsSources, { id: makeId(), source, amount }],
+    }));
+    resetSavingsForm();
+  };
+
+  const editSavingsSource = (item) => {
+    setEditingSavingsId(item.id);
+    setSavingsForm({ source: item.source, amount: String(item.amount) });
+    setSavingsFormError("");
+  };
+
+  const deleteSavingsSource = (id) => {
+    setPlan((current) => ({
+      ...current,
+      savingsSources: current.savingsSources.filter((item) => item.id !== id),
+    }));
+    if (editingSavingsId === id) resetSavingsForm();
   };
 
   const resetForm = () => {
@@ -236,6 +297,9 @@ export default function FutureExpenses() {
               <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
                 {formatCurrency(savings)}
               </p>
+              <p className="mt-0.5 text-[9px] font-semibold text-slate-500 dark:text-slate-400">
+                {plan.savingsSources.length} {plan.savingsSources.length === 1 ? "source" : "sources"}
+              </p>
             </div>
 
             <div className="rounded-2xl border border-violet-500/20 bg-white/65 p-3 dark:bg-black/15">
@@ -301,9 +365,9 @@ export default function FutureExpenses() {
               <BriefcaseBusiness className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-[0.88rem] font-extrabold text-white">Income and savings</h2>
+              <h2 className="text-[0.88rem] font-extrabold text-white">Next-job salary</h2>
               <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
-                Set the next take-home amount and savings on hand.
+                Set the take-home amount for your next plan.
               </p>
             </div>
             <span className="shrink-0 rounded-full bg-emerald-400/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
@@ -311,55 +375,166 @@ export default function FutureExpenses() {
             </span>
           </div>
 
-          <div className="relative mt-3 grid gap-2.5 sm:grid-cols-2">
-            <div className="flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
-                ⃁
+          <div className="relative mt-3 flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
+              ⃁
+            </span>
+            <div className="min-w-0 flex-1">
+              <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
+                Expected take-home
+              </Label>
+              <Input
+                id="future-salary"
+                type="number"
+                min="0"
+                step="0.01"
+                inputMode="decimal"
+                value={plan.expectedSalary}
+                onChange={(event) => updatePlanAmount("expectedSalary", event.target.value)}
+                placeholder="0.00"
+                className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+            </div>
+          </div>
+        </section>
+
+        <form
+          onSubmit={saveSavingsSource}
+          className="relative overflow-hidden rounded-[1.4rem] border border-blue-300/[0.1] bg-[linear-gradient(145deg,rgba(8,25,35,0.98),rgba(5,13,17,0.99))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.22)]"
+        >
+          <div className="pointer-events-none absolute -right-14 -top-20 h-36 w-36 rounded-full bg-blue-400/[0.05] blur-2xl" />
+
+          <div className="relative flex items-center gap-2.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-blue-400/[0.1] text-blue-400 ring-1 ring-inset ring-blue-300/[0.07]">
+              <PiggyBank className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-[0.88rem] font-extrabold text-white">Savings sources</h2>
+              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
+                Track where each savings balance is kept.
+              </p>
+            </div>
+            {editingSavingsId ? (
+              <button
+                type="button"
+                onClick={resetSavingsForm}
+                className="shrink-0 rounded-full bg-white/[0.05] px-2.5 py-1 text-[0.65rem] font-bold text-slate-300 ring-1 ring-inset ring-white/[0.07]"
+              >
+                Cancel
+              </button>
+            ) : (
+              <span className="shrink-0 rounded-full bg-blue-400/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-blue-300 ring-1 ring-inset ring-blue-400/[0.08]">
+                {plan.savingsSources.length} {plan.savingsSources.length === 1 ? "source" : "sources"}
               </span>
-              <div className="min-w-0 flex-1">
-                <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
-                  Expected take-home
-                </Label>
-                <Input
-                  id="future-salary"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  inputMode="decimal"
-                  value={plan.expectedSalary}
-                  onChange={(event) => updatePlanAmount("expectedSalary", event.target.value)}
-                  placeholder="0.00"
-                  className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                />
-              </div>
+            )}
+          </div>
+
+          <div className="relative mt-3 grid grid-cols-[minmax(0,1fr)_minmax(7.25rem,0.7fr)] gap-2.5">
+            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
+              <Label htmlFor="savings-source" className="text-[0.62rem] font-semibold text-slate-400">
+                Savings source
+              </Label>
+              <Input
+                id="savings-source"
+                value={savingsForm.source}
+                onChange={(event) => {
+                  setSavingsForm((current) => ({ ...current, source: event.target.value }));
+                  setSavingsFormError("");
+                }}
+                placeholder="e.g. Maybank or cash"
+                className="mt-1 h-8 border-0 bg-transparent px-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
             </div>
 
-            <div className="flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
-                <PiggyBank className="h-4 w-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <Label htmlFor="future-savings" className="text-[0.62rem] font-semibold text-slate-400">
-                  Current savings
-                </Label>
+            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
+              <Label htmlFor="savings-amount" className="text-[0.62rem] font-semibold text-slate-400">
+                Current balance
+              </Label>
+              <div className="relative mt-1">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-blue-400">
+                  ⃁
+                </span>
                 <Input
-                  id="future-savings"
+                  id="savings-amount"
                   type="number"
                   min="0"
                   step="0.01"
                   inputMode="decimal"
-                  value={plan.savings}
-                  onChange={(event) => updatePlanAmount("savings", event.target.value)}
+                  value={savingsForm.amount}
+                  onChange={(event) => {
+                    setSavingsForm((current) => ({ ...current, amount: event.target.value }));
+                    setSavingsFormError("");
+                  }}
                   placeholder="0.00"
-                  className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-8 border-0 bg-transparent pl-5 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
           </div>
+
+          {savingsFormError && (
+            <p className="relative mt-2.5 rounded-xl bg-rose-400/[0.08] px-3 py-2 text-[0.68rem] font-semibold text-rose-300 ring-1 ring-inset ring-rose-400/[0.12]">
+              {savingsFormError}
+            </p>
+          )}
+
+          <Button
+            type="submit"
+            className="relative mt-3 h-10 w-full rounded-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 text-[0.8rem] font-extrabold text-white shadow-[0_12px_24px_rgba(37,99,235,0.13)] ring-1 ring-inset ring-blue-300/10 hover:from-blue-600 hover:via-blue-500 hover:to-blue-600"
+          >
+            {editingSavingsId ? <Save className="mr-1.5 h-4 w-4" /> : <Plus className="mr-1.5 h-4 w-4" />}
+            {editingSavingsId ? "Save source" : "Add savings source"}
+          </Button>
+
+          {plan.savingsSources.length === 0 ? (
+            <p className="relative mt-3 rounded-[1rem] border border-dashed border-white/[0.08] px-3 py-4 text-center text-[0.68rem] font-medium text-slate-500">
+              No savings sources added yet.
+            </p>
+          ) : (
+            <div className="relative mt-3 space-y-2">
+              {plan.savingsSources.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2.5 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-blue-400/[0.1] text-blue-400">
+                    <PiggyBank className="h-3.5 w-3.5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[0.76rem] font-bold text-white">{item.source}</p>
+                    <p className="mt-0.5 text-[0.68rem] font-semibold text-blue-300">
+                      {formatCurrency(item.amount)}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => editSavingsSource(item)}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] text-slate-400 transition hover:bg-white/[0.06] hover:text-blue-300"
+                    aria-label={`Edit ${item.source}`}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteSavingsSource(item.id)}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] text-slate-400 transition hover:bg-rose-400/[0.08] hover:text-rose-300"
+                    aria-label={`Delete ${item.source}`}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+              <div className="flex items-center justify-between px-1 pt-1 text-[0.68rem] font-semibold text-slate-400">
+                <span>Total savings</span>
+                <span className="font-extrabold text-blue-300">{formatCurrency(savings)}</span>
+              </div>
+            </div>
+          )}
+
           <p className="relative mt-2 text-[0.62rem] font-medium text-slate-500">
-            Savings are shown in the summary and are not deducted from your next salary.
+            Savings are included in the summary and are not deducted from your next salary.
           </p>
-        </section>
+        </form>
 
         <form
           onSubmit={saveCommitment}
