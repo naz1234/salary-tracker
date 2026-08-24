@@ -59,17 +59,18 @@ export default function MobileLayout({ children }) {
 
             <SheetContent
               side="left"
-              className="mobile-sidebar w-[78vw] max-w-[18rem] border-r border-slate-200 bg-white/95 p-0 backdrop-blur-xl dark:border-[#202733] dark:bg-[#05080c]/98"
+              overlayClassName="bg-slate-950/45 backdrop-blur-[2px] dark:bg-black/75"
+              className="mobile-sidebar w-[78vw] max-w-[18rem] border-r border-sidebar-border bg-sidebar p-0 text-sidebar-foreground shadow-[18px_0_44px_rgba(15,23,42,0.14)] backdrop-blur-xl dark:shadow-[18px_0_48px_rgba(0,0,0,0.58)]"
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
               <SheetHeader
-                className="border-b border-slate-200 px-5 pb-4 text-left dark:border-[#202733]"
+                className="border-b border-sidebar-border bg-gradient-to-b from-emerald-50/80 via-white/30 to-transparent px-5 pb-4 text-left dark:from-emerald-500/[0.08] dark:via-transparent"
                 style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)" }}
               >
-                <SheetTitle className="text-lg font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+                <SheetTitle className="text-lg font-extrabold tracking-tight text-sidebar-foreground">
                   Salary Tracker
                 </SheetTitle>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                <p className="text-xs font-medium text-muted-foreground">
                   Choose a section
                 </p>
               </SheetHeader>
@@ -84,16 +85,16 @@ export default function MobileLayout({ children }) {
                       onClick={() => goToTab(path)}
                       className={`flex h-12 items-center gap-3 rounded-2xl px-3.5 text-sm font-semibold transition-all active:scale-[0.98] ${
                         active
-                          ? "bg-emerald-500/10 text-emerald-700 ring-1 ring-inset ring-emerald-500/30 dark:text-emerald-400 dark:ring-emerald-500/25"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-400 dark:hover:bg-[#10151c] dark:hover:text-slate-100"
+                          ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 shadow-sm dark:bg-emerald-500/[0.12] dark:text-emerald-400 dark:ring-emerald-500/30 dark:shadow-none"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-[#10151c] dark:hover:text-slate-100"
                       }`}
                       aria-current={active ? "page" : undefined}
                     >
                       <span
                         className={`flex h-8 w-8 items-center justify-center rounded-xl ${
                           active
-                            ? "bg-emerald-500/10"
-                            : "bg-slate-100 dark:bg-[#10151c]"
+                            ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
+                            : "border border-slate-200 bg-white text-slate-500 shadow-sm dark:border-[#202733] dark:bg-[#10151c] dark:text-slate-400 dark:shadow-none"
                         }`}
                       >
                         <Icon className={`h-[18px] w-[18px] ${active ? "stroke-[2.5]" : ""}`} />
