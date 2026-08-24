@@ -171,15 +171,29 @@ function CategoryBreakdown({ data, total, compact = false }) {
               const CategoryIcon = getExpenseIcon(item.name);
               const isExpanded = expandedCategory === item.name;
               return (
-                <div key={item.name} className={`overflow-hidden rounded-2xl border ${tone.border} ${tone.rowBg}`}>
+                <div
+                  key={item.name}
+                  className={`relative overflow-hidden rounded-2xl border ${tone.border} ${tone.rowBg} dark:!border-transparent dark:!bg-[#090d12]`}
+                >
+                  <div
+                    className="pointer-events-none absolute inset-0 hidden rounded-2xl border dark:block"
+                    style={{
+                      backgroundImage: `linear-gradient(90deg, ${tone.hex}20 0%, ${tone.hex}0a 52%, transparent 100%)`,
+                      borderColor: `${tone.hex}55`,
+                    }}
+                  />
                   <button
                     type="button"
-                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left"
+                    className="relative z-10 flex w-full items-center gap-3 px-3 py-2.5 text-left"
                     onClick={() => toggleCategory(item.name)}
                     aria-expanded={isExpanded}
                   >
-                    <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
-                      <CategoryIcon className="h-4 w-4" strokeWidth={2.1} />
+                    <span className={`relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring} dark:!bg-[#10151c] dark:!ring-transparent`}>
+                      <span
+                        className="pointer-events-none absolute inset-0 hidden dark:block"
+                        style={{ backgroundColor: `${tone.hex}22` }}
+                      />
+                      <CategoryIcon className="relative h-4 w-4" strokeWidth={2.1} />
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className={`truncate text-xs font-bold ${tone.text}`}>{item.name}</p>
@@ -193,7 +207,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
                   </button>
 
                   {isExpanded && (
-                    <div className="border-t border-white/80 dark:border-[#202733]/80 px-2.5 pb-2.5 pt-2">
+                    <div className="relative z-10 border-t border-white/80 dark:border-[#202733]/80 px-2.5 pb-2.5 pt-2">
                       <div className="space-y-1.5">
                         {item.expenses.map((expense, index) => (
                           <CategoryExpenseDetailRow key={expense.id || `${item.name}-${index}`} expense={expense} />
@@ -452,7 +466,9 @@ export default function Expenses() {
                     key={view}
                     type="button"
                     className={`rounded-2xl px-2 py-2 text-[11px] font-extrabold capitalize transition-all ${
-                      activeView === view ? "bg-emerald-500 text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                      activeView === view
+                        ? "bg-emerald-500 text-white shadow-sm dark:bg-emerald-500/10 dark:ring-1 dark:ring-inset dark:ring-emerald-500/55 dark:shadow-[0_0_20px_rgba(16,185,129,0.10)]"
+                        : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
                     }`}
                     onClick={() => setActiveView(view)}
                   >
@@ -463,16 +479,22 @@ export default function Expenses() {
 
               {activeView === "overview" && (
                 <div className="space-y-4">
-                  <div className="rounded-[1.5rem] bg-gradient-to-r from-rose-50 dark:from-rose-950 via-pink-50 dark:via-pink-950 to-white dark:to-slate-950 p-4 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400">
+                  <div className="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-rose-50 via-pink-50 to-white p-4 shadow-sm ring-1 ring-rose-100 dark:bg-none dark:bg-[#090d12] dark:ring-[#202733]/80">
+                    <div
+                      className="pointer-events-none absolute inset-0 hidden dark:block"
+                      style={{
+                        backgroundImage: "radial-gradient(circle at 10% 50%, rgba(236,72,153,0.16) 0%, rgba(236,72,153,0.06) 38%, transparent 70%)",
+                      }}
+                    />
+                    <div className="relative flex items-center gap-3">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-1 dark:ring-inset dark:ring-pink-500/10">
                         <TrendingDown className="h-7 w-7" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">Total Expenses</p>
                         <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950 dark:text-slate-50">{fmtCurrency(overview.total)}</h2>
                       </div>
-                      <span className="rounded-full bg-rose-100 dark:bg-rose-900 px-3 py-1 text-[11px] font-extrabold text-rose-700 dark:text-rose-300">
+                      <span className="rounded-full bg-rose-100 px-3 py-1 text-[11px] font-extrabold text-rose-700 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-1 dark:ring-inset dark:ring-pink-500/10">
                         {expenses.length} item{expenses.length > 1 ? "s" : ""}
                       </span>
                     </div>
