@@ -217,29 +217,32 @@ export default function FutureExpenses() {
           </div>
         </section>
 
-        <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm dark:border-[#202733] dark:bg-[#090d12]">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-              <BriefcaseBusiness className="h-[18px] w-[18px]" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                Next-job salary
-              </h2>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Enter the expected take-home amount.
+        <section className="relative overflow-hidden rounded-[1.4rem] border border-emerald-300/[0.1] bg-[linear-gradient(135deg,rgba(5,42,34,0.78),rgba(6,18,22,0.97))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.24)]">
+          <div className="pointer-events-none absolute -right-14 -top-16 h-36 w-36 rounded-full bg-emerald-400/[0.07] blur-2xl" />
+
+          <div className="relative flex items-center gap-2.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.08]">
+              <BriefcaseBusiness className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-[0.88rem] font-extrabold text-white">Next-job salary</h2>
+              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
+                Set the take-home amount for your next plan.
               </p>
             </div>
+            <span className="shrink-0 rounded-full bg-emerald-400/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
+              Auto-saved
+            </span>
           </div>
 
-          <div className="mt-4">
-            <Label htmlFor="future-salary" className="text-xs font-semibold">
-              Expected salary
-            </Label>
-            <div className="relative mt-1.5">
-              <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-bold text-slate-400">
-                ⃁
-              </span>
+          <div className="relative mt-3 flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
+              ⃁
+            </span>
+            <div className="min-w-0 flex-1">
+              <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
+                Expected take-home
+              </Label>
               <Input
                 id="future-salary"
                 type="number"
@@ -249,43 +252,45 @@ export default function FutureExpenses() {
                 value={plan.expectedSalary}
                 onChange={(event) => updateExpectedSalary(event.target.value)}
                 placeholder="0.00"
-                className="h-12 rounded-xl pl-8 text-base font-semibold dark:border-[#28313e] dark:bg-[#060a0f]"
+                className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
-            <p className="mt-2 text-[10px] text-slate-400 dark:text-slate-500">
-              Your plan is saved automatically on this device.
-            </p>
           </div>
         </section>
 
         <form
           onSubmit={saveCommitment}
-          className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm dark:border-[#202733] dark:bg-[#090d12]"
+          className="relative overflow-hidden rounded-[1.4rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.98),rgba(5,13,17,0.99))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.22)]"
         >
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+          <div className="pointer-events-none absolute -left-16 -top-20 h-36 w-36 rounded-full bg-emerald-400/[0.045] blur-2xl" />
+
+          <div className="relative flex items-center gap-2.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.1] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+              <ReceiptText className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-[0.88rem] font-extrabold text-white">
                 {editingId ? "Edit commitment" : "Add future commitment"}
               </h2>
-              <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
-                Rent, loan, family, savings, or any planned payment.
+              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
+                Add a planned payment for the next salary.
               </p>
             </div>
             {editingId && (
               <button
                 type="button"
                 onClick={resetForm}
-                className="text-xs font-semibold text-slate-500 dark:text-slate-400"
+                className="shrink-0 rounded-full bg-white/[0.05] px-2.5 py-1 text-[0.65rem] font-bold text-slate-300 ring-1 ring-inset ring-white/[0.07]"
               >
                 Cancel
               </button>
             )}
           </div>
 
-          <div className="mt-4 space-y-3">
-            <div>
-              <Label htmlFor="future-name" className="text-xs font-semibold">
-                Commitment name
+          <div className="relative mt-3 grid grid-cols-[minmax(0,1fr)_minmax(7.25rem,0.7fr)] gap-2.5">
+            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
+              <Label htmlFor="future-name" className="text-[0.62rem] font-semibold text-slate-400">
+                Commitment
               </Label>
               <Input
                 id="future-name"
@@ -295,39 +300,47 @@ export default function FutureExpenses() {
                   setFormError("");
                 }}
                 placeholder="e.g. House rent"
-                className="mt-1.5 h-11 rounded-xl dark:border-[#28313e] dark:bg-[#060a0f]"
+                className="mt-1 h-8 border-0 bg-transparent px-0 text-[0.8rem] font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
 
-            <div>
-              <Label htmlFor="future-amount" className="text-xs font-semibold">
+            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
+              <Label htmlFor="future-amount" className="text-[0.62rem] font-semibold text-slate-400">
                 Amount
               </Label>
-              <Input
-                id="future-amount"
-                type="number"
-                min="0"
-                step="0.01"
-                inputMode="decimal"
-                value={form.amount}
-                onChange={(event) => {
-                  setForm((current) => ({ ...current, amount: event.target.value }));
-                  setFormError("");
-                }}
-                placeholder="0.00"
-                className="mt-1.5 h-11 rounded-xl dark:border-[#28313e] dark:bg-[#060a0f]"
-              />
+              <div className="relative mt-1">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-emerald-400">
+                  ⃁
+                </span>
+                <Input
+                  id="future-amount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  inputMode="decimal"
+                  value={form.amount}
+                  onChange={(event) => {
+                    setForm((current) => ({ ...current, amount: event.target.value }));
+                    setFormError("");
+                  }}
+                  placeholder="0.00"
+                  className="h-8 border-0 bg-transparent pl-5 pr-0 text-[0.8rem] font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
             </div>
           </div>
 
           {formError && (
-            <p className="mt-3 text-xs font-medium text-rose-600 dark:text-rose-400">
+            <p className="relative mt-2.5 rounded-xl bg-rose-400/[0.08] px-3 py-2 text-[0.68rem] font-semibold text-rose-300 ring-1 ring-inset ring-rose-400/[0.12]">
               {formError}
             </p>
           )}
 
-          <Button type="submit" className="mt-4 h-11 w-full rounded-xl font-bold">
-            {editingId ? <Save className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+          <Button
+            type="submit"
+            className="relative mt-3 h-10 w-full rounded-full bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-700 text-[0.8rem] font-extrabold text-white shadow-[0_12px_24px_rgba(16,185,129,0.13)] ring-1 ring-inset ring-emerald-300/10 hover:from-emerald-600 hover:via-emerald-500 hover:to-emerald-600"
+          >
+            {editingId ? <Save className="mr-1.5 h-4 w-4" /> : <Plus className="mr-1.5 h-4 w-4" />}
             {editingId ? "Save commitment" : "Add commitment"}
           </Button>
         </form>
