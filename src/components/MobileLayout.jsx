@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Receipt, PiggyBank, CalendarRange, Settings, WalletCards, X } from "lucide-react";
 
 const EDGE_SWIPE_ZONE_PX = 72;
+const IOS_HISTORY_EDGE_PX = 24;
 const SWIPE_DISTANCE_PX = 64;
 const HORIZONTAL_SWIPE_BIAS = 1.2;
 const POST_SWIPE_CLICK_GUARD_MS = 450;
@@ -20,6 +21,7 @@ export default function MobileLayout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const shellRef = useRef(null);
   const swipeGesture = useRef(null);
   const blockClicksUntil = useRef(0);
 
@@ -37,6 +39,40 @@ export default function MobileLayout({ children }) {
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [sidebarOpen]);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return undefined;
+
+    const stopNativeEdgeNavigation = (event) => {
+      if (sidebarOpen || event.touches.length !== 1) return;
+      if (event.touches[0].clientX <= IOS_HISTORY_EDGE_PX && event.cancelable) {
+        event.preventDefault();
+      }
+    };
+
+    const stopNativeHorizontalNavigation = (event) => {
+      const gesture = swipeGesture.current;
+      if (!gesture || gesture.mode !== "open" || event.touches.length !== 1) return;
+
+      const touch = event.touches[0];
+      const horizontalDistance = touch.clientX - gesture.startX;
+      const verticalDistance = Math.abs(touch.clientY - gesture.startY);
+      const isOpeningSwipe =
+        horizontalDistance > 8 && horizontalDistance > verticalDistance * HORIZONTAL_SWIPE_BIAS;
+
+      if (isOpeningSwipe && event.cancelable) {
+        event.preventDefault();
+      }
+    };
+
+    shell.addEventListener("touchstart", stopNativeEdgeNavigation, { passive: false });
+    shell.addEventListener("touchmove", stopNativeHorizontalNavigation, { passive: false });
+    return () => {
+      shell.removeEventListener("touchstart", stopNativeEdgeNavigation);
+      shell.removeEventListener("touchmove", stopNativeHorizontalNavigation);
+    };
   }, [sidebarOpen]);
 
   const goToTab = (path) => {
@@ -101,6 +137,7 @@ export default function MobileLayout({ children }) {
 
   return (
     <div
+      ref={shellRef}
       className="app-mobile-shell fixed inset-0 overflow-hidden bg-background"
       onClickCapture={blockPostSwipeClick}
       onTouchStart={startOpenSwipe}
@@ -111,6 +148,8 @@ export default function MobileLayout({ children }) {
         minHeight: "100dvh",
         WebkitTapHighlightColor: "transparent",
         WebkitTouchCallout: "none",
+        overscrollBehaviorX: "none",
+        touchAction: "pan-y pinch-zoom",
       }}
     >
       <div
