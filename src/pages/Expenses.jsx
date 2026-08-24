@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from "react";
 import { cloudflare } from "@/api/cloudflareClient";
 import { filterExpensesForCycle, formatDisplayDate, getRecentExpensesByDays, isDateInSalaryCycle } from "@/utils/cycleFilters";
 import { getExpenseCategoryPaletteHex, getExpenseCategoryPaletteTone } from "@/utils/expenseCategoryColors";
-import { getExpenseDateTone } from "@/utils/expenseDateColors";
 import { getExpenseIcon } from "@/utils/expenseIcons";
 import GroupedExpenseSections from "@/components/GroupedExpenseSections";
 import { Button } from "@/components/ui/button";
@@ -115,13 +114,12 @@ function DonutChart({ data, total }) {
   );
 }
 
-function CategoryExpenseDetailRow({ expense }) {
+function CategoryExpenseDetailRow({ expense, tone }) {
   const Icon = getExpenseIcon(expense.category, expense.description);
-  const tone = getExpenseDateTone(expense.date);
 
   return (
-    <div className={`flex items-center gap-2.5 rounded-xl border ${tone.border} ${tone.rowBg} px-2.5 py-2`}>
-      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+    <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/70 px-2.5 py-2 dark:border-white/[0.07] dark:bg-white/[0.025]">
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 ${tone.text} ring-1 ring-slate-200 dark:bg-white/[0.05] dark:ring-white/[0.07]`}>
         <Icon className="h-3.5 w-3.5" />
       </div>
       <div className="min-w-0 flex-1">
@@ -210,7 +208,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
                     <div className="relative z-10 border-t border-white/80 dark:border-[#202733]/80 px-2.5 pb-2.5 pt-2">
                       <div className="space-y-1.5">
                         {item.expenses.map((expense, index) => (
-                          <CategoryExpenseDetailRow key={expense.id || `${item.name}-${index}`} expense={expense} />
+                          <CategoryExpenseDetailRow key={expense.id || `${item.name}-${index}`} expense={expense} tone={tone} />
                         ))}
                       </div>
                     </div>
