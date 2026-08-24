@@ -52,26 +52,19 @@ function getDaysBetween(start, end) {
   return Math.max(1, Math.round((end - start) / oneDay) + 1);
 }
 
-function StatCard({ icon: Icon, label, value, helper, tone = "rose" }) {
-  const toneClasses = {
-    rose: "from-rose-50 dark:from-rose-950 to-pink-50 dark:to-pink-950 text-rose-600 dark:text-rose-400 ring-rose-100 dark:ring-rose-900",
-    blue: "from-blue-50 dark:from-blue-950 to-sky-50 dark:to-sky-950 text-blue-600 dark:text-blue-400 ring-blue-100 dark:ring-blue-900",
-    green: "from-emerald-50 dark:from-emerald-950 to-teal-50 dark:to-teal-950 text-emerald-600 dark:text-emerald-400 ring-emerald-100 dark:ring-emerald-900",
-    amber: "from-amber-50 dark:from-amber-950 to-orange-50 dark:to-orange-950 text-amber-600 dark:text-amber-400 ring-amber-100 dark:ring-amber-900",
-  };
-
+function StatCard({ icon: Icon, label, value, helper }) {
   return (
-    <div className="rounded-[1.4rem] bg-white/90 dark:bg-[#090d12]/90 p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
-      <div className="flex items-start gap-3">
-        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${toneClasses[tone]}`}>
-          <Icon className="h-5 w-5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{label}</p>
-          <p className="mt-1 break-words text-[0.95rem] font-extrabold leading-tight text-slate-950 dark:text-slate-50">{value}</p>
-          {helper && <p className="mt-0.5 text-[9px] font-medium text-slate-400 dark:text-slate-500">{helper}</p>}
-        </div>
-      </div>
+    <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-white/[0.07] bg-black/10 px-2.5 py-2.5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+        <Icon className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[0.62rem] font-semibold text-slate-400">{label}</span>
+        <span className="mt-0.5 block break-words text-[clamp(0.7rem,2.9vw,0.88rem)] font-extrabold leading-tight text-white">
+          {value}
+        </span>
+        {helper && <span className="mt-0.5 block text-[0.58rem] font-medium text-slate-500">{helper}</span>}
+      </span>
     </div>
   );
 }
@@ -476,40 +469,35 @@ export default function Expenses() {
               </div>
 
               {activeView === "overview" && (
-                <div className="space-y-4">
-                  <div className="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-rose-50 via-pink-50 to-white p-4 shadow-sm ring-1 ring-rose-100 dark:bg-none dark:bg-[#090d12] dark:ring-[#202733]/80">
-                    <div
-                      className="pointer-events-none absolute inset-0 hidden dark:block"
-                      style={{
-                        backgroundImage: "radial-gradient(circle at 10% 50%, rgba(236,72,153,0.16) 0%, rgba(236,72,153,0.06) 38%, transparent 70%)",
-                      }}
-                    />
-                    <div className="relative flex items-center gap-3">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-1 dark:ring-inset dark:ring-pink-500/10">
-                        <TrendingDown className="h-7 w-7" />
-                      </div>
+                <div className="space-y-3">
+                  <section className="rounded-[1.35rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] p-3 shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+                        <TrendingDown className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
+                      </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">Total Expenses</p>
-                        <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950 dark:text-slate-50">{fmtCurrency(overview.total)}</h2>
+                        <h2 className="text-[0.82rem] font-bold text-white">Total Expenses</h2>
+                        <p className="mt-1.5 truncate text-[clamp(1.15rem,5.5vw,1.55rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+                          {fmtCurrency(overview.total)}
+                        </p>
                       </div>
-                      <span className="rounded-full bg-rose-100 px-3 py-1 text-[11px] font-extrabold text-rose-700 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-1 dark:ring-inset dark:ring-pink-500/10">
+                      <span className="shrink-0 rounded-full bg-emerald-400/[0.1] px-2.5 py-1 text-[0.66rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
                         {expenses.length} item{expenses.length > 1 ? "s" : ""}
                       </span>
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <StatCard icon={ReceiptText} label="Total Transactions" value={expenses.length} tone="blue" />
-                    <StatCard icon={WalletCards} label="Average per Day" value={fmtCurrency(overview.averagePerDay)} tone="amber" />
-                    <StatCard
-                      icon={CalendarDays}
-                      label="Date Range"
-                      value={overview.firstDate ? `${fmtDate(overview.firstDate)} – ${fmtDate(overview.lastDate)}` : "—"}
-                      helper={overview.rangeDays ? `${overview.rangeDays} day${overview.rangeDays > 1 ? "s" : ""}` : ""}
-                      tone="green"
-                    />
-                    <StatCard icon={PieChart} label="Categories" value={overview.byCategory.length} helper="Spending groups" tone="rose" />
-                  </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <StatCard icon={ReceiptText} label="Transactions" value={expenses.length} />
+                      <StatCard icon={WalletCards} label="Average per Day" value={fmtCurrency(overview.averagePerDay)} />
+                      <StatCard
+                        icon={CalendarDays}
+                        label="Date Range"
+                        value={overview.firstDate ? `${fmtDate(overview.firstDate)} – ${fmtDate(overview.lastDate)}` : "—"}
+                        helper={overview.rangeDays ? `${overview.rangeDays} day${overview.rangeDays > 1 ? "s" : ""}` : ""}
+                      />
+                      <StatCard icon={PieChart} label="Categories" value={overview.byCategory.length} helper="Spending groups" />
+                    </div>
+                  </section>
 
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
