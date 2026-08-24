@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowDownRight,
   BriefcaseBusiness,
-  CircleDollarSign,
   Landmark,
   Pencil,
   PiggyBank,
@@ -80,10 +79,57 @@ function loadPlan() {
 }
 
 function formatCurrency(value) {
-  return `⃁ ${Number(value || 0).toLocaleString("en-MY", {
+  return `RM ${Number(value || 0).toLocaleString("en-MY", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
+}
+
+function clampPercentage(value) {
+  return Math.min(100, Math.max(0, Number.isFinite(value) ? value : 0));
+}
+
+function AllocationRing({ percentage, overBudget }) {
+  const ringValue = clampPercentage(percentage);
+
+  return (
+    <div
+      className="relative h-[4.4rem] w-[4.4rem] shrink-0"
+      aria-label={`${Math.round(percentage)}% of expected salary allocated`}
+    >
+      <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          stroke="rgba(148, 163, 184, 0.16)"
+          strokeWidth="10"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          fill="none"
+          pathLength="100"
+          stroke={overBudget ? "#fb7185" : "#2ee68a"}
+          strokeWidth="10"
+          strokeDasharray={`${ringValue} ${100 - ringValue}`}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <span
+          className={`text-[0.86rem] font-extrabold tabular-nums ${
+            overBudget ? "text-rose-300" : "text-white"
+          }`}
+        >
+          {Math.round(percentage)}%
+        </span>
+        <span className="mt-0.5 text-[0.58rem] font-semibold text-slate-400">allocated</span>
+      </div>
+    </div>
+  );
 }
 
 export default function FutureExpenses() {
@@ -116,8 +162,9 @@ export default function FutureExpenses() {
   const overBudget = remaining < 0;
   const netPosition = savings - totalLoanBalance;
   const hasNetDeficit = netPosition < 0;
-  const commitmentPercent =
-    expectedSalary > 0 ? Math.min(100, (totalCommitments / expectedSalary) * 100) : 0;
+  const allocationPercentage = expectedSalary > 0 ? (totalCommitments / expectedSalary) * 100 : 0;
+  const remainingPercentage = expectedSalary > 0 ? (remaining / expectedSalary) * 100 : 0;
+  const remainingBar = clampPercentage(remainingPercentage);
 
   const updatePlanAmount = (field, value) => {
     if (value !== "" && Number(value) < 0) return;
@@ -228,134 +275,140 @@ export default function FutureExpenses() {
           </p>
         </div>
 
-        <section className="overflow-hidden rounded-[28px] border border-emerald-500/25 bg-gradient-to-br from-emerald-50 via-white to-cyan-50 p-5 shadow-sm dark:border-emerald-500/25 dark:from-[#06271f] dark:via-[#07131a] dark:to-[#07101d]">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-400">
-                <WalletCards className="h-7 w-7" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <div className="space-y-3">
+          <section className="overflow-hidden rounded-[1.35rem] border border-emerald-300/[0.09] bg-[linear-gradient(135deg,rgba(5,62,43,0.78)_0%,rgba(8,21,22,0.94)_48%,rgba(7,16,19,0.98)_100%)] p-3 shadow-[0_18px_48px_rgba(0,0,0,0.34)]">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.12] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.08]">
+                <WalletCards className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.1} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-[0.8rem] font-bold text-slate-300">Future Plan</h2>
+                <p className="mt-0.5 truncate text-[0.66rem] font-semibold text-slate-400">
                   Expected next salary
                 </p>
-                <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-950 dark:text-white">
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-400/[0.11] px-2.5 py-1 text-[0.66rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(46,230,138,0.75)]" />
+                {plan.commitments.length} {plan.commitments.length === 1 ? "item" : "items"}
+              </span>
+            </div>
+
+            <div className="mt-3 grid grid-cols-[1fr_1px_1fr] items-stretch gap-3 rounded-[1rem] border border-white/[0.07] bg-black/[0.13] px-3 py-3">
+              <div className="min-w-0">
+                <p className="text-[0.68rem] font-semibold text-slate-400">Expected salary</p>
+                <p className="mt-2 whitespace-nowrap text-[clamp(0.92rem,4vw,1.3rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
                   {formatCurrency(expectedSalary)}
                 </p>
               </div>
-            </div>
-            <span className="shrink-0 rounded-full bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-              {plan.commitments.length} {plan.commitments.length === 1 ? "item" : "items"}
-            </span>
-          </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-2.5">
-            <div className="rounded-2xl border border-orange-500/20 bg-white/65 p-3 dark:bg-black/15">
-              <div className="flex items-center gap-1.5 text-orange-600 dark:text-orange-400">
-                <ArrowDownRight className="h-4 w-4" />
-                <span className="text-[11px] font-semibold">Monthly commitments</span>
-              </div>
-              <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
-                {formatCurrency(totalCommitments)}
-              </p>
-            </div>
+              <div className="h-full min-h-[3.9rem] bg-white/[0.09]" />
 
-            <div
-              className={`rounded-2xl border bg-white/65 p-3 dark:bg-black/15 ${
-                overBudget ? "border-rose-500/25" : "border-emerald-500/20"
-              }`}
-            >
-              <div
-                className={`flex items-center gap-1.5 ${
-                  overBudget
-                    ? "text-rose-600 dark:text-rose-400"
-                    : "text-emerald-600 dark:text-emerald-400"
-                }`}
-              >
-                <CircleDollarSign className="h-4 w-4" />
-                <span className="text-[11px] font-semibold">
+              <div className="min-w-0">
+                <p className="text-[0.68rem] font-semibold text-slate-400">
                   {overBudget ? "Shortfall" : "Remaining"}
+                </p>
+                <p
+                  className={`mt-2 whitespace-nowrap text-[clamp(0.9rem,3.8vw,1.2rem)] font-extrabold leading-none tracking-tight tabular-nums ${
+                    overBudget ? "text-rose-300" : "text-emerald-400"
+                  }`}
+                >
+                  {formatCurrency(Math.abs(remaining))}
+                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-700/55">
+                    <div
+                      className={`h-full rounded-full transition-[width] duration-500 ${
+                        overBudget
+                          ? "bg-rose-400"
+                          : "bg-gradient-to-r from-emerald-500 to-emerald-300"
+                      }`}
+                      style={{ width: `${overBudget ? 100 : remainingBar}%` }}
+                    />
+                  </div>
+                  <span
+                    className={`text-[0.64rem] font-bold tabular-nums ${
+                      overBudget ? "text-rose-300" : "text-slate-400"
+                    }`}
+                  >
+                    {overBudget ? "Over" : `${Math.round(remainingBar)}%`}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-[1.35rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] p-3 shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+                <ArrowDownRight className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-[0.82rem] font-bold text-white">Monthly Commitments</h2>
+                <p className="mt-2 truncate text-[clamp(1.15rem,5.5vw,1.55rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+                  {formatCurrency(totalCommitments)}
+                </p>
+              </div>
+              <AllocationRing percentage={allocationPercentage} overBudget={overBudget} />
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-white/[0.07] bg-black/10 px-2.5 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+                  <PiggyBank className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate text-[0.64rem] font-semibold text-slate-400">
+                    Current Savings
+                  </span>
+                  <span className="mt-0.5 block truncate text-[clamp(0.66rem,2.7vw,0.82rem)] font-bold tabular-nums text-white">
+                    {formatCurrency(savings)}
+                  </span>
+                  <span className="mt-0.5 block text-[0.56rem] font-semibold text-slate-500">
+                    {plan.savingsSources.length} {plan.savingsSources.length === 1 ? "source" : "sources"}
+                  </span>
                 </span>
               </div>
-              <p
-                className={`mt-1.5 text-sm font-extrabold ${
-                  overBudget
-                    ? "text-rose-600 dark:text-rose-400"
-                    : "text-slate-900 dark:text-slate-100"
+
+              <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-white/[0.07] bg-black/10 px-2.5 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+                  <Landmark className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate text-[0.64rem] font-semibold text-slate-400">
+                    Loan Balances
+                  </span>
+                  <span className="mt-0.5 block truncate text-[clamp(0.66rem,2.7vw,0.82rem)] font-bold tabular-nums text-white">
+                    {formatCurrency(totalLoanBalance)}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div
+              className={`mt-2 flex items-center justify-between gap-3 rounded-[1rem] border bg-black/10 px-2.5 py-2.5 ${
+                hasNetDeficit ? "border-rose-400/[0.13]" : "border-white/[0.07]"
+              }`}
+            >
+              <div
+                className={`flex min-w-0 items-center gap-2 ${
+                  hasNetDeficit ? "text-rose-300" : "text-emerald-400"
                 }`}
               >
-                {formatCurrency(Math.abs(remaining))}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-2.5 grid grid-cols-2 gap-2.5">
-            <div className="rounded-2xl border border-blue-500/20 bg-white/65 p-3 dark:bg-black/15">
-              <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                <PiggyBank className="h-4 w-4" />
-                <span className="text-[11px] font-semibold">Current savings</span>
+                <Scale className="h-[0.95rem] w-[0.95rem] shrink-0" strokeWidth={2.2} />
+                <span className="truncate text-[0.64rem] font-semibold">
+                  {hasNetDeficit ? "Loans above savings" : "Savings after loans"}
+                </span>
               </div>
-              <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
-                {formatCurrency(savings)}
-              </p>
-              <p className="mt-0.5 text-[9px] font-semibold text-slate-500 dark:text-slate-400">
-                {plan.savingsSources.length} {plan.savingsSources.length === 1 ? "source" : "sources"}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-violet-500/20 bg-white/65 p-3 dark:bg-black/15">
-              <div className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400">
-                <Landmark className="h-4 w-4" />
-                <span className="text-[11px] font-semibold">Loan balances</span>
-              </div>
-              <p className="mt-1.5 text-sm font-extrabold text-slate-900 dark:text-slate-100">
-                {formatCurrency(totalLoanBalance)}
-              </p>
-            </div>
-          </div>
-
-          <div
-            className={`mt-2.5 flex items-center justify-between gap-3 rounded-2xl border bg-white/65 px-3 py-2.5 dark:bg-black/15 ${
-              hasNetDeficit ? "border-rose-500/25" : "border-emerald-500/20"
-            }`}
-          >
-            <div
-              className={`flex min-w-0 items-center gap-2 ${
-                hasNetDeficit
-                  ? "text-rose-600 dark:text-rose-400"
-                  : "text-emerald-600 dark:text-emerald-400"
-              }`}
-            >
-              <Scale className="h-4 w-4 shrink-0" />
-              <span className="truncate text-[11px] font-semibold">
-                {hasNetDeficit ? "Loans above savings" : "Savings after loans"}
+              <span
+                className={`shrink-0 text-[0.82rem] font-extrabold tabular-nums ${
+                  hasNetDeficit ? "text-rose-300" : "text-white"
+                }`}
+              >
+                {formatCurrency(Math.abs(netPosition))}
               </span>
             </div>
-            <p
-              className={`shrink-0 text-sm font-extrabold ${
-                hasNetDeficit
-                  ? "text-rose-600 dark:text-rose-400"
-                  : "text-slate-900 dark:text-slate-100"
-              }`}
-            >
-              {formatCurrency(Math.abs(netPosition))}
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <div className="mb-1.5 flex justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400">
-              <span>Salary allocated</span>
-              <span>{expectedSalary > 0 ? `${Math.round((totalCommitments / expectedSalary) * 100)}%` : "0%"}</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-slate-200/70 dark:bg-white/10">
-              <div
-                className={`h-full rounded-full transition-all ${
-                  overBudget ? "bg-rose-500" : "bg-emerald-500"
-                }`}
-                style={{ width: `${commitmentPercent}%` }}
-              />
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
 
         <section className="relative overflow-hidden rounded-[1.4rem] border border-emerald-300/[0.1] bg-[linear-gradient(135deg,rgba(5,42,34,0.78),rgba(6,18,22,0.97))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.24)]">
           <div className="pointer-events-none absolute -right-14 -top-16 h-36 w-36 rounded-full bg-emerald-400/[0.07] blur-2xl" />
@@ -377,7 +430,7 @@ export default function FutureExpenses() {
 
           <div className="relative mt-3 flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
-              ⃁
+              RM
             </span>
             <div className="min-w-0 flex-1">
               <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
@@ -452,7 +505,7 @@ export default function FutureExpenses() {
               </Label>
               <div className="relative mt-1">
                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-blue-400">
-                  ⃁
+                  RM
                 </span>
                 <Input
                   id="savings-amount"
@@ -466,7 +519,7 @@ export default function FutureExpenses() {
                     setSavingsFormError("");
                   }}
                   placeholder="0.00"
-                  className="h-8 border-0 bg-transparent pl-5 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
@@ -588,7 +641,7 @@ export default function FutureExpenses() {
               </Label>
               <div className="relative mt-1">
                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-emerald-400">
-                  ⃁
+                  RM
                 </span>
                 <Input
                   id="future-amount"
@@ -602,7 +655,7 @@ export default function FutureExpenses() {
                     setFormError("");
                   }}
                   placeholder="0.00"
-                  className="h-8 border-0 bg-transparent pl-5 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
@@ -617,7 +670,7 @@ export default function FutureExpenses() {
             </div>
             <div className="relative mt-1">
               <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-violet-400">
-                ⃁
+                RM
               </span>
               <Input
                 id="future-loan-balance"
@@ -631,7 +684,7 @@ export default function FutureExpenses() {
                   setFormError("");
                 }}
                 placeholder="0.00"
-                className="h-8 border-0 bg-transparent pl-5 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
             <p className="mt-1 text-[0.6rem] font-medium text-slate-500">
