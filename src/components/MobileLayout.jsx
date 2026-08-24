@@ -134,11 +134,11 @@ export default function MobileLayout({ children }) {
               onTouchStart={startCloseSwipe}
               onTouchEnd={finishSwipe}
               onTouchCancel={cancelSwipe}
-              className="mobile-sidebar absolute inset-y-0 left-0 w-[72vw] min-w-[15rem] max-w-[17rem] overflow-hidden border-r border-sidebar-border bg-sidebar text-sidebar-foreground shadow-[18px_0_44px_rgba(15,23,42,0.14)] backdrop-blur-xl animate-in slide-in-from-left duration-300 dark:shadow-[18px_0_48px_rgba(0,0,0,0.58)]"
+              className="mobile-sidebar absolute inset-y-0 left-0 flex w-[72vw] min-w-[15rem] max-w-[17rem] flex-col overflow-hidden border-r border-sidebar-border bg-sidebar text-sidebar-foreground shadow-[18px_0_44px_rgba(15,23,42,0.14)] backdrop-blur-xl animate-in slide-in-from-left duration-300 dark:shadow-[18px_0_48px_rgba(0,0,0,0.58)]"
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
               <div
-                className="relative border-b border-sidebar-border bg-gradient-to-b from-emerald-50/80 via-white/30 to-transparent px-5 pb-4 pr-14 text-left dark:from-emerald-500/[0.08] dark:via-transparent"
+                className="relative shrink-0 border-b border-sidebar-border bg-gradient-to-b from-emerald-50/80 via-white/30 to-transparent px-5 pb-4 pr-14 text-left dark:from-emerald-500/[0.08] dark:via-transparent"
                 style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)" }}
               >
                 <h2 className="text-lg font-extrabold tracking-tight text-sidebar-foreground">
@@ -158,7 +158,10 @@ export default function MobileLayout({ children }) {
                 </button>
               </div>
 
-              <nav className="flex flex-col gap-1.5 p-3" aria-label="Main navigation links">
+              <nav
+                className="mt-auto flex min-h-0 flex-col gap-1.5 overflow-y-auto p-3 overscroll-contain no-scrollbar"
+                aria-label="Main navigation links"
+              >
                 {tabs.map(({ path, icon: Icon, label }) => {
                   const active = isTabActive(path);
                   return (
@@ -166,7 +169,7 @@ export default function MobileLayout({ children }) {
                       key={path}
                       type="button"
                       onClick={() => goToTab(path)}
-                      className={`flex h-12 touch-manipulation items-center gap-3 rounded-2xl px-3.5 text-sm font-semibold transition-all active:scale-[0.98] ${
+                      className={`flex h-12 shrink-0 touch-manipulation items-center gap-3 rounded-2xl px-3.5 text-sm font-semibold transition-all active:scale-[0.98] ${
                         active
                           ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 shadow-sm dark:bg-emerald-500/[0.12] dark:text-emerald-400 dark:ring-emerald-500/30 dark:shadow-none"
                           : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-[#10151c] dark:hover:text-slate-100"
