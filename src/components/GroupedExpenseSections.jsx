@@ -7,16 +7,9 @@ import { getExpenseIcon } from "@/utils/expenseIcons";
 const DATE_GROUP_TONES = [
   {
     rowBg: "bg-white dark:bg-[#090d12]",
-    iconBg: "bg-slate-50 dark:bg-[#090d12]",
+    iconBg: "bg-slate-50 dark:bg-white/[0.04]",
     border: "border-slate-200 dark:border-[#202733]",
-    ring: "ring-slate-200 dark:ring-[#202733]",
-    text: "text-slate-700 dark:text-slate-200",
-  },
-  {
-    rowBg: "bg-slate-100/80 dark:bg-slate-800/80",
-    iconBg: "bg-slate-200/80 dark:bg-slate-700/80",
-    border: "border-slate-200 dark:border-[#202733]",
-    ring: "ring-slate-300 dark:ring-slate-600",
+    ring: "ring-slate-200 dark:ring-white/[0.07]",
     text: "text-slate-700 dark:text-slate-200",
   },
 ];
@@ -84,8 +77,8 @@ function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false 
   const Icon = getExpenseIcon(expense.category, expense.description);
 
   return (
-    <div className={`flex items-center gap-3 rounded-2xl border border-l-4 ${tone.border} ${tone.rowBg} px-3 py-2.5 shadow-sm`}>
-      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring}`}>
+    <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 shadow-sm dark:border-white/[0.07] dark:bg-white/[0.025]">
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 ${tone.text} ring-1 ring-slate-200 dark:bg-white/[0.05] dark:ring-white/[0.07]`}>
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
