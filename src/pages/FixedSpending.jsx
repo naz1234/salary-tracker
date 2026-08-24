@@ -831,27 +831,33 @@ export default function FixedSpending() {
           )}
 
           {cycle && (
-            <section className="rounded-[1.5rem] bg-gradient-to-r from-emerald-50 dark:from-emerald-950 via-teal-50 dark:via-teal-950 to-white dark:to-slate-950 p-4 shadow-sm ring-1 ring-emerald-100 dark:ring-emerald-900">
-              <div className="flex items-center gap-3">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400">
+            <section className="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-emerald-50 via-teal-50 to-white p-4 shadow-sm ring-1 ring-emerald-100 dark:bg-none dark:bg-[#090d12] dark:ring-[#202733]/80">
+              <div
+                className="pointer-events-none absolute inset-0 hidden dark:block"
+                style={{
+                  backgroundImage: "radial-gradient(circle at 12% 42%, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 38%, transparent 70%)",
+                }}
+              />
+              <div className="relative flex items-center gap-3">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-1 dark:ring-inset dark:ring-emerald-500/10">
                   <Wallet className="h-7 w-7" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">Total Fixed Spending</p>
                   <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950 dark:text-slate-50">{formatMoney(total)}</h2>
                 </div>
-                <span className="rounded-full bg-emerald-100 dark:bg-emerald-900 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300">
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-1 dark:ring-inset dark:ring-emerald-500/10">
                   {items.length} item{items.length !== 1 ? "s" : ""}
                 </span>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-[#090d12]/70 px-3 py-2 ring-1 ring-emerald-100 dark:ring-emerald-900">
+              <div className="relative mt-3 grid grid-cols-2 gap-2">
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-[#090d12]/80 px-3 py-2 ring-1 ring-emerald-100 dark:ring-emerald-500/25">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                     <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> Paid
                   </span>
                   <span className="text-[11px] font-extrabold tabular-nums text-emerald-700 dark:text-emerald-300">{formatMoney(paidTotal)}</span>
                 </div>
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-[#090d12]/70 px-3 py-2 ring-1 ring-orange-100 dark:ring-orange-900">
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-[#090d12]/80 px-3 py-2 ring-1 ring-orange-100 dark:ring-orange-500/25">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                     <Clock3 className="h-4 w-4 text-orange-600 dark:text-orange-400" /> Due
                   </span>
@@ -882,7 +888,7 @@ export default function FixedSpending() {
                     className={`h-9 rounded-xl border px-1.5 text-[11px] font-medium transition-all disabled:opacity-60 ${
                       active
                         ? filter.key === "all"
-                          ? "border-slate-200 dark:border-[#202733] bg-white dark:bg-[#090d12] text-slate-700 dark:text-slate-200 shadow-sm ring-1 ring-slate-100 dark:ring-slate-800"
+                          ? "border-slate-200 bg-white text-slate-700 shadow-sm ring-1 ring-slate-100 dark:border-emerald-500/70 dark:bg-emerald-500/5 dark:text-slate-100 dark:ring-emerald-500/20 dark:shadow-[0_0_18px_rgba(16,185,129,0.08)]"
                           : "border-emerald-100 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 shadow-sm"
                         : "border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#090d12]/80 text-slate-500 dark:text-slate-400 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-900"
                     }`}
@@ -990,12 +996,12 @@ export default function FixedSpending() {
                     data-fixed-spending-id={String(i.id)}
                     draggable={false}
                     onDragStart={(event) => event.preventDefault()}
-                    className={`group relative flex select-none items-center gap-2 rounded-[1.05rem] border px-2.5 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.055)] transition-[box-shadow,border-color,opacity,transform] duration-200 ${card} ${
+                    className={`group relative flex select-none items-center gap-2 rounded-[1.05rem] border px-2.5 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.055)] transition-[box-shadow,border-color,opacity,transform] duration-200 ${card} dark:!border-[#202733]/80 dark:!bg-none dark:!bg-[#090d12]/90 dark:shadow-[0_8px_22px_rgba(0,0,0,0.16)] ${
                       arrangeMode ? "ring-1 ring-emerald-200 dark:ring-emerald-800" : ""
                     } ${i.is_paid ? "saturate-[0.92]" : ""} ${isSavingPaid || savingOrder ? "opacity-70" : ""}`}
                   >
                     <div
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${wrap}`}
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full dark:rounded-xl ${wrap} dark:!bg-[#10151c] dark:ring-1 dark:ring-inset dark:ring-white/5`}
                     >
                       <Icon className={`h-4 w-4 ${icon}`} />
                     </div>
@@ -1008,7 +1014,7 @@ export default function FixedSpending() {
                       </div>
                       <p className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[11px] font-normal leading-4 text-slate-500 dark:text-slate-400">
                         <span
-                          className={`inline-flex shrink-0 items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium leading-none ${pill}`}
+                          className={`inline-flex shrink-0 items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium leading-none ${pill} dark:!bg-transparent dark:px-0`}
                         >
                           {i.category || "Other"}
                         </span>
@@ -1059,8 +1065,8 @@ export default function FixedSpending() {
                               disabled={isSavingPaid || savingOrder}
                               className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors disabled:cursor-default disabled:opacity-70 ${
                                 i.is_paid
-                                  ? "bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                                  : "bg-orange-50 dark:bg-orange-950 text-orange-600 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900"
+                                  ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-transparent dark:text-emerald-400 dark:hover:bg-emerald-500/10"
+                                  : "bg-orange-50 text-orange-600 hover:bg-orange-100 dark:bg-transparent dark:text-orange-400 dark:hover:bg-orange-500/10"
                               }`}
                               aria-label={
                                 i.is_paid
