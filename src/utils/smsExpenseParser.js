@@ -4,15 +4,27 @@ function parseMoney(value) {
   return Number.isFinite(number) && number > 0 ? number : null;
 }
 
+function parseSarAmount(text, labelPattern) {
+  // Banks put the currency either before or after the transaction amount.
+  const match = text.match(new RegExp(
+    `${labelPattern}[^\\S\\n]*:?[^\\S\\n]*(?:(?:SAR|SR)[^\\S\\n]*([\\d,.]+)|([\\d,.]+)[^\\S\\n]*(?:SAR|SR)\\b)`,
+    "im",
+  ));
+  return parseMoney(match?.[1] || match?.[2]);
+}
+
 function parseBankDate(text) {
-  const match = String(text || "").match(/\b(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  const dateText = getLineValue(text, "Date") || text;
+  const isoMatch = dateText.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
+  const match = isoMatch || dateText.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})\b/);
   if (!match) return null;
 
-  const day = Number(match[1]);
+  const day = Number(match[isoMatch ? 3 : 1]);
   const month = Number(match[2]);
-  let year = Number(match[3]);
-  if (year < 100) year += 2000;
+  let year = Number(match[isoMatch ? 1 : 3]);
+  if (!isoMatch && year < 100) year += 2000;
 
+  // Keep the bank's calendar date, regardless of the device's time zone.
   const date = new Date(year, month - 1, day);
   if (
     date.getFullYear() !== year ||
@@ -25,25 +37,32 @@ function parseBankDate(text) {
   return `${year.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
 }
 
-function getLineValue(text, label) {
+function getLineValues(text, label) {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = String(text || "").match(new RegExp(`^\\s*${escaped}\\s*:\\s*(.+)$`, "im"));
-  return match?.[1]?.trim() || "";
+  const matches = text.matchAll(new RegExp(`^[^\\S\\n]*${escaped}[^\\S\\n]*:[^\\S\\n]*(.*)$`, "gim"));
+  return [...matches].map((match) => match[1].trim()).filter(Boolean);
+}
+
+function getLineValue(text, label) {
+  return getLineValues(text, label)[0] || "";
 }
 
 function getMerchant(text) {
-  const from = getLineValue(text, "From");
-  if (from) return { merchant: from, source: "from" };
+  const isTransfer = /INTERNAL\s+OUTWARD\s+TRANSFER/i.test(text);
+  const labels = isTransfer ? ["To", "At", "From"] : ["At", "From", "To"];
 
-  const to = getLineValue(text, "To");
-  if (to) return { merchant: to, source: "to" };
+  for (const label of labels) {
+    for (const value of getLineValues(text, label)) {
+      // "From" can be the charged account, while "At" can be a timestamp.
+      if (/^(?:(?:account|a\/c|card)\s*)?[*x×•#\d\s-]+$/i.test(value)) continue;
+      if (/^(?:\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{2,4})(?:\s|T|$)/.test(value)) continue;
 
-  const atMatches = [...String(text || "").matchAll(/^\s*At\s*:\s*(.+)$/gim)];
-  const merchantAt = atMatches
-    .map((match) => match[1].trim())
-    .find((value) => !/^\d{1,2}\/\d{1,2}\/\d{2,4}(?:\s+\d{1,2}:\d{2})?$/.test(value));
+      const merchant = value.replace(/×+/g, " ").replace(/\s+/g, " ").trim();
+      if (merchant) return { merchant, source: label.toLowerCase() };
+    }
+  }
 
-  return { merchant: merchantAt || "", source: merchantAt ? "at" : "" };
+  return { merchant: "", source: "" };
 }
 
 function inferCategory(merchant, text) {
@@ -51,7 +70,7 @@ function inferCategory(merchant, text) {
   const mappings = [
     [/HUNGER|HUNGERSTATION/, "Hungerstation"],
     [/STEAM/, "Entertainment"],
-    [/FAWAL|RESTAURANT|CAFE|COFFEE|FOOD|BAKERY|BROAST|SHAWARMA/, "Food"],
+    [/KEETA|FAWAL|RESTAURANT|CAFE|COFFEE|FOOD|BAKERY|BROAST|SHAWARMA/, "Food"],
     [/PANDA|DANUBE|CARREFOUR|TAMIMI|LULU|GROCERY|SUPERMARKET/, "Groceries"],
     [/UBER|CAREEM|TAXI|METRO|RAIL|PETROL|FUEL|GAS STATION/, "Transport"],
     [/NAHDI|PHARMACY|HOSPITAL|CLINIC|MEDICAL/, "Healthcare"],
@@ -79,10 +98,10 @@ export function parseSmsExpense(rawText) {
     return { ok: false, error: "Paste a bank SMS first." };
   }
 
-  const totalDue = text.match(/\bTotal\s+due\s+amount\s*:\s*([\d,.]+)\s*(?:SAR|SR)\b/i);
-  const amountLine = text.match(/^\s*Amount\s*:\s*([\d,.]+)\s*(?:SAR|SR)\b/im);
-  const transactionAmount = text.match(/\bTransaction\s+Amount\s*:?\s*([\d,.]+)\s*(?:SAR|SR)\b/i);
-  const amount = parseMoney(totalDue?.[1] || amountLine?.[1] || transactionAmount?.[1]);
+  const totalDue = parseSarAmount(text, "\\bTotal\\s+due\\s+amount");
+  const amountLine = parseSarAmount(text, "^[^\\S\\n]*Amount");
+  const transactionAmount = parseSarAmount(text, "\\bTransaction\\s+Amount");
+  const amount = totalDue || amountLine || transactionAmount;
   const date = parseBankDate(text);
   const { merchant, source } = getMerchant(text);
   const isTransfer = /INTERNAL\s+OUTWARD\s+TRANSFER/i.test(text);
