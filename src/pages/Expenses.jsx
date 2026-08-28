@@ -501,17 +501,17 @@ export default function Expenses() {
 
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
-                  <div className="pika-card pika-panel-pink rounded-[1.5rem] p-4">
+                  <div className="pika-card pika-panel-sky rounded-[1.5rem] p-4">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-brand-pink/10 text-brand-pink ring-1 ring-inset ring-brand-pink/10">
+                        <div className="pika-panel-sky-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl">
                           <Clock3 className="h-4 w-4" />
                         </div>
                         <div>
                           <h3 className="text-[13px] font-semibold text-foreground">Recent Transactions</h3>
                         </div>
                       </div>
-                      <button type="button" className="text-[11px] font-medium text-brand-pink" onClick={() => setActiveView("transactions")}>View all</button>
+                      <button type="button" className="pika-panel-sky-link text-[11px] font-medium" onClick={() => setActiveView("transactions")}>View all</button>
                     </div>
                     <GroupedExpenseSections expenses={overview.recent} compact />
                   </div>

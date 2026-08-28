@@ -120,6 +120,28 @@
     border-color: hsl(var(--brand-plum) / 0.24);
   }
 
+  .pika-panel-sky {
+    --pika-sky-background: 204 75% 92%;
+    --pika-sky-ink: 203 57% 32%;
+    background-image: linear-gradient(135deg, hsl(var(--pika-sky-background)), hsl(var(--pika-sky-background) / 0.65));
+    border-color: hsl(var(--pika-sky-ink) / 0.24);
+  }
+
+  .dark .pika-panel-sky {
+    --pika-sky-background: 203 50% 20%;
+    --pika-sky-ink: 203 73% 80%;
+  }
+
+  .pika-panel-sky-icon {
+    color: hsl(var(--pika-sky-ink));
+    background-color: hsl(var(--pika-sky-ink) / 0.1);
+    box-shadow: inset 0 0 0 1px hsl(var(--pika-sky-ink) / 0.1);
+  }
+
+  .pika-panel-sky-link {
+    color: hsl(var(--pika-sky-ink));
+  }
+
   .pika-expense-stat {
     --pika-stat-background: var(--accent);
     --pika-stat-ink: var(--brand-pink);
