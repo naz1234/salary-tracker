@@ -108,15 +108,15 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
               <MessageSquareText className="h-4 w-4" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Import bank SMS</p>
-              <p className="mt-0.5 text-xs leading-5 text-slate-500 dark:text-slate-400">
+              <p className="text-sm font-semibold text-foreground">Import bank SMS</p>
+              <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
                 Copy a transaction SMS, then let the app fill the amount, date, merchant, category and payment method.
               </p>
             </div>
           </div>
 
           <div className="mt-3 flex min-w-0 gap-2">
-            <Button type="button" className="h-10 min-w-0 flex-1 rounded-xl bg-emerald-600 text-xs font-semibold text-white hover:bg-emerald-700" onClick={handlePasteAndRead}>
+            <Button type="button" className="pika-action h-10 min-w-0 flex-1 rounded-xl text-xs font-semibold text-white" onClick={handlePasteAndRead}>
               <ClipboardPaste className="mr-1.5 h-4 w-4" /> Paste & Read
             </Button>
             <Button
@@ -136,7 +136,7 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
                 onChange={(event) => setSmsText(event.target.value)}
                 placeholder="Paste the complete bank SMS here..."
                 wrap="soft"
-                className="min-h-32 max-w-full resize-none overflow-x-hidden whitespace-pre-wrap break-words bg-white text-base dark:bg-slate-950"
+                className="min-h-32 max-w-full resize-none overflow-x-hidden whitespace-pre-wrap break-words bg-card text-base dark:bg-background"
               />
               <Button type="button" variant="outline" className="h-10 w-full rounded-xl text-xs font-semibold" disabled={!smsText.trim()} onClick={() => applySms(smsText)}>
                 Read SMS
@@ -193,7 +193,7 @@ export default function ExpenseForm({ onSubmit, initial, loading, cycle }) {
         </Select>
       </div>
       <Button
-        className="w-full h-12 text-base font-semibold rounded-xl"
+        className="pika-action w-full h-12 text-base font-semibold text-white rounded-xl"
         disabled={!form.date || !form.amount || !form.category || loading}
         onClick={() => onSubmit({ ...form, amount: parseFloat(form.amount) })}
       >

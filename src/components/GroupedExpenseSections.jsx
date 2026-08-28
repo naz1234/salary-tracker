@@ -6,11 +6,11 @@ import { getExpenseIcon } from "@/utils/expenseIcons";
 
 const DATE_GROUP_TONES = [
   {
-    rowBg: "bg-white dark:bg-[#090d12]",
-    iconBg: "bg-slate-50 dark:bg-white/[0.04]",
-    border: "border-slate-200 dark:border-[#202733]",
-    ring: "ring-slate-200 dark:ring-white/[0.07]",
-    text: "text-slate-700 dark:text-slate-200",
+    rowBg: "bg-card",
+    iconBg: "bg-secondary",
+    border: "border-border",
+    ring: "ring-brand-plum/10",
+    text: "text-brand-plum",
   },
 ];
 
@@ -77,15 +77,15 @@ function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false 
   const Icon = getExpenseIcon(expense.category, expense.description);
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 shadow-sm dark:border-white/[0.07] dark:bg-white/[0.025]">
-      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 ${tone.text} ring-1 ring-slate-200 dark:bg-white/[0.05] dark:ring-white/[0.07]`}>
+    <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-background/70 px-3 py-2.5 shadow-sm dark:border-border/70 dark:bg-muted/60">
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-muted ${tone.text} ring-1 ring-border dark:bg-muted/60 dark:ring-border/70`}>
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[13px] font-semibold text-slate-900 dark:text-slate-100">
+        <p className="truncate text-[13px] font-semibold text-foreground">
           {expense.description || expense.category || "Expense"}
         </p>
-        <p className="truncate text-[10px] font-medium text-slate-500 dark:text-slate-400">
+        <p className="truncate text-[10px] font-medium text-muted-foreground">
           <span className={`font-semibold ${tone.text}`}>{expense.category || "Uncategorized"}</span>
           {expense.payment_method ? ` · ${expense.payment_method}` : ""}
         </p>
@@ -93,8 +93,8 @@ function ExpenseListItem({ expense, tone, onEdit, onDelete, showActions = false 
       <p className={`shrink-0 text-[13px] font-extrabold ${tone.text}`}>-{fmtCurrency(expense.amount)}</p>
       {showActions ? (
         <div className="flex shrink-0 gap-0.5">
-          <button type="button" className="rounded-lg p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => onEdit?.(expense)} aria-label="Edit expense">
-            <Pencil className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
+          <button type="button" className="rounded-lg p-1.5 hover:bg-muted" onClick={() => onEdit?.(expense)} aria-label="Edit expense">
+            <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
           <button type="button" className="rounded-lg p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950" onClick={() => onDelete?.(expense.id)} aria-label="Delete expense">
             <Trash2 className="h-3.5 w-3.5 text-rose-500" />
@@ -125,7 +125,7 @@ export default function GroupedExpenseSections({
         const isExpanded = expandedGroupKey === group.key;
         const headerTone = DATE_GROUP_TONES[groupIndex % DATE_GROUP_TONES.length];
         return (
-          <div key={group.key} className={`overflow-hidden rounded-2xl border ${headerTone.border} bg-white dark:bg-[#090d12] shadow-sm`}>
+          <div key={group.key} className={`overflow-hidden rounded-2xl border ${headerTone.border} bg-card shadow-sm`}>
             <button
               type="button"
               className={`flex w-full items-center gap-3 px-3 py-2.5 text-left ${headerTone.rowBg}`}
@@ -137,17 +137,17 @@ export default function GroupedExpenseSections({
               </span>
               <div className="min-w-0 flex-1">
                 <p className={`truncate text-[13px] font-semibold ${headerTone.text}`}>{formatDisplayDate(group.date)}</p>
-                <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
+                <p className="text-[10px] font-medium text-muted-foreground">{group.items.length} item{group.items.length > 1 ? "s" : ""}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Total spending</p>
+                <p className="text-[10px] font-medium text-muted-foreground">Total spending</p>
                 <p className={`text-[13px] font-extrabold ${headerTone.text}`}>-{fmtCurrency(group.total)}</p>
               </div>
               <ChevronDown className={`h-4 w-4 shrink-0 ${headerTone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
             </button>
 
             {isExpanded && (
-              <div className={`border-t ${headerTone.border} bg-white dark:bg-[#090d12] px-2.5 pb-2.5 pt-2`}>
+              <div className={`border-t ${headerTone.border} bg-card px-2.5 pb-2.5 pt-2`}>
                 <div className="space-y-2">
                   {group.items.map((expense) => {
                     const expenseTone = categoryToneMap.get(normalizeCategory(expense.category)) || getExpenseCategoryPaletteTone(0);

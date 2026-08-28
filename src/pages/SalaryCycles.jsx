@@ -233,7 +233,7 @@ export default function SalaryCycles() {
       <div className="space-y-4 pb-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Salary Cycles</h1>
-          <Button size="sm" className="rounded-xl gap-1" onClick={() => setSheetOpen(true)}>
+          <Button size="sm" className="pika-action rounded-xl gap-1 text-white" onClick={() => setSheetOpen(true)}>
             <Plus className="w-4 h-4" /> New Cycle
           </Button>
         </div>
@@ -326,11 +326,11 @@ export default function SalaryCycles() {
       </div>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent side="bottom" className="rounded-t-2xl">
+        <SheetContent side="bottom" className="rounded-t-3xl bg-card">
           <SheetHeader><SheetTitle>New Salary Cycle</SheetTitle></SheetHeader>
           <div className="mt-4 space-y-4 pb-6">
-            <div className="bg-blue-50 dark:bg-blue-950 rounded-xl p-3 border border-blue-200 dark:border-blue-800">
-              <p className="text-xs text-blue-700 dark:text-blue-300">
+            <div className="bg-secondary rounded-xl p-3 border border-brand-plum/20">
+              <p className="text-xs text-brand-plum">
                 Your spending cycle starts from your salary received date. If you create an older/backfill cycle, it will stay Closed and can still be edited. Only the latest cycle will be Active.
               </p>
             </div>
@@ -343,7 +343,7 @@ export default function SalaryCycles() {
               <Input type="number" step="0.01" placeholder="0.00" value={form.salary_amount} onChange={(e) => setForm((p) => ({ ...p, salary_amount: e.target.value }))} className="mt-1 h-12 text-base" />
             </div>
             <Button
-              className="w-full h-12 text-base font-semibold rounded-xl"
+              className="pika-action w-full h-12 text-base font-semibold text-white rounded-xl"
               disabled={!form.start_date || !form.salary_amount || saving}
               onClick={handleCreate}
             >
@@ -362,7 +362,7 @@ export default function SalaryCycles() {
           }
         }}
       >
-        <SheetContent side="bottom" className="rounded-t-2xl">
+        <SheetContent side="bottom" className="rounded-t-3xl bg-card">
           <SheetHeader><SheetTitle>Edit Salary Amount</SheetTitle></SheetHeader>
           <div className="mt-4 space-y-4 pb-6">
             {editSalaryTarget && (
@@ -386,7 +386,7 @@ export default function SalaryCycles() {
               />
             </div>
             <Button
-              className="w-full h-12 text-base font-semibold rounded-xl"
+              className="pika-action w-full h-12 text-base font-semibold text-white rounded-xl"
               disabled={!editSalaryAmount || updatingSalary}
               onClick={handleUpdateSalary}
             >

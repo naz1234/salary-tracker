@@ -734,7 +734,7 @@ export default function FixedSpending() {
   return (
     <MobileLayout>
       <div
-        className="fixed-spending-no-select -mx-4 -mt-4 min-h-full touch-pan-y bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),transparent_32%),linear-gradient(180deg,#ffffff_0%,#f8fafc_45%,#f7f9fb_100%)] px-3 pb-4 pt-4 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_34%),linear-gradient(180deg,#05080c_0%,#04070a_55%,#030609_100%)] sm:px-4"
+        className="pika-page fixed-spending-no-select -mx-4 -mt-4 min-h-full touch-pan-y px-3 pb-4 pt-4 sm:px-4"
         style={{
           WebkitTouchCallout: "none",
           WebkitTapHighlightColor: "transparent",
@@ -744,7 +744,7 @@ export default function FixedSpending() {
       >
         <div className="space-y-3">
           <header className="flex items-center justify-between gap-3">
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+            <h1 className="text-xl font-extrabold tracking-tight text-foreground">
               Fixed Spending
             </h1>
             {cycle && (
@@ -758,7 +758,7 @@ export default function FixedSpending() {
                     className={`h-10 rounded-2xl px-3 text-[13px] font-bold shadow-sm ${
                       arrangeMode
                         ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                        : "border-slate-200 dark:border-[#202733] bg-white dark:bg-[#090d12] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        : "border-border bg-card text-muted-foreground dark:text-foreground hover:bg-background"
                     }`}
                     onClick={toggleArrangeMode}
                   >
@@ -773,7 +773,7 @@ export default function FixedSpending() {
                 <Button
                   size="sm"
                   disabled={arrangeMode || savingOrder}
-                  className="h-10 shrink-0 rounded-2xl bg-emerald-500 px-3.5 text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600 disabled:bg-slate-300 dark:disabled:bg-slate-600 disabled:shadow-none"
+                  className="pika-action h-10 shrink-0 rounded-2xl px-3.5 text-[13px] font-bold text-white disabled:bg-muted disabled:shadow-none"
                   onClick={() => {
                     setEditing(null);
                     setSheetOpen(true);
@@ -786,15 +786,15 @@ export default function FixedSpending() {
           </header>
 
           {availableCycles.length > 0 && (
-            <section className="rounded-[1.25rem] bg-white dark:bg-[#090d12] p-3 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
+            <section className="rounded-[1.25rem] bg-card p-3 shadow-sm ring-1 ring-border/70">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                     <CalendarDays className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[12px] font-semibold text-slate-900 dark:text-slate-100">Salary Cycle</p>
-                    <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Choose which cycle to view</p>
+                    <p className="text-[12px] font-semibold text-foreground">Salary Cycle</p>
+                    <p className="text-[10px] font-medium text-muted-foreground">Choose which cycle to view</p>
                   </div>
                 </div>
                 {cycle && (
@@ -803,7 +803,7 @@ export default function FixedSpending() {
                     className={`rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
                       cycle.status === "active"
                         ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        : "bg-muted text-muted-foreground hover:bg-muted"
                     }`}
                   >
                     {cycle.status === "active" ? "Active" : "Closed"}
@@ -815,7 +815,7 @@ export default function FixedSpending() {
                 onValueChange={openSalaryCycle}
                 disabled={arrangeMode || savingOrder}
               >
-                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-slate-800 dark:text-slate-200 shadow-sm focus:ring-emerald-300 dark:focus:ring-emerald-700">
+                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-foreground shadow-sm focus:ring-emerald-300 dark:focus:ring-emerald-700">
                   <SelectValue placeholder="Select salary cycle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -831,34 +831,28 @@ export default function FixedSpending() {
           )}
 
           {cycle && (
-            <section className="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-emerald-50 via-teal-50 to-white p-4 shadow-sm ring-1 ring-emerald-100 dark:bg-none dark:bg-[#090d12] dark:ring-[#202733]/80">
-              <div
-                className="pointer-events-none absolute inset-0 hidden dark:block"
-                style={{
-                  backgroundImage: "radial-gradient(circle at 12% 42%, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 38%, transparent 70%)",
-                }}
-              />
+            <section className="pika-card pika-cycle-card relative overflow-hidden rounded-[1.5rem] p-4">
               <div className="relative flex items-center gap-3">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-1 dark:ring-inset dark:ring-emerald-500/10">
                   <Wallet className="h-7 w-7" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400">Total Fixed Spending</p>
-                  <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-slate-950 dark:text-slate-50">{formatMoney(total)}</h2>
+                  <p className="text-[11px] font-bold text-muted-foreground">Total Fixed Spending</p>
+                  <h2 className="mt-1 text-[1.3rem] font-black tracking-tight text-foreground">{formatMoney(total)}</h2>
                 </div>
                 <span className="rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-extrabold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-1 dark:ring-inset dark:ring-emerald-500/10">
                   {items.length} item{items.length !== 1 ? "s" : ""}
                 </span>
               </div>
               <div className="relative mt-3 grid grid-cols-2 gap-2">
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-[#090d12]/80 px-3 py-2 ring-1 ring-emerald-100 dark:ring-emerald-500/25">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-card/70 dark:bg-card/80 px-3 py-2 ring-1 ring-emerald-100 dark:ring-emerald-500/25">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
                     <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> Paid
                   </span>
                   <span className="text-[11px] font-extrabold tabular-nums text-emerald-700 dark:text-emerald-300">{formatMoney(paidTotal)}</span>
                 </div>
-                <div className="flex items-center justify-between gap-2 rounded-xl bg-white/70 dark:bg-[#090d12]/80 px-3 py-2 ring-1 ring-orange-100 dark:ring-orange-500/25">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                <div className="flex items-center justify-between gap-2 rounded-xl bg-card/70 dark:bg-card/80 px-3 py-2 ring-1 ring-orange-100 dark:ring-orange-500/25">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
                     <Clock3 className="h-4 w-4 text-orange-600 dark:text-orange-400" /> Due
                   </span>
                   <span className="text-[11px] font-extrabold tabular-nums text-orange-600 dark:text-orange-400">{formatMoney(dueTotal)}</span>
@@ -868,7 +862,7 @@ export default function FixedSpending() {
           )}
 
           {!cycle && !loading && !loadError && (
-            <p className="rounded-3xl border border-slate-200 dark:border-[#202733] bg-white dark:bg-[#090d12] p-6 text-center text-sm text-slate-500 dark:text-slate-400 shadow-sm">
+            <p className="rounded-3xl border border-border bg-card p-6 text-center text-sm text-muted-foreground shadow-sm">
               No salary cycle selected. Create one first from the Dashboard or
               open one from Salary Cycles.
             </p>
@@ -888,9 +882,9 @@ export default function FixedSpending() {
                     className={`h-9 rounded-xl border px-1.5 text-[11px] font-medium transition-all disabled:opacity-60 ${
                       active
                         ? filter.key === "all"
-                          ? "border-slate-200 bg-white text-slate-700 shadow-sm ring-1 ring-slate-100 dark:border-emerald-500/70 dark:bg-emerald-500/5 dark:text-slate-100 dark:ring-emerald-500/20 dark:shadow-[0_0_18px_rgba(16,185,129,0.08)]"
+                          ? "pika-action border-primary/20 text-white ring-1 ring-primary/20"
                           : "border-emerald-100 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 shadow-sm"
-                        : "border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#090d12]/80 text-slate-500 dark:text-slate-400 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-900"
+                        : "border-border bg-card/80 text-muted-foreground shadow-sm hover:bg-background"
                     }`}
                   >
                     <span className="inline-flex items-center justify-center gap-1.5">
@@ -914,7 +908,7 @@ export default function FixedSpending() {
               </span>
               <button
                 type="button"
-                className="shrink-0 rounded-full bg-white/80 dark:bg-[#090d12]/80 px-2 py-1 text-[10px] font-medium text-emerald-700 dark:text-emerald-300"
+                className="shrink-0 rounded-full bg-card/80 px-2 py-1 text-[10px] font-medium text-emerald-700 dark:text-emerald-300"
                 onClick={toggleArrangeMode}
                 disabled={savingOrder}
               >
@@ -928,7 +922,7 @@ export default function FixedSpending() {
               <span>{loadWarning}</span>
               <button
                 type="button"
-                className="shrink-0 rounded-full bg-white/80 dark:bg-[#090d12]/80 px-2 py-1 text-[10px] font-medium text-amber-700 dark:text-amber-300"
+                className="shrink-0 rounded-full bg-card/80 px-2 py-1 text-[10px] font-medium text-amber-700 dark:text-amber-300"
                 onClick={load}
               >
                 Retry
@@ -941,7 +935,7 @@ export default function FixedSpending() {
               {[1, 2, 3, 4].map((key) => (
                 <div
                   key={key}
-                  className="h-16 animate-pulse rounded-[1rem] border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#090d12]/80 shadow-sm"
+                  className="h-16 animate-pulse rounded-[1rem] border border-border bg-card/80 shadow-sm"
                 />
               ))}
             </div>
@@ -967,20 +961,20 @@ export default function FixedSpending() {
               </Button>
             </div>
           ) : items.length === 0 && cycle ? (
-            <div className="rounded-[1.5rem] border border-dashed border-slate-200 dark:border-[#202733] bg-white/70 dark:bg-[#090d12]/70 p-8 text-center shadow-sm">
+            <div className="rounded-[1.5rem] border border-dashed border-border bg-card/70 p-8 text-center shadow-sm">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
                 <ReceiptText className="h-5 w-5" />
               </div>
-              <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+              <p className="mt-3 text-sm font-semibold text-foreground">
                 No fixed spending yet.
               </p>
-              <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
                 Tap Add to record commitments like rent, loans, utilities, or
                 family support.
               </p>
             </div>
           ) : visibleItems.length === 0 && cycle ? (
-            <div className="rounded-[1.5rem] border border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-[#090d12]/80 p-6 text-center text-sm text-slate-500 dark:text-slate-400 shadow-sm">
+            <div className="rounded-[1.5rem] border border-border bg-card/80 p-6 text-center text-sm text-muted-foreground shadow-sm">
               No {statusFilter} fixed spending item found.
             </div>
           ) : (
@@ -996,30 +990,30 @@ export default function FixedSpending() {
                     data-fixed-spending-id={String(i.id)}
                     draggable={false}
                     onDragStart={(event) => event.preventDefault()}
-                    className={`group relative flex select-none items-center gap-2 rounded-[1.05rem] border px-2.5 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.055)] transition-[box-shadow,border-color,opacity,transform] duration-200 ${card} dark:!border-[#202733]/80 dark:!bg-none dark:!bg-[#090d12]/90 dark:shadow-[0_8px_22px_rgba(0,0,0,0.16)] ${
+                    className={`group relative flex select-none items-center gap-2 rounded-[1.05rem] border px-2.5 py-2 shadow-[0_8px_22px_rgba(15,23,42,0.055)] transition-[box-shadow,border-color,opacity,transform] duration-200 ${card} dark:!border-border/80 dark:!bg-none dark:!bg-card/90 dark:shadow-[0_8px_22px_rgba(0,0,0,0.16)] ${
                       arrangeMode ? "ring-1 ring-emerald-200 dark:ring-emerald-800" : ""
                     } ${i.is_paid ? "saturate-[0.92]" : ""} ${isSavingPaid || savingOrder ? "opacity-70" : ""}`}
                   >
                     <div
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full dark:rounded-xl ${wrap} dark:!bg-[#10151c] dark:ring-1 dark:ring-inset dark:ring-white/5`}
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full dark:rounded-xl ${wrap} dark:!bg-muted dark:ring-1 dark:ring-inset dark:ring-border/70`}
                     >
                       <Icon className={`h-4 w-4 ${icon}`} />
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex min-w-0 items-center gap-1.5 leading-tight">
-                        <p className="truncate text-[13px] font-medium text-slate-900 dark:text-slate-100">
+                        <p className="truncate text-[13px] font-medium text-foreground">
                           {i.name}
                         </p>
                       </div>
-                      <p className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[11px] font-normal leading-4 text-slate-500 dark:text-slate-400">
+                      <p className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-[11px] font-normal leading-4 text-muted-foreground">
                         <span
                           className={`inline-flex shrink-0 items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium leading-none ${pill} dark:!bg-transparent dark:px-0`}
                         >
                           {i.category || "Other"}
                         </span>
                         {cleanNote && (
-                          <span className="truncate text-slate-500 dark:text-slate-400">
+                          <span className="truncate text-muted-foreground">
                             {cleanNote}
                           </span>
                         )}
@@ -1039,7 +1033,7 @@ export default function FixedSpending() {
                             <button
                               type="button"
                               disabled={savingOrder || index === 0}
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:bg-slate-50 dark:disabled:bg-slate-900 disabled:text-slate-300 dark:disabled:text-slate-600 disabled:opacity-70"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:bg-background disabled:text-foreground dark:disabled:text-muted-foreground disabled:opacity-70"
                               onClick={() => moveFixedSpendingItem(i.id, -1)}
                               aria-label={`Move ${i.name} up`}
                             >
@@ -1050,7 +1044,7 @@ export default function FixedSpending() {
                               disabled={
                                 savingOrder || index === visibleItems.length - 1
                               }
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:bg-slate-50 dark:disabled:bg-slate-900 disabled:text-slate-300 dark:disabled:text-slate-600 disabled:opacity-70"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:bg-background disabled:text-foreground dark:disabled:text-muted-foreground disabled:opacity-70"
                               onClick={() => moveFixedSpendingItem(i.id, 1)}
                               aria-label={`Move ${i.name} down`}
                             >
@@ -1065,7 +1059,7 @@ export default function FixedSpending() {
                               disabled={isSavingPaid || savingOrder}
                               className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors disabled:cursor-default disabled:opacity-70 ${
                                 i.is_paid
-                                  ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-transparent dark:text-emerald-400 dark:hover:bg-emerald-500/10"
+                                  ? "bg-primary/10 text-primary hover:bg-primary/20"
                                   : "bg-orange-50 text-orange-600 hover:bg-orange-100 dark:bg-transparent dark:text-orange-400 dark:hover:bg-orange-500/10"
                               }`}
                               aria-label={
@@ -1084,7 +1078,7 @@ export default function FixedSpending() {
 
                             <button
                               type="button"
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-background"
                               onClick={() => {
                                 setEditing(i);
                                 setSheetOpen(true);
@@ -1098,7 +1092,7 @@ export default function FixedSpending() {
                               <DropdownMenuTrigger asChild>
                                 <button
                                   type="button"
-                                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+                                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-background"
                                   aria-label={`More options for ${i.name}`}
                                 >
                                   <MoreVertical className="h-3.5 w-3.5" />
