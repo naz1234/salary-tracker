@@ -276,9 +276,9 @@ export default function FutureExpenses() {
         </div>
 
         <div className="space-y-3">
-          <section className="pika-card pika-cycle-card overflow-hidden rounded-[1.35rem] border border-primary/[0.09] p-3">
+          <section className="pika-card pika-future-plan-card overflow-hidden rounded-[1.35rem] p-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-primary/[0.12] text-primary ring-1 ring-inset ring-primary/[0.08]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-brand-gold/10 text-brand-gold ring-1 ring-inset ring-brand-gold/10">
                 <WalletCards className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.1} />
               </span>
               <div className="min-w-0 flex-1">
@@ -287,8 +287,8 @@ export default function FutureExpenses() {
                   Expected next salary
                 </p>
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/[0.11] px-2.5 py-1 text-[0.66rem] font-bold text-primary ring-1 ring-inset ring-primary/[0.08]">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-gold/10 px-2.5 py-1 text-[0.66rem] font-bold text-brand-gold ring-1 ring-inset ring-brand-gold/10">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-gold" />
                 {plan.commitments.length} {plan.commitments.length === 1 ? "item" : "items"}
               </span>
             </div>
@@ -337,7 +337,7 @@ export default function FutureExpenses() {
             </div>
           </section>
 
-          <section className="pika-card rounded-[1.35rem] border border-border/70 p-3">
+          <section className="pika-card pika-commitments-card rounded-[1.35rem] p-3">
             <div className="flex items-center gap-2.5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-accent text-brand-pink ring-1 ring-inset ring-brand-pink/10">
                 <ArrowDownRight className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
@@ -410,7 +410,7 @@ export default function FutureExpenses() {
           </section>
         </div>
 
-        <section className="pika-card pika-cycle-card relative overflow-hidden rounded-[1.4rem] border border-primary/[0.1] p-3.5">
+        <section className="pika-card pika-next-salary-card relative overflow-hidden rounded-[1.4rem] p-3.5">
           <div className="pointer-events-none absolute -right-14 -top-16 h-36 w-36 rounded-full bg-primary/[0.07] blur-2xl" />
 
           <div className="relative flex items-center gap-2.5">
