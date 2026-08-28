@@ -54,8 +54,8 @@ function getDaysBetween(start, end) {
 
 function StatCard({ icon: Icon, label, value, helper }) {
   return (
-    <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-border/70 bg-background/70 px-2.5 py-2.5">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.08]">
+    <div className="pika-expense-stat flex min-w-0 items-center gap-2 rounded-[1rem] border px-2.5 py-2.5">
+      <span className="pika-expense-stat-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem]">
         <Icon className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
       </span>
       <span className="min-w-0 flex-1">
@@ -135,10 +135,10 @@ function CategoryBreakdown({ data, total, compact = false }) {
   };
 
   return (
-    <div className="rounded-[1.5rem] bg-card p-4 shadow-sm ring-1 ring-border/70">
+    <div className="pika-card pika-panel-plum rounded-[1.5rem] p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-brand-plum">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-plum/10 text-brand-plum ring-1 ring-inset ring-brand-plum/10">
             <PieChart className="h-4 w-4" />
           </div>
           <div>
@@ -382,7 +382,7 @@ export default function Expenses() {
           </div>
 
           {cycles.length > 0 && (
-            <div className="rounded-[1.25rem] bg-card p-3 shadow-sm ring-1 ring-border/70">
+            <div className="pika-card pika-panel-mint rounded-[1.25rem] p-3">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-primary">
@@ -407,7 +407,7 @@ export default function Expenses() {
                 )}
               </div>
               <Select value={cycle?.id ? String(cycle.id) : ""} onValueChange={handleCycleChange}>
-                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-foreground shadow-sm focus:ring-primary dark:focus:ring-emerald-700">
+                <SelectTrigger className="h-11 rounded-2xl border-primary/25 bg-card px-3 text-[12px] font-semibold text-foreground shadow-sm focus:ring-ring">
                   <SelectValue placeholder="Select salary cycle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -470,9 +470,9 @@ export default function Expenses() {
 
               {activeView === "overview" && (
                 <div className="space-y-3">
-                  <section className="pika-card rounded-[1.35rem] border border-border/70 p-3">
+                  <section className="pika-card pika-panel-gold rounded-[1.35rem] p-3">
                     <div className="flex items-center gap-2.5">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.07]">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-brand-gold/10 text-brand-gold ring-1 ring-inset ring-brand-gold/10">
                         <TrendingDown className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
                       </span>
                       <div className="min-w-0 flex-1">
@@ -481,12 +481,12 @@ export default function Expenses() {
                           {fmtCurrency(overview.total)}
                         </p>
                       </div>
-                      <span className="shrink-0 rounded-full bg-primary/[0.1] px-2.5 py-1 text-[0.66rem] font-bold text-primary ring-1 ring-inset ring-primary/[0.08]">
+                      <span className="shrink-0 rounded-full bg-brand-gold/10 px-2.5 py-1 text-[0.66rem] font-bold text-brand-gold ring-1 ring-inset ring-brand-gold/10">
                         {expenses.length} item{expenses.length > 1 ? "s" : ""}
                       </span>
                     </div>
 
-                    <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div className="pika-expense-stats mt-3 grid grid-cols-2 gap-2">
                       <StatCard icon={ReceiptText} label="Transactions" value={expenses.length} />
                       <StatCard icon={WalletCards} label="Average per Day" value={fmtCurrency(overview.averagePerDay)} />
                       <StatCard
@@ -501,22 +501,22 @@ export default function Expenses() {
 
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
-                  <div className="rounded-[1.5rem] bg-card p-4 shadow-sm ring-1 ring-border/70">
+                  <div className="pika-card pika-panel-pink rounded-[1.5rem] p-4">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-primary">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-brand-pink/10 text-brand-pink ring-1 ring-inset ring-brand-pink/10">
                           <Clock3 className="h-4 w-4" />
                         </div>
                         <div>
                           <h3 className="text-[13px] font-semibold text-foreground">Recent Transactions</h3>
                         </div>
                       </div>
-                      <button type="button" className="text-[11px] font-medium text-emerald-600 dark:text-current" onClick={() => setActiveView("transactions")}>View all</button>
+                      <button type="button" className="text-[11px] font-medium text-brand-pink" onClick={() => setActiveView("transactions")}>View all</button>
                     </div>
                     <GroupedExpenseSections expenses={overview.recent} compact />
                   </div>
 
-                  <div className="flex items-center justify-between rounded-[1.25rem] bg-card p-4 shadow-sm ring-1 ring-border/70">
+                  <div className="pika-card pika-panel-gold flex items-center justify-between rounded-[1.25rem] p-4">
                     <p className="text-xs font-extrabold text-foreground">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
                     <p className="text-xl font-black text-rose-600 dark:text-rose-400">{fmtCurrency(overview.total)}</p>
                   </div>
@@ -525,7 +525,7 @@ export default function Expenses() {
 
               {activeView === "transactions" && (
                 <div className="space-y-3">
-                  <div className="rounded-[1.25rem] bg-card p-3 shadow-sm ring-1 ring-border/70">
+                  <div className="pika-card pika-panel-pink rounded-[1.25rem] p-3">
                     <p className="text-[13px] font-medium text-foreground">All Daily Expenses</p>
                     <p className="text-[11px] font-normal text-muted-foreground">Viewing {cycle ? `${formatDisplayDate(cycle.start_date)} — ${cycle.end_date ? formatDisplayDate(cycle.end_date) : "Current"}` : "selected salary cycle"}.</p>
                   </div>
