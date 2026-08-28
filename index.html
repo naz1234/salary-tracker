@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#f8fafc" />
+    <meta name="theme-color" content="#eef7e8" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Salary Tracker" />
@@ -16,7 +16,7 @@
         if (localStorage.getItem("salary-tracker-theme") === "dark") {
           document.documentElement.classList.add("dark");
           document.documentElement.style.colorScheme = "dark";
-          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#05080c");
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#12281f");
           document
             .querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
             .setAttribute("content", "black-translucent");
@@ -25,7 +25,7 @@
         console.warn("Unable to restore the saved theme", error);
       }
     </script>
-    <link rel="manifest" href="/manifest.webmanifest?v=pika-salary-20260828" />
+    <link rel="manifest" href="/manifest.webmanifest?v=pika-theme-20260828" />
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png?v=pika-salary-20260828" />
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16.png?v=pika-salary-20260828" />
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png?v=pika-salary-20260828" />
@@ -39,11 +39,20 @@
       }
 
       html {
-        background: #f8fafc;
+        --startup-background: #eef7e8;
+        --startup-card: #fffcf4;
+        --startup-text: #1b3045;
+        --startup-muted: #536858;
+        --startup-border: #c5d8bd;
+        background: var(--startup-background);
       }
 
       html.dark {
-        background: #05080c;
+        --startup-background: #12281f;
+        --startup-card: #1b382c;
+        --startup-text: #f9f5e9;
+        --startup-muted: #b3c5b2;
+        --startup-border: #496552;
       }
 
       #root:empty::before {
@@ -53,13 +62,8 @@
         align-items: center;
         justify-content: center;
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #64748b;
-        background: #f8fafc;
-      }
-
-      html.dark #root:empty::before {
-        color: #98a2b3;
-        background: #05080c;
+        color: var(--startup-muted);
+        background: var(--startup-background);
       }
     </style>
   </head>
@@ -76,11 +80,11 @@
           if (!root || root.children.length > 0) return;
 
           root.innerHTML =
-            '<div style="min-height:100dvh;display:flex;align-items:center;justify-content:center;background:#f8fafc;padding:16px;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#0f172a;text-align:center;">' +
-            '<div style="max-width:360px;border:1px solid #e2e8f0;background:white;border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(15,23,42,.08);">' +
+            '<div style="min-height:100dvh;display:flex;align-items:center;justify-content:center;background:var(--startup-background);padding:16px;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:var(--startup-text);text-align:center;">' +
+            '<div style="max-width:360px;border:1px solid var(--startup-border);background:var(--startup-card);border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(27,56,44,.08);">' +
             '<div style="font-size:18px;font-weight:700;margin-bottom:8px;">App did not load</div>' +
-            '<div style="font-size:14px;color:#64748b;line-height:1.45;">Please refresh once. The previous cached file may still be open in this browser.</div>' +
-            '<button onclick="window.location.reload()" style="margin-top:16px;border:0;border-radius:14px;background:#15803d;color:white;padding:12px 18px;font-weight:700;">Refresh</button>' +
+            '<div style="font-size:14px;color:var(--startup-muted);line-height:1.45;">Please refresh once. The previous cached file may still be open in this browser.</div>' +
+            '<button onclick="window.location.reload()" style="margin-top:16px;border:0;border-radius:14px;background:#216d3d;color:white;padding:12px 18px;font-weight:700;">Refresh</button>' +
             "</div></div>";
         },
         true

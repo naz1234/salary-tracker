@@ -103,7 +103,7 @@ function AllocationRing({ percentage, overBudget }) {
           cy="50"
           r="40"
           fill="none"
-          stroke="rgba(148, 163, 184, 0.16)"
+          stroke="hsl(var(--border))"
           strokeWidth="10"
         />
         <circle
@@ -112,7 +112,7 @@ function AllocationRing({ percentage, overBudget }) {
           r="40"
           fill="none"
           pathLength="100"
-          stroke={overBudget ? "#fb7185" : "#2ee68a"}
+          stroke={overBudget ? "hsl(var(--destructive))" : "hsl(var(--brand-gold))"}
           strokeWidth="10"
           strokeDasharray={`${ringValue} ${100 - ringValue}`}
           strokeLinecap="round"
@@ -121,12 +121,12 @@ function AllocationRing({ percentage, overBudget }) {
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span
           className={`text-[0.86rem] font-extrabold tabular-nums ${
-            overBudget ? "text-rose-300" : "text-white"
+            overBudget ? "text-destructive" : "text-foreground"
           }`}
         >
           {Math.round(percentage)}%
         </span>
-        <span className="mt-0.5 text-[0.58rem] font-semibold text-slate-400">allocated</span>
+        <span className="mt-0.5 text-[0.58rem] font-semibold text-muted-foreground">allocated</span>
       </div>
     </div>
   );
@@ -267,55 +267,55 @@ export default function FutureExpenses() {
     <MobileLayout>
       <div className="space-y-4 pb-4">
         <div>
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+          <h1 className="text-xl font-extrabold tracking-tight text-foreground">
             Future Expenses
           </h1>
-          <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-xs font-medium text-muted-foreground">
             Plan your next salary before it arrives.
           </p>
         </div>
 
         <div className="space-y-3">
-          <section className="overflow-hidden rounded-[1.35rem] border border-emerald-300/[0.09] bg-[linear-gradient(135deg,rgba(5,62,43,0.78)_0%,rgba(8,21,22,0.94)_48%,rgba(7,16,19,0.98)_100%)] p-3 shadow-[0_18px_48px_rgba(0,0,0,0.34)]">
+          <section className="pika-card pika-cycle-card overflow-hidden rounded-[1.35rem] border border-primary/[0.09] p-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.12] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.08]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-primary/[0.12] text-primary ring-1 ring-inset ring-primary/[0.08]">
                 <WalletCards className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.1} />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="text-[0.8rem] font-bold text-slate-300">Future Plan</h2>
-                <p className="mt-0.5 truncate text-[0.66rem] font-semibold text-slate-400">
+                <h2 className="text-[0.8rem] font-bold text-foreground">Future Plan</h2>
+                <p className="mt-0.5 truncate text-[0.66rem] font-semibold text-muted-foreground">
                   Expected next salary
                 </p>
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-400/[0.11] px-2.5 py-1 text-[0.66rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(46,230,138,0.75)]" />
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/[0.11] px-2.5 py-1 text-[0.66rem] font-bold text-primary ring-1 ring-inset ring-primary/[0.08]">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                 {plan.commitments.length} {plan.commitments.length === 1 ? "item" : "items"}
               </span>
             </div>
 
-            <div className="mt-3 grid grid-cols-[1fr_1px_1fr] items-stretch gap-3 rounded-[1rem] border border-white/[0.07] bg-black/[0.13] px-3 py-3">
+            <div className="pika-money-panel mt-3 grid grid-cols-[1fr_1px_1fr] items-stretch gap-3 rounded-[1rem] border px-3 py-3">
               <div className="min-w-0">
-                <p className="text-[0.68rem] font-semibold text-slate-400">Expected salary</p>
-                <p className="mt-2 whitespace-nowrap text-[clamp(0.92rem,4vw,1.3rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+                <p className="text-[0.68rem] font-semibold text-muted-foreground">Expected salary</p>
+                <p className="mt-2 whitespace-nowrap text-[clamp(0.92rem,4vw,1.3rem)] font-extrabold leading-none tracking-tight tabular-nums text-foreground">
                   {formatCurrency(expectedSalary)}
                 </p>
               </div>
 
-              <div className="h-full min-h-[3.9rem] bg-white/[0.09]" />
+              <div className="h-full min-h-[3.9rem] bg-muted/60" />
 
               <div className="min-w-0">
-                <p className="text-[0.68rem] font-semibold text-slate-400">
+                <p className="text-[0.68rem] font-semibold text-muted-foreground">
                   {overBudget ? "Shortfall" : "Remaining"}
                 </p>
                 <p
                   className={`mt-2 whitespace-nowrap text-[clamp(0.9rem,3.8vw,1.2rem)] font-extrabold leading-none tracking-tight tabular-nums ${
-                    overBudget ? "text-rose-300" : "text-emerald-400"
+                    overBudget ? "text-destructive" : "text-primary"
                   }`}
                 >
                   {formatCurrency(Math.abs(remaining))}
                 </p>
                 <div className="mt-2 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-700/55">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted/55">
                     <div
                       className={`h-full rounded-full transition-[width] duration-500 ${
                         overBudget
@@ -327,7 +327,7 @@ export default function FutureExpenses() {
                   </div>
                   <span
                     className={`text-[0.64rem] font-bold tabular-nums ${
-                      overBudget ? "text-rose-300" : "text-slate-400"
+                      overBudget ? "text-destructive" : "text-muted-foreground"
                     }`}
                   >
                     {overBudget ? "Over" : `${Math.round(remainingBar)}%`}
@@ -337,14 +337,14 @@ export default function FutureExpenses() {
             </div>
           </section>
 
-          <section className="rounded-[1.35rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] p-3 shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
+          <section className="pika-card rounded-[1.35rem] border border-border/70 p-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-accent text-brand-pink ring-1 ring-inset ring-brand-pink/10">
                 <ArrowDownRight className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="text-[0.82rem] font-bold text-white">Monthly Commitments</h2>
-                <p className="mt-2 truncate text-[clamp(1.15rem,5.5vw,1.55rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+                <h2 className="text-[0.82rem] font-bold text-foreground">Monthly Commitments</h2>
+                <p className="mt-2 truncate text-[clamp(1.15rem,5.5vw,1.55rem)] font-extrabold leading-none tracking-tight tabular-nums text-foreground">
                   {formatCurrency(totalCommitments)}
                 </p>
               </div>
@@ -352,32 +352,32 @@ export default function FutureExpenses() {
             </div>
 
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-white/[0.07] bg-black/10 px-2.5 py-2.5">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+              <div className="pika-breakdown flex min-w-0 items-center gap-2 rounded-[1rem] border border-border/70 px-2.5 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.08]">
                   <PiggyBank className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[0.64rem] font-semibold text-slate-400">
+                  <span className="block truncate text-[0.64rem] font-semibold text-muted-foreground">
                     Current Savings
                   </span>
-                  <span className="mt-0.5 block truncate text-[clamp(0.66rem,2.7vw,0.82rem)] font-bold tabular-nums text-white">
+                  <span className="mt-0.5 block truncate text-[clamp(0.66rem,2.7vw,0.82rem)] font-bold tabular-nums text-foreground">
                     {formatCurrency(savings)}
                   </span>
-                  <span className="mt-0.5 block text-[0.56rem] font-semibold text-slate-500">
+                  <span className="mt-0.5 block text-[0.56rem] font-semibold text-muted-foreground">
                     {plan.savingsSources.length} {plan.savingsSources.length === 1 ? "source" : "sources"}
                   </span>
                 </span>
               </div>
 
-              <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-white/[0.07] bg-black/10 px-2.5 py-2.5">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+              <div className="pika-breakdown flex min-w-0 items-center gap-2 rounded-[1rem] border border-border/70 px-2.5 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.08]">
                   <Landmark className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[0.64rem] font-semibold text-slate-400">
+                  <span className="block truncate text-[0.64rem] font-semibold text-muted-foreground">
                     Loan Balances
                   </span>
-                  <span className="mt-0.5 block truncate text-[clamp(0.66rem,2.7vw,0.82rem)] font-bold tabular-nums text-white">
+                  <span className="mt-0.5 block truncate text-[clamp(0.66rem,2.7vw,0.82rem)] font-bold tabular-nums text-foreground">
                     {formatCurrency(totalLoanBalance)}
                   </span>
                 </span>
@@ -385,13 +385,13 @@ export default function FutureExpenses() {
             </div>
 
             <div
-              className={`mt-2 flex items-center justify-between gap-3 rounded-[1rem] border bg-black/10 px-2.5 py-2.5 ${
-                hasNetDeficit ? "border-rose-400/[0.13]" : "border-white/[0.07]"
+              className={`mt-2 flex items-center justify-between gap-3 rounded-[1rem] border bg-background/70 px-2.5 py-2.5 ${
+                hasNetDeficit ? "border-rose-400/[0.13]" : "border-border/70"
               }`}
             >
               <div
                 className={`flex min-w-0 items-center gap-2 ${
-                  hasNetDeficit ? "text-rose-300" : "text-emerald-400"
+                  hasNetDeficit ? "text-destructive" : "text-primary"
                 }`}
               >
                 <Scale className="h-[0.95rem] w-[0.95rem] shrink-0" strokeWidth={2.2} />
@@ -401,7 +401,7 @@ export default function FutureExpenses() {
               </div>
               <span
                 className={`shrink-0 text-[0.82rem] font-extrabold tabular-nums ${
-                  hasNetDeficit ? "text-rose-300" : "text-white"
+                  hasNetDeficit ? "text-destructive" : "text-foreground"
                 }`}
               >
                 {formatCurrency(Math.abs(netPosition))}
@@ -410,30 +410,30 @@ export default function FutureExpenses() {
           </section>
         </div>
 
-        <section className="relative overflow-hidden rounded-[1.4rem] border border-emerald-300/[0.1] bg-[linear-gradient(135deg,rgba(5,42,34,0.78),rgba(6,18,22,0.97))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.24)]">
-          <div className="pointer-events-none absolute -right-14 -top-16 h-36 w-36 rounded-full bg-emerald-400/[0.07] blur-2xl" />
+        <section className="pika-card pika-cycle-card relative overflow-hidden rounded-[1.4rem] border border-primary/[0.1] p-3.5">
+          <div className="pointer-events-none absolute -right-14 -top-16 h-36 w-36 rounded-full bg-primary/[0.07] blur-2xl" />
 
           <div className="relative flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.08]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.08]">
               <BriefcaseBusiness className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-[0.88rem] font-extrabold text-white">Next-job salary</h2>
-              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
+              <h2 className="text-[0.88rem] font-extrabold text-foreground">Next-job salary</h2>
+              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-muted-foreground">
                 Set the take-home amount for your next plan.
               </p>
             </div>
-            <span className="shrink-0 rounded-full bg-emerald-400/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
+            <span className="shrink-0 rounded-full bg-primary/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-primary ring-1 ring-inset ring-primary/[0.08]">
               Auto-saved
             </span>
           </div>
 
-          <div className="relative mt-3 flex items-center gap-2.5 rounded-[1rem] border border-white/[0.075] bg-black/[0.16] px-3 py-2.5">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-white/[0.05] text-[0.85rem] font-extrabold text-emerald-400 ring-1 ring-inset ring-white/[0.06]">
+          <div className="pika-input-panel relative mt-3 flex items-center gap-2.5 rounded-[1rem] border border-input bg-card px-3 py-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.8rem] bg-muted/60 text-[0.85rem] font-extrabold text-primary ring-1 ring-inset ring-border/70">
               RM
             </span>
             <div className="min-w-0 flex-1">
-              <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-slate-400">
+              <Label htmlFor="future-salary" className="text-[0.62rem] font-semibold text-muted-foreground">
                 Expected take-home
               </Label>
               <Input
@@ -445,7 +445,7 @@ export default function FutureExpenses() {
                 value={plan.expectedSalary}
                 onChange={(event) => updatePlanAmount("expectedSalary", event.target.value)}
                 placeholder="0.00"
-                className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-white shadow-none placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="mt-0.5 h-7 border-0 bg-transparent px-0 text-[1.05rem] font-extrabold text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
           </div>
@@ -453,17 +453,17 @@ export default function FutureExpenses() {
 
         <form
           onSubmit={saveSavingsSource}
-          className="relative overflow-hidden rounded-[1.4rem] border border-blue-300/[0.1] bg-[linear-gradient(145deg,rgba(8,25,35,0.98),rgba(5,13,17,0.99))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.22)]"
+          className="pika-card pika-savings-card relative overflow-hidden rounded-[1.4rem] border border-brand-plum/[0.1] p-3.5"
         >
-          <div className="pointer-events-none absolute -right-14 -top-20 h-36 w-36 rounded-full bg-blue-400/[0.05] blur-2xl" />
+          <div className="pointer-events-none absolute -right-14 -top-20 h-36 w-36 rounded-full bg-brand-plum/[0.05] blur-2xl" />
 
           <div className="relative flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-blue-400/[0.1] text-blue-400 ring-1 ring-inset ring-blue-300/[0.07]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-brand-plum/[0.1] text-brand-plum ring-1 ring-inset ring-brand-plum/[0.07]">
               <PiggyBank className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-[0.88rem] font-extrabold text-white">Savings sources</h2>
-              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
+              <h2 className="text-[0.88rem] font-extrabold text-foreground">Savings sources</h2>
+              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-muted-foreground">
                 Track where each savings balance is kept.
               </p>
             </div>
@@ -471,20 +471,20 @@ export default function FutureExpenses() {
               <button
                 type="button"
                 onClick={resetSavingsForm}
-                className="shrink-0 rounded-full bg-white/[0.05] px-2.5 py-1 text-[0.65rem] font-bold text-slate-300 ring-1 ring-inset ring-white/[0.07]"
+                className="shrink-0 rounded-full bg-muted/60 px-2.5 py-1 text-[0.65rem] font-bold text-foreground ring-1 ring-inset ring-border/70"
               >
                 Cancel
               </button>
             ) : (
-              <span className="shrink-0 rounded-full bg-blue-400/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-blue-300 ring-1 ring-inset ring-blue-400/[0.08]">
+              <span className="shrink-0 rounded-full bg-brand-plum/[0.09] px-2.5 py-1 text-[0.62rem] font-bold text-brand-plum ring-1 ring-inset ring-brand-plum/[0.08]">
                 {plan.savingsSources.length} {plan.savingsSources.length === 1 ? "source" : "sources"}
               </span>
             )}
           </div>
 
           <div className="relative mt-3 grid grid-cols-[minmax(0,1fr)_minmax(7.25rem,0.7fr)] gap-2.5">
-            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
-              <Label htmlFor="savings-source" className="text-[0.62rem] font-semibold text-slate-400">
+            <div className="pika-input-panel min-w-0 rounded-[1rem] border border-input bg-card px-3 py-2.5">
+              <Label htmlFor="savings-source" className="text-[0.62rem] font-semibold text-muted-foreground">
                 Savings source
               </Label>
               <Input
@@ -495,16 +495,16 @@ export default function FutureExpenses() {
                   setSavingsFormError("");
                 }}
                 placeholder="e.g. Maybank or cash"
-                className="mt-1 h-8 border-0 bg-transparent px-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="mt-1 h-8 border-0 bg-transparent px-0 text-base font-bold text-foreground shadow-none placeholder:font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
 
-            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
-              <Label htmlFor="savings-amount" className="text-[0.62rem] font-semibold text-slate-400">
+            <div className="pika-input-panel min-w-0 rounded-[1rem] border border-input bg-card px-3 py-2.5">
+              <Label htmlFor="savings-amount" className="text-[0.62rem] font-semibold text-muted-foreground">
                 Current balance
               </Label>
               <div className="relative mt-1">
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-blue-400">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-brand-plum">
                   RM
                 </span>
                 <Input
@@ -519,28 +519,28 @@ export default function FutureExpenses() {
                     setSavingsFormError("");
                   }}
                   placeholder="0.00"
-                  className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-foreground shadow-none placeholder:font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
           </div>
 
           {savingsFormError && (
-            <p className="relative mt-2.5 rounded-xl bg-rose-400/[0.08] px-3 py-2 text-[0.68rem] font-semibold text-rose-300 ring-1 ring-inset ring-rose-400/[0.12]">
+            <p className="relative mt-2.5 rounded-xl bg-rose-400/[0.08] px-3 py-2 text-[0.68rem] font-semibold text-destructive ring-1 ring-inset ring-rose-400/[0.12]">
               {savingsFormError}
             </p>
           )}
 
           <Button
             type="submit"
-            className="relative mt-3 h-10 w-full rounded-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 text-[0.8rem] font-extrabold text-white shadow-[0_12px_24px_rgba(37,99,235,0.13)] ring-1 ring-inset ring-blue-300/10 hover:from-blue-600 hover:via-blue-500 hover:to-blue-600"
+            className="pika-action pika-action-plum relative mt-3 h-10 w-full rounded-full text-[0.8rem] font-extrabold text-white ring-1 ring-inset ring-brand-plum/10"
           >
             {editingSavingsId ? <Save className="mr-1.5 h-4 w-4" /> : <Plus className="mr-1.5 h-4 w-4" />}
             {editingSavingsId ? "Save source" : "Add savings source"}
           </Button>
 
           {plan.savingsSources.length === 0 ? (
-            <p className="relative mt-3 rounded-[1rem] border border-dashed border-white/[0.08] px-3 py-4 text-center text-[0.68rem] font-medium text-slate-500">
+            <p className="relative mt-3 rounded-[1rem] border border-dashed border-border/70 px-3 py-4 text-center text-[0.68rem] font-medium text-muted-foreground">
               No savings sources added yet.
             </p>
           ) : (
@@ -548,21 +548,21 @@ export default function FutureExpenses() {
               {plan.savingsSources.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-2.5 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5"
+                  className="flex items-center gap-2.5 rounded-[1rem] border border-border/70 bg-background/70 px-3 py-2.5"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-blue-400/[0.1] text-blue-400">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-brand-plum/[0.1] text-brand-plum">
                     <PiggyBank className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[0.76rem] font-bold text-white">{item.source}</p>
-                    <p className="mt-0.5 text-[0.68rem] font-semibold text-blue-300">
+                    <p className="truncate text-[0.76rem] font-bold text-foreground">{item.source}</p>
+                    <p className="mt-0.5 text-[0.68rem] font-semibold text-brand-plum">
                       {formatCurrency(item.amount)}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => editSavingsSource(item)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] text-slate-400 transition hover:bg-white/[0.06] hover:text-blue-300"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] text-muted-foreground transition hover:bg-muted/60 hover:text-brand-plum"
                     aria-label={`Edit ${item.source}`}
                   >
                     <Pencil className="h-3.5 w-3.5" />
@@ -570,40 +570,40 @@ export default function FutureExpenses() {
                   <button
                     type="button"
                     onClick={() => deleteSavingsSource(item.id)}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] text-slate-400 transition hover:bg-rose-400/[0.08] hover:text-rose-300"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] text-muted-foreground transition hover:bg-rose-400/[0.08] hover:text-destructive"
                     aria-label={`Delete ${item.source}`}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
               ))}
-              <div className="flex items-center justify-between px-1 pt-1 text-[0.68rem] font-semibold text-slate-400">
+              <div className="flex items-center justify-between px-1 pt-1 text-[0.68rem] font-semibold text-muted-foreground">
                 <span>Total savings</span>
-                <span className="font-extrabold text-blue-300">{formatCurrency(savings)}</span>
+                <span className="font-extrabold text-brand-plum">{formatCurrency(savings)}</span>
               </div>
             </div>
           )}
 
-          <p className="relative mt-2 text-[0.62rem] font-medium text-slate-500">
+          <p className="relative mt-2 text-[0.62rem] font-medium text-muted-foreground">
             Savings are included in the summary and are not deducted from your next salary.
           </p>
         </form>
 
         <form
           onSubmit={saveCommitment}
-          className="relative overflow-hidden rounded-[1.4rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.98),rgba(5,13,17,0.99))] p-3.5 shadow-[0_16px_36px_rgba(0,0,0,0.22)]"
+          className="pika-card relative overflow-hidden rounded-[1.4rem] border border-border/70 p-3.5"
         >
-          <div className="pointer-events-none absolute -left-16 -top-20 h-36 w-36 rounded-full bg-emerald-400/[0.045] blur-2xl" />
+          <div className="pointer-events-none absolute -left-16 -top-20 h-36 w-36 rounded-full bg-primary/[0.045] blur-2xl" />
 
           <div className="relative flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.1] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-primary/[0.1] text-primary ring-1 ring-inset ring-primary/[0.07]">
               <ReceiptText className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-[0.88rem] font-extrabold text-white">
+              <h2 className="text-[0.88rem] font-extrabold text-foreground">
                 {editingId ? "Edit commitment" : "Add future commitment"}
               </h2>
-              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-slate-400">
+              <p className="mt-0.5 truncate text-[0.68rem] font-medium text-muted-foreground">
                 Add a planned payment for the next salary.
               </p>
             </div>
@@ -611,7 +611,7 @@ export default function FutureExpenses() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="shrink-0 rounded-full bg-white/[0.05] px-2.5 py-1 text-[0.65rem] font-bold text-slate-300 ring-1 ring-inset ring-white/[0.07]"
+                className="shrink-0 rounded-full bg-muted/60 px-2.5 py-1 text-[0.65rem] font-bold text-foreground ring-1 ring-inset ring-border/70"
               >
                 Cancel
               </button>
@@ -619,8 +619,8 @@ export default function FutureExpenses() {
           </div>
 
           <div className="relative mt-3 grid grid-cols-[minmax(0,1fr)_minmax(7.25rem,0.7fr)] gap-2.5">
-            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
-              <Label htmlFor="future-name" className="text-[0.62rem] font-semibold text-slate-400">
+            <div className="pika-input-panel min-w-0 rounded-[1rem] border border-input bg-card px-3 py-2.5">
+              <Label htmlFor="future-name" className="text-[0.62rem] font-semibold text-muted-foreground">
                 Commitment
               </Label>
               <Input
@@ -631,16 +631,16 @@ export default function FutureExpenses() {
                   setFormError("");
                 }}
                 placeholder="e.g. House rent"
-                className="mt-1 h-8 border-0 bg-transparent px-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="mt-1 h-8 border-0 bg-transparent px-0 text-base font-bold text-foreground shadow-none placeholder:font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
 
-            <div className="min-w-0 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
-              <Label htmlFor="future-amount" className="text-[0.62rem] font-semibold text-slate-400">
+            <div className="pika-input-panel min-w-0 rounded-[1rem] border border-input bg-card px-3 py-2.5">
+              <Label htmlFor="future-amount" className="text-[0.62rem] font-semibold text-muted-foreground">
                 Monthly payment
               </Label>
               <div className="relative mt-1">
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-emerald-400">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-primary">
                   RM
                 </span>
                 <Input
@@ -655,21 +655,21 @@ export default function FutureExpenses() {
                     setFormError("");
                   }}
                   placeholder="0.00"
-                  className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-foreground shadow-none placeholder:font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
             </div>
           </div>
 
-          <div className="relative mt-2.5 rounded-[1rem] border border-white/[0.07] bg-black/[0.14] px-3 py-2.5">
+          <div className="pika-input-panel relative mt-2.5 rounded-[1rem] border border-input bg-card px-3 py-2.5">
             <div className="flex items-center justify-between gap-2">
-              <Label htmlFor="future-loan-balance" className="text-[0.62rem] font-semibold text-slate-400">
+              <Label htmlFor="future-loan-balance" className="text-[0.62rem] font-semibold text-muted-foreground">
                 Remaining loan balance
               </Label>
-              <span className="text-[0.58rem] font-semibold text-slate-500">Optional — loans only</span>
+              <span className="text-[0.58rem] font-semibold text-muted-foreground">Optional — loans only</span>
             </div>
             <div className="relative mt-1">
-              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-violet-400">
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-[0.72rem] font-extrabold text-brand-plum">
                 RM
               </span>
               <Input
@@ -684,51 +684,51 @@ export default function FutureExpenses() {
                   setFormError("");
                 }}
                 placeholder="0.00"
-                className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-white shadow-none placeholder:font-medium placeholder:text-slate-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="h-8 border-0 bg-transparent pl-7 pr-0 text-base font-bold text-foreground shadow-none placeholder:font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
-            <p className="mt-1 text-[0.6rem] font-medium text-slate-500">
+            <p className="mt-1 text-[0.6rem] font-medium text-muted-foreground">
               Enter the total still owed; the monthly payment remains separate above.
             </p>
           </div>
 
           {formError && (
-            <p className="relative mt-2.5 rounded-xl bg-rose-400/[0.08] px-3 py-2 text-[0.68rem] font-semibold text-rose-300 ring-1 ring-inset ring-rose-400/[0.12]">
+            <p className="relative mt-2.5 rounded-xl bg-rose-400/[0.08] px-3 py-2 text-[0.68rem] font-semibold text-destructive ring-1 ring-inset ring-rose-400/[0.12]">
               {formError}
             </p>
           )}
 
           <Button
             type="submit"
-            className="relative mt-3 h-10 w-full rounded-full bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-700 text-[0.8rem] font-extrabold text-white shadow-[0_12px_24px_rgba(16,185,129,0.13)] ring-1 ring-inset ring-emerald-300/10 hover:from-emerald-600 hover:via-emerald-500 hover:to-emerald-600"
+            className="pika-action relative mt-3 h-10 w-full rounded-full text-[0.8rem] font-extrabold text-white ring-1 ring-inset ring-primary/10"
           >
             {editingId ? <Save className="mr-1.5 h-4 w-4" /> : <Plus className="mr-1.5 h-4 w-4" />}
             {editingId ? "Save commitment" : "Add commitment"}
           </Button>
         </form>
 
-        <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm dark:border-[#202733] dark:bg-[#090d12]">
+        <section className="rounded-[24px] border border-border bg-card p-4 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="text-sm font-bold text-foreground">
                 Planned commitments
               </h2>
-              <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="mt-0.5 text-[11px] text-muted-foreground">
                 Monthly total {formatCurrency(totalCommitments)} · Loans {formatCurrency(totalLoanBalance)}
               </p>
             </div>
-            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500 dark:bg-[#10151c] dark:text-slate-400">
+            <span className="rounded-full bg-muted px-2.5 py-1 text-[10px] font-bold text-muted-foreground">
               {plan.commitments.length}
             </span>
           </div>
 
           {plan.commitments.length === 0 ? (
-            <div className="mt-4 rounded-2xl border border-dashed border-slate-200 px-4 py-8 text-center dark:border-[#28313e]">
-              <ReceiptText className="mx-auto h-7 w-7 text-slate-300 dark:text-slate-600" />
-              <p className="mt-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
+            <div className="mt-4 rounded-2xl border border-dashed border-border px-4 py-8 text-center">
+              <ReceiptText className="mx-auto h-7 w-7 text-foreground dark:text-muted-foreground" />
+              <p className="mt-2 text-sm font-semibold text-muted-foreground dark:text-foreground">
                 No future commitments yet
               </p>
-              <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">
+              <p className="mt-1 text-[11px] text-muted-foreground">
                 Add your expected payments to see how much salary will remain.
               </p>
             </div>
@@ -737,13 +737,13 @@ export default function FutureExpenses() {
               {plan.commitments.map((item, index) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-3 dark:border-[#202733] dark:bg-[#060a0f]"
+                  className="flex items-center gap-3 rounded-2xl border border-border bg-background/80 p-3 dark:bg-background"
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-sm font-extrabold text-violet-600 dark:text-violet-400">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 text-sm font-extrabold text-violet-600 dark:text-brand-plum">
                     {index + 1}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-slate-900 dark:text-slate-100">
+                    <p className="truncate text-sm font-bold text-foreground">
                       {item.name}
                     </p>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -751,7 +751,7 @@ export default function FutureExpenses() {
                         Monthly {formatCurrency(item.amount)}
                       </p>
                       {item.remainingLoan > 0 && (
-                        <p className="text-[11px] font-semibold text-violet-600 dark:text-violet-400">
+                        <p className="text-[11px] font-semibold text-violet-600 dark:text-brand-plum">
                           Balance {formatCurrency(item.remainingLoan)}
                         </p>
                       )}
@@ -760,7 +760,7 @@ export default function FutureExpenses() {
                   <button
                     type="button"
                     onClick={() => editCommitment(item)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-200/70 dark:text-slate-400 dark:hover:bg-[#151b23]"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted/70 dark:hover:bg-muted"
                     aria-label={`Edit ${item.name}`}
                   >
                     <Pencil className="h-4 w-4" />
@@ -768,7 +768,7 @@ export default function FutureExpenses() {
                   <button
                     type="button"
                     onClick={() => deleteCommitment(item.id)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-slate-500 transition hover:bg-rose-500/10 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400"
                     aria-label={`Delete ${item.name}`}
                   >
                     <Trash2 className="h-4 w-4" />

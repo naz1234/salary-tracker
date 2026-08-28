@@ -13,7 +13,7 @@ export function applyTheme(theme) {
   document.documentElement.style.colorScheme = isDark ? "dark" : "light";
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", isDark ? "#05080c" : "#f8fafc");
+    ?.setAttribute("content", isDark ? "#12281f" : "#eef7e8");
   document
     .querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
     ?.setAttribute("content", isDark ? "black-translucent" : "default");

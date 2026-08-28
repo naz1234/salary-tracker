@@ -10,6 +10,18 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+            brand: {
+                plum: 'hsl(var(--brand-plum))',
+                pink: 'hsl(var(--brand-pink))',
+                gold: 'hsl(var(--brand-gold))',
+                'gold-soft': 'hsl(var(--brand-gold-soft))',
+            },
+            emerald: {
+                50: '#eff8e9', 100: '#def0d6', 200: '#bddfb6',
+                300: '#9acf94', 400: '#6fb574', 500: '#347e4b',
+                600: '#287444', 700: '#205c38', 800: '#1e4b31',
+                900: '#193e2a', 950: '#0e261a',
+            },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

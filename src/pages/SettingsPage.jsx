@@ -15,8 +15,8 @@ import MobileLayout from "../components/MobileLayout";
 import { useTheme } from "../hooks/use-theme";
 
 const themeOptions = [
-  { value: "light", label: "Light", description: "Bright and clean", icon: Sun },
-  { value: "dark", label: "Dark", description: "Easy on your eyes", icon: Moon },
+  { value: "light", label: "Light", description: "Mint & cream", icon: Sun },
+  { value: "dark", label: "Dark", description: "Forest & plum", icon: Moon },
 ];
 
 const tutorialSteps = [
@@ -58,20 +58,20 @@ export default function SettingsPage() {
   return (
     <MobileLayout>
       <div className="space-y-5 pb-4 mobile-no-select">
-        <div className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-emerald-500/10 p-5 shadow-sm dark:border-white/10 dark:via-card dark:to-card">
+        <div className="pika-card pika-savings-card rounded-[28px] p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary text-brand-plum">
               <Settings className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/80">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-plum">
                 Preferences
               </p>
               <h1 className="text-xl font-bold tracking-tight">Settings</h1>
             </div>
           </div>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Customize how the Salary Tracker app looks.
+            Make Pika Salary feel like you.
           </p>
         </div>
 
@@ -102,7 +102,7 @@ export default function SettingsPage() {
                     <Icon className="h-4 w-4" />
                     {label}
                   </span>
-                  <span className="text-[10px] font-medium opacity-75">{description}</span>
+                  <span className="text-[11px] font-medium">{description}</span>
                 </button>
               ))}
             </div>
@@ -139,14 +139,14 @@ export default function SettingsPage() {
 
         <div className="rounded-[24px] border border-rose-200/60 bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 p-4 shadow-sm dark:border-rose-500/25 dark:from-rose-950/35 dark:via-card dark:to-card">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 text-rose-500 shadow-sm dark:bg-rose-500/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-card/80 text-rose-500 shadow-sm dark:bg-rose-500/10">
               <Heart className="h-5 w-5 fill-current" />
             </div>
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-rose-500">
                 Credit
               </p>
-              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Created by Nazif Jaafar</h3>
+              <h3 className="text-base font-bold text-foreground">Created by Nazif Jaafar</h3>
             </div>
           </div>
         </div>

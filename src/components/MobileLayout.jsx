@@ -138,7 +138,7 @@ export default function MobileLayout({ children }) {
   return (
     <div
       ref={shellRef}
-      className="app-mobile-shell fixed inset-0 overflow-hidden bg-background"
+      className="app-mobile-shell pika-shell fixed inset-0 overflow-hidden"
       onClickCapture={blockPostSwipeClick}
       onTouchStart={startOpenSwipe}
       onTouchEnd={finishSwipe}
@@ -153,7 +153,7 @@ export default function MobileLayout({ children }) {
       }}
     >
       <div
-        className="relative mx-auto flex h-[100dvh] max-w-lg flex-col overflow-hidden bg-background"
+        className="pika-shell relative mx-auto flex h-[100dvh] max-w-lg flex-col overflow-hidden"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
         <button
@@ -171,7 +171,7 @@ export default function MobileLayout({ children }) {
           <div className="absolute inset-0 z-[100]">
             <button
               type="button"
-              className="absolute inset-0 h-full w-full touch-none bg-slate-950/45 backdrop-blur-[2px] animate-in fade-in-0 duration-200 dark:bg-black/75"
+              className="absolute inset-0 h-full w-full touch-none bg-background/45 backdrop-blur-[2px] animate-in fade-in-0 duration-200 dark:bg-black/75"
               onClick={() => setSidebarOpen(false)}
               aria-label="Close navigation menu"
             />
@@ -188,13 +188,14 @@ export default function MobileLayout({ children }) {
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
               <div
-                className="relative shrink-0 border-b border-sidebar-border bg-gradient-to-b from-emerald-50/80 via-white/30 to-transparent px-5 pb-4 pr-14 text-left dark:from-emerald-500/[0.08] dark:via-transparent"
+                className="pika-page relative shrink-0 border-b border-sidebar-border px-5 pb-4 pr-14 text-left"
                 style={{ paddingTop: "calc(env(safe-area-inset-top) + 1rem)" }}
               >
+                <img src="/icons/icon-192.png?v=pika-salary-20260828" alt="" width="64" height="64" className="pika-brand-icon mb-2 h-16 w-16" />
                 <h2 className="text-lg font-extrabold tracking-tight text-sidebar-foreground">
-                  Salary Tracker
+                  Pika Salary
                 </h2>
-                <p className="mt-2 text-xs font-medium text-muted-foreground">
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
                   Choose a section
                 </p>
                 <button
@@ -221,16 +222,16 @@ export default function MobileLayout({ children }) {
                       onClick={() => goToTab(path)}
                       className={`flex h-12 shrink-0 touch-manipulation items-center gap-3 rounded-2xl px-3.5 text-sm font-semibold transition-all active:scale-[0.98] ${
                         active
-                          ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200 shadow-sm dark:bg-emerald-500/[0.12] dark:text-emerald-400 dark:ring-emerald-500/30 dark:shadow-none"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-[#10151c] dark:hover:text-slate-100"
+                          ? "pika-action text-white ring-1 ring-inset ring-primary/20"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-foreground"
                       }`}
                       aria-current={active ? "page" : undefined}
                     >
                       <span
                         className={`flex h-8 w-8 items-center justify-center rounded-xl ${
                           active
-                            ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400"
-                            : "border border-slate-200 bg-white text-slate-500 shadow-sm dark:border-[#202733] dark:bg-[#10151c] dark:text-slate-400 dark:shadow-none"
+                            ? "bg-white/15 text-white"
+                            : "border border-border bg-card text-muted-foreground shadow-sm dark:bg-muted dark:shadow-none"
                         }`}
                       >
                         <Icon className={`h-[18px] w-[18px] ${active ? "stroke-[2.5]" : ""}`} />

@@ -54,16 +54,16 @@ function getDaysBetween(start, end) {
 
 function StatCard({ icon: Icon, label, value, helper }) {
   return (
-    <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-white/[0.07] bg-black/10 px-2.5 py-2.5">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-400/[0.08]">
+    <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-border/70 bg-background/70 px-2.5 py-2.5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.75rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.08]">
         <Icon className="h-[0.95rem] w-[0.95rem]" strokeWidth={2.2} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[0.62rem] font-semibold text-slate-400">{label}</span>
-        <span className="mt-0.5 block break-words text-[clamp(0.7rem,2.9vw,0.88rem)] font-extrabold leading-tight text-white">
+        <span className="block truncate text-[0.62rem] font-semibold text-muted-foreground">{label}</span>
+        <span className="mt-0.5 block break-words text-[clamp(0.7rem,2.9vw,0.88rem)] font-extrabold leading-tight text-foreground">
           {value}
         </span>
-        {helper && <span className="mt-0.5 block text-[0.58rem] font-medium text-slate-500">{helper}</span>}
+        {helper && <span className="mt-0.5 block text-[0.58rem] font-medium text-muted-foreground">{helper}</span>}
       </span>
     </div>
   );
@@ -77,7 +77,7 @@ function DonutChart({ data, total }) {
   return (
     <div className="relative mx-auto h-48 w-48">
       <svg className="h-full w-full" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r={radius} fill="none" stroke="#e2e8f0" strokeWidth="16" />
+        <circle cx="60" cy="60" r={radius} fill="none" stroke="hsl(var(--border))" strokeWidth="16" />
         {data.map((item, index) => {
           const slice = total > 0 ? (item.amount / total) * circumference : 0;
           const strokeDashoffset = -offset;
@@ -100,8 +100,8 @@ function DonutChart({ data, total }) {
         })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">Total</span>
-        <span className="mt-1 text-lg font-extrabold text-slate-950 dark:text-slate-50">{fmtCurrency(total)}</span>
+        <span className="text-xs font-semibold text-muted-foreground">Total</span>
+        <span className="mt-1 text-lg font-extrabold text-foreground">{fmtCurrency(total)}</span>
       </div>
     </div>
   );
@@ -111,13 +111,13 @@ function CategoryExpenseDetailRow({ expense, tone }) {
   const Icon = getExpenseIcon(expense.category, expense.description);
 
   return (
-    <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/70 px-2.5 py-2 dark:border-white/[0.07] dark:bg-white/[0.025]">
-      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 ${tone.text} ring-1 ring-slate-200 dark:bg-white/[0.05] dark:ring-white/[0.07]`}>
+    <div className="flex items-center gap-2.5 rounded-xl border border-border/80 bg-background/70 px-2.5 py-2 dark:border-border/70 dark:bg-muted/60">
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-muted ${tone.text} ring-1 ring-border dark:bg-muted/60 dark:ring-border/70`}>
         <Icon className="h-3.5 w-3.5" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[11px] font-bold text-slate-800 dark:text-slate-200">{expense.description || expense.category || "Expense"}</p>
-        <p className="truncate text-[9px] font-medium text-slate-500 dark:text-slate-400">
+        <p className="truncate text-[11px] font-bold text-foreground">{expense.description || expense.category || "Expense"}</p>
+        <p className="truncate text-[9px] font-medium text-muted-foreground">
           {fmtDate(expense.date, true)}{expense.payment_method ? ` · ${expense.payment_method}` : ""}
         </p>
       </div>
@@ -135,21 +135,21 @@ function CategoryBreakdown({ data, total, compact = false }) {
   };
 
   return (
-    <div className="rounded-[1.5rem] bg-white dark:bg-[#090d12] p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
+    <div className="rounded-[1.5rem] bg-card p-4 shadow-sm ring-1 ring-border/70">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-violet-400">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-violet-50 dark:bg-violet-950 text-violet-600 dark:text-brand-plum">
             <PieChart className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-extrabold text-slate-950 dark:text-slate-50">Expenses by Category</h3>
-            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Tap a category to see its expenses</p>
+            <h3 className="text-sm font-extrabold text-foreground">Expenses by Category</h3>
+            <p className="text-[10px] font-medium text-muted-foreground">Tap a category to see its expenses</p>
           </div>
         </div>
       </div>
 
       {visibleData.length === 0 ? (
-        <div className="flex h-36 items-center justify-center rounded-2xl bg-slate-50 dark:bg-[#090d12] text-xs font-medium text-slate-400 dark:text-slate-500">
+        <div className="flex h-36 items-center justify-center rounded-2xl bg-background dark:bg-card text-xs font-medium text-muted-foreground">
           No category data yet.
         </div>
       ) : (
@@ -164,7 +164,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
               return (
                 <div
                   key={item.name}
-                  className={`relative overflow-hidden rounded-2xl border ${tone.border} ${tone.rowBg} dark:!border-transparent dark:!bg-[#090d12]`}
+                  className={`relative overflow-hidden rounded-2xl border ${tone.border} ${tone.rowBg} dark:!border-transparent dark:!bg-card`}
                 >
                   <div
                     className="pointer-events-none absolute inset-0 hidden rounded-2xl border dark:block"
@@ -179,7 +179,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
                     onClick={() => toggleCategory(item.name)}
                     aria-expanded={isExpanded}
                   >
-                    <span className={`relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring} dark:!bg-[#10151c] dark:!ring-transparent`}>
+                    <span className={`relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl ${tone.iconBg} ${tone.text} ring-1 ${tone.ring} dark:!bg-muted dark:!ring-transparent`}>
                       <span
                         className="pointer-events-none absolute inset-0 hidden dark:block"
                         style={{ backgroundColor: `${tone.hex}22` }}
@@ -188,17 +188,17 @@ function CategoryBreakdown({ data, total, compact = false }) {
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className={`truncate text-xs font-bold ${tone.text}`}>{item.name}</p>
-                      <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">{item.count} item{item.count > 1 ? "s" : ""}</p>
+                      <p className="text-[10px] font-medium text-muted-foreground">{item.count} item{item.count > 1 ? "s" : ""}</p>
                     </div>
                     <div className="text-right">
                       <p className={`text-xs font-extrabold ${tone.text}`}>{fmtCurrency(item.amount)}</p>
-                      <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">{percent.toFixed(1)}%</p>
+                      <p className="text-[10px] font-semibold text-muted-foreground">{percent.toFixed(1)}%</p>
                     </div>
                     <ChevronDown className={`h-4 w-4 shrink-0 ${tone.text} transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                   </button>
 
                   {isExpanded && (
-                    <div className="relative z-10 border-t border-white/80 dark:border-[#202733]/80 px-2.5 pb-2.5 pt-2">
+                    <div className="relative z-10 border-t border-border/70 dark:border-border/80 px-2.5 pb-2.5 pt-2">
                       <div className="space-y-1.5">
                         {item.expenses.map((expense, index) => (
                           <CategoryExpenseDetailRow key={expense.id || `${item.name}-${index}`} expense={expense} tone={tone} />
@@ -211,7 +211,7 @@ function CategoryBreakdown({ data, total, compact = false }) {
             })}
           </div>
           {compact && data.length > visibleData.length && (
-            <p className="mt-3 text-center text-[10px] font-medium text-slate-400 dark:text-slate-500">
+            <p className="mt-3 text-center text-[10px] font-medium text-muted-foreground">
               Showing top {visibleData.length} of {data.length} categories.
             </p>
           )}
@@ -360,12 +360,12 @@ export default function Expenses() {
 
   return (
     <MobileLayout>
-      <div className="-mx-4 -mt-4 min-h-[calc(100vh-5rem)] bg-gradient-to-b from-slate-50 via-white to-slate-100 px-4 pb-6 pt-4 text-slate-950 dark:from-[#05080c] dark:via-[#05080c] dark:to-[#030609] dark:text-slate-50">
+      <div className="pika-page -mx-4 -mt-4 min-h-[calc(100vh-5rem)] px-4 pb-6 pt-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h1 className="text-xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">Daily Expenses</h1>
-              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              <h1 className="text-xl font-extrabold tracking-tight text-foreground">Daily Expenses</h1>
+              <p className="text-[11px] font-medium text-muted-foreground">
                 {cycle ? `${formatDisplayDate(cycle.start_date)} — ${formatDisplayDate(cycle.end_date)}` : "Overview for salary cycle"}
               </p>
               {cycle && cycle.status !== "active" && (
@@ -375,22 +375,22 @@ export default function Expenses() {
               )}
             </div>
             {cycle && (
-              <Button className="h-10 rounded-2xl bg-emerald-500 px-3.5 text-[13px] font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600" onClick={openAddSheet}>
+              <Button className="pika-action h-10 rounded-2xl px-3.5 text-[13px] font-bold text-white" onClick={openAddSheet}>
                 <Plus className="mr-1 h-3.5 w-3.5" /> Add
               </Button>
             )}
           </div>
 
           {cycles.length > 0 && (
-            <div className="rounded-[1.25rem] bg-white dark:bg-[#090d12] p-3 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
+            <div className="rounded-[1.25rem] bg-card p-3 shadow-sm ring-1 ring-border/70">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-primary">
                     <CalendarDays className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[12px] font-semibold text-slate-900 dark:text-slate-100">Salary Cycle</p>
-                    <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Choose which cycle to view</p>
+                    <p className="text-[12px] font-semibold text-foreground">Salary Cycle</p>
+                    <p className="text-[10px] font-medium text-muted-foreground">Choose which cycle to view</p>
                   </div>
                 </div>
                 {cycle && (
@@ -398,8 +398,8 @@ export default function Expenses() {
                     variant="secondary"
                     className={`rounded-full px-2.5 py-1 text-[9px] font-extrabold ${
                       cycle.status === "active"
-                        ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        ? "bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-primary hover:bg-emerald-100 dark:hover:bg-emerald-900"
+                        : "bg-muted text-muted-foreground hover:bg-muted"
                     }`}
                   >
                     {cycle.status === "active" ? "Active" : "Closed"}
@@ -407,7 +407,7 @@ export default function Expenses() {
                 )}
               </div>
               <Select value={cycle?.id ? String(cycle.id) : ""} onValueChange={handleCycleChange}>
-                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-slate-800 dark:text-slate-200 shadow-sm focus:ring-emerald-300 dark:focus:ring-emerald-700">
+                <SelectTrigger className="h-11 rounded-2xl border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/60 px-3 text-[12px] font-semibold text-foreground shadow-sm focus:ring-primary dark:focus:ring-emerald-700">
                   <SelectValue placeholder="Select salary cycle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -423,7 +423,7 @@ export default function Expenses() {
           )}
 
           {!cycle && !loading && (
-            <p className="rounded-[1.5rem] bg-white dark:bg-[#090d12] p-5 text-center text-sm font-medium text-slate-500 dark:text-slate-400 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
+            <p className="rounded-[1.5rem] bg-card p-5 text-center text-sm font-medium text-muted-foreground shadow-sm ring-1 ring-border/70">
               No salary cycle selected. Create one first from the Dashboard or open one from Salary Cycles.
             </p>
           )}
@@ -439,27 +439,27 @@ export default function Expenses() {
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
             </div>
           ) : expenses.length === 0 && cycle ? (
-            <div className="rounded-[1.5rem] bg-white dark:bg-[#090d12] p-8 text-center shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+            <div className="rounded-[1.5rem] bg-card p-8 text-center shadow-sm ring-1 ring-border/70">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-primary">
                 <ReceiptText className="h-7 w-7" />
               </div>
-              <h2 className="mt-4 text-base font-extrabold text-slate-950 dark:text-slate-50">No expenses yet</h2>
-              <p className="mx-auto mt-1 max-w-xs text-xs font-medium text-slate-500 dark:text-slate-400">Tap Add to record your spending and view the expense overview here.</p>
-              <Button className="mt-5 h-11 rounded-2xl bg-emerald-500 px-6 font-bold text-white hover:bg-emerald-600" onClick={openAddSheet}>
+              <h2 className="mt-4 text-base font-extrabold text-foreground">No expenses yet</h2>
+              <p className="mx-auto mt-1 max-w-xs text-xs font-medium text-muted-foreground">Tap Add to record your spending and view the expense overview here.</p>
+              <Button className="pika-action mt-5 h-11 rounded-2xl px-6 font-bold text-white" onClick={openAddSheet}>
                 <Plus className="mr-1 h-4 w-4" /> Add Expense
               </Button>
             </div>
           ) : cycle ? (
             <>
-              <div className="grid grid-cols-3 rounded-[1.2rem] bg-white dark:bg-[#090d12] p-1 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
+              <div className="grid grid-cols-3 rounded-[1.2rem] bg-card p-1 shadow-sm ring-1 ring-border/70">
                 {["overview", "transactions", "categories"].map((view) => (
                   <button
                     key={view}
                     type="button"
                     className={`rounded-2xl px-2 py-2 text-[11px] font-extrabold capitalize transition-all ${
                       activeView === view
-                        ? "bg-emerald-500 text-white shadow-sm dark:bg-emerald-500/10 dark:ring-1 dark:ring-inset dark:ring-emerald-500/55 dark:shadow-[0_0_20px_rgba(16,185,129,0.10)]"
-                        : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        ? "pika-action text-white ring-1 ring-inset ring-primary/20"
+                        : "text-muted-foreground hover:bg-background"
                     }`}
                     onClick={() => setActiveView(view)}
                   >
@@ -470,18 +470,18 @@ export default function Expenses() {
 
               {activeView === "overview" && (
                 <div className="space-y-3">
-                  <section className="rounded-[1.35rem] border border-white/[0.075] bg-[linear-gradient(145deg,rgba(12,23,27,0.97),rgba(5,13,17,0.99))] p-3 shadow-[0_18px_48px_rgba(0,0,0,0.3)]">
+                  <section className="pika-card rounded-[1.35rem] border border-border/70 p-3">
                     <div className="flex items-center gap-2.5">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-emerald-400/[0.11] text-emerald-400 ring-1 ring-inset ring-emerald-300/[0.07]">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.9rem] bg-primary/[0.11] text-primary ring-1 ring-inset ring-primary/[0.07]">
                         <TrendingDown className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.2} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <h2 className="text-[0.82rem] font-bold text-white">Total Expenses</h2>
-                        <p className="mt-1.5 truncate text-[clamp(1.15rem,5.5vw,1.55rem)] font-extrabold leading-none tracking-tight tabular-nums text-white">
+                        <h2 className="text-[0.82rem] font-bold text-foreground">Total Expenses</h2>
+                        <p className="mt-1.5 truncate text-[clamp(1.15rem,5.5vw,1.55rem)] font-extrabold leading-none tracking-tight tabular-nums text-foreground">
                           {fmtCurrency(overview.total)}
                         </p>
                       </div>
-                      <span className="shrink-0 rounded-full bg-emerald-400/[0.1] px-2.5 py-1 text-[0.66rem] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-400/[0.08]">
+                      <span className="shrink-0 rounded-full bg-primary/[0.1] px-2.5 py-1 text-[0.66rem] font-bold text-primary ring-1 ring-inset ring-primary/[0.08]">
                         {expenses.length} item{expenses.length > 1 ? "s" : ""}
                       </span>
                     </div>
@@ -501,23 +501,23 @@ export default function Expenses() {
 
                   <CategoryBreakdown data={overview.byCategory} total={overview.total} compact />
 
-                  <div className="rounded-[1.5rem] bg-white dark:bg-[#090d12] p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
+                  <div className="rounded-[1.5rem] bg-card p-4 shadow-sm ring-1 ring-border/70">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-primary">
                           <Clock3 className="h-4 w-4" />
                         </div>
                         <div>
-                          <h3 className="text-[13px] font-semibold text-slate-900 dark:text-slate-100">Recent Transactions</h3>
+                          <h3 className="text-[13px] font-semibold text-foreground">Recent Transactions</h3>
                         </div>
                       </div>
-                      <button type="button" className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400" onClick={() => setActiveView("transactions")}>View all</button>
+                      <button type="button" className="text-[11px] font-medium text-emerald-600 dark:text-current" onClick={() => setActiveView("transactions")}>View all</button>
                     </div>
                     <GroupedExpenseSections expenses={overview.recent} compact />
                   </div>
 
-                  <div className="flex items-center justify-between rounded-[1.25rem] bg-white dark:bg-[#090d12] p-4 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
-                    <p className="text-xs font-extrabold text-slate-800 dark:text-slate-200">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
+                  <div className="flex items-center justify-between rounded-[1.25rem] bg-card p-4 shadow-sm ring-1 ring-border/70">
+                    <p className="text-xs font-extrabold text-foreground">Total ({expenses.length} item{expenses.length > 1 ? "s" : ""})</p>
                     <p className="text-xl font-black text-rose-600 dark:text-rose-400">{fmtCurrency(overview.total)}</p>
                   </div>
                 </div>
@@ -525,9 +525,9 @@ export default function Expenses() {
 
               {activeView === "transactions" && (
                 <div className="space-y-3">
-                  <div className="rounded-[1.25rem] bg-white dark:bg-[#090d12] p-3 shadow-sm ring-1 ring-slate-200/70 dark:ring-[#202733]/70">
-                    <p className="text-[13px] font-medium text-slate-900 dark:text-slate-100">All Daily Expenses</p>
-                    <p className="text-[11px] font-normal text-slate-500 dark:text-slate-400">Viewing {cycle ? `${formatDisplayDate(cycle.start_date)} — ${cycle.end_date ? formatDisplayDate(cycle.end_date) : "Current"}` : "selected salary cycle"}.</p>
+                  <div className="rounded-[1.25rem] bg-card p-3 shadow-sm ring-1 ring-border/70">
+                    <p className="text-[13px] font-medium text-foreground">All Daily Expenses</p>
+                    <p className="text-[11px] font-normal text-muted-foreground">Viewing {cycle ? `${formatDisplayDate(cycle.start_date)} — ${cycle.end_date ? formatDisplayDate(cycle.end_date) : "Current"}` : "selected salary cycle"}.</p>
                   </div>
                   <GroupedExpenseSections expenses={expenses} onEdit={handleEdit} onDelete={setDeleteId} showActions />
                 </div>
@@ -544,7 +544,7 @@ export default function Expenses() {
       <Sheet open={sheetOpen} onOpenChange={(open) => { setSheetOpen(open); if (!open) setEditing(null); }}>
         <SheetContent
           side="bottom"
-          className="w-full max-w-full touch-pan-y overflow-x-hidden overflow-y-auto overscroll-x-none overscroll-y-contain rounded-t-3xl max-h-[90dvh]"
+          className="w-full max-w-full touch-pan-y overflow-x-hidden overflow-y-auto overscroll-x-none overscroll-y-contain rounded-t-3xl bg-card max-h-[90dvh]"
         >
           <SheetHeader className="min-w-0"><SheetTitle>{editing ? "Edit Expense" : "Add Expense"}</SheetTitle></SheetHeader>
           <div className="mt-4 w-full min-w-0 max-w-full overflow-x-hidden pb-6">
