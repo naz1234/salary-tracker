@@ -282,24 +282,30 @@ export default function Expenses() {
     await load(cycleId);
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data, { keepOpen = false } = {}) => {
     if (!isDateInSalaryCycle(data.date, cycle)) {
       const start = cycle?.start_date || "the cycle start date";
       const end = cycle?.end_date || "the next salary cycle";
       alert(`Expense date must be within the selected salary cycle (${start} to ${end}).`);
-      return;
+      return false;
     }
 
     setSaving(true);
-    if (editing) {
-      await cloudflare.entities.Expense.update(editing.id, data);
-    } else {
-      await cloudflare.entities.Expense.create({ ...data, salary_cycle_id: cycle.id });
+    try {
+      const saved = editing
+        ? await cloudflare.entities.Expense.update(editing.id, data)
+        : await cloudflare.entities.Expense.create({ ...data, salary_cycle_id: cycle.id });
+      setExpenses((current) => editing
+        ? current.map((expense) => expense.id === editing.id ? saved : expense)
+        : [saved, ...current]);
+      if (!keepOpen) {
+        setSheetOpen(false);
+        setEditing(null);
+      }
+      return true;
+    } finally {
+      setSaving(false);
     }
-    setSheetOpen(false);
-    setEditing(null);
-    setSaving(false);
-    await load(cycle?.id);
   };
 
   const handleDelete = async () => {
